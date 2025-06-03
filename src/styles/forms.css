@@ -1,0 +1,222 @@
+.page-background {
+  background-color: var(--gray-light);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.form-container {
+  background-color: var(--gray-light);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 360px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: none;
+  border: none;
+}
+
+.logo {
+  height: 50px; /* ⬆️ Increased logo size */
+  margin-bottom: 0.2rem; /* ⬇️ Closer to subtitle */
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #1c1c1c;
+  width: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--gray-light);
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  letter-spacing: 0.3px;
+  font-style: italic;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+
+.fixed-width-subtitle {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  outline: none;
+  margin-bottom: 1rem;
+  background-color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.input-field:focus {
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 0 2px rgba(42, 67, 212, 0.15);
+}
+
+.form-label {
+  display: block;
+  text-align: left;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.ai-cta {
+  padding: 0.45rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+/* Inactive button matches subtitle/bg */
+.inactive-cta {
+  background-color: var(--gray-light);
+  color: var(--blue-primary);
+  font-weight: 600;
+  border: 1px solid var(--blue-primary);
+}
+
+/* Active login gradient */
+.active-cta {
+  background: linear-gradient(135deg, var(--blue-primary), var(--violet-primary));
+  color: var(--white) !important;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  text-align: center;
+  color: var(--grey-medium);
+  font-size: 0.85rem;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #ccc;
+  margin: 0 8px;
+}
+
+/* Social buttons stacked vertically */
+.vertical-oauth {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 1rem 0;
+}
+
+/* Rectangle Google/LinkedIn buttons */
+.btn-google,
+.btn-linkedin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px; /* Rectangular */
+  padding: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: white;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.btn-google:hover,
+.btn-linkedin:hover {
+  background-color: #f4f4f4;
+}
+
+.form-links {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  margin-top: 1rem;
+}
+
+.animated-link {
+  color: #000;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.animated-link::after {
+  content: "";
+  display: block;
+  height: 2px;
+  background-color: #000;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.animated-link:hover::after {
+  width: 100%;
+}
+
+/* Ensure consistent widths across all elements */
+.input-field,
+.ai-cta,
+.btn-google,
+.btn-linkedin {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* SIGN UP  */
+/* SIGN UP: LinkedInOnlyForm */
+
+/* 💬 Soft notification box (no border, no left stripe) */
+.linkedin-note-text {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: #1c1c1c;
+  background-color: #f5f6f7;
+  padding: 0.8rem 1.1rem;
+  border-radius: 6px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ✅ White background with native LinkedIn blue icon */
+.btn-linkedin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #1c1c1c;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.btn-linkedin:hover {
+  background-color: #f0f0f0;
+}

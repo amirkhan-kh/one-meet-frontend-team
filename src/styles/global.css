@@ -1,0 +1,32 @@
+@import './variables.css';
+@import './forms.css';
+
+
+/* Usage example */
+body {
+  background-color: var(--surface-light);
+  color: var(--blue-midnight);
+}
+
+/* Example button */
+.button-primary {
+  background-color: var(--blue-primary);
+  color: var(--white);
+  box-shadow: 0 4px 10px var(--shadow-light);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* === OneMeet Primary Text Style === */
+.primary-text {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--blue-midnight);
+  letter-spacing: 0.01em;
+}
+
+

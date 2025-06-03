@@ -1,0 +1,170 @@
+/* Import Inter font */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+
+/* Reset font family globally */
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+/* HEADER CONTAINER */
+.ai-header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  background: var(--surface-light); /* pure white */
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+/* FLEX CONTAINER */
+.ai-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+/* LOGO */
+.ai-logo {
+  font-size: clamp(26px, 2.6vw, 32px); /* bigger */
+  font-weight: 700; /* bolder */
+  color: var(--blue-slate-dark);
+  letter-spacing: -0.5px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* DESKTOP NAV LINKS */
+.ai-nav {
+  display: flex;
+  align-items: center;
+}
+
+/* LINK STYLE */
+.ai-nav a {
+  font-size: 17px; /* bigger */
+  color: var(--grey-medium);
+  text-decoration: none;
+  font-weight: 600; /* bolder */
+  padding: 8px 16px;
+  border-radius: 6px; /* slightly rounded corners */
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 0 0 transparent;
+  user-select: none;
+}
+
+/* Underline hover effect for Features and Pricing */
+.ai-nav a.underline-hover {
+  position: relative;
+  padding-bottom: 6px; /* space for underline */
+  color: var(--grey-medium);
+  transition: color 0.3s ease;
+}
+
+.ai-nav a.underline-hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  background-color: var(--blue-primary);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.ai-nav a.underline-hover:hover {
+  color: var(--blue-primary);
+}
+
+.ai-nav a.underline-hover:hover::after {
+  width: 100%;
+}
+
+/* Hover effect for other nav links (no underline) */
+.ai-nav a:not(.underline-hover):hover {
+  color: var(--blue-primary);
+  box-shadow: inset 0 0 8px var(--blue-primary);
+  background-color: rgba(42, 67, 212, 0.12);
+}
+
+/* CTA BUTTON - rectangular with subtle rounding */
+.ai-cta {
+  background: linear-gradient(135deg, var(--blue-primary), var(--violet-primary));
+  padding: 12px 32px; /* wider */
+  color: var(--white) !important;
+  border-radius: 8px; /* subtle rounding, no circle */
+  font-weight: 700;
+  font-size: 16px;
+  box-shadow:
+    0 0 10px var(--blue-primary),
+    0 0 20px rgba(94, 3, 211, 0.3),
+    inset 0 -2px 6px rgba(255, 255, 255, 0.25);
+  transition: all 0.4s ease;
+  text-align: center;
+  border: none;
+  user-select: none;
+}
+
+.ai-cta:hover {
+  background: linear-gradient(135deg, var(--violet-primary), var(--blue-slate-dark));
+  box-shadow:
+    0 0 18px var(--violet-primary),
+    0 0 30px rgba(94, 3, 211, 0.5),
+    inset 0 -2px 8px rgba(255, 255, 255, 0.35);
+  transform: translateY(-3px);
+  cursor: pointer;
+}
+
+/* TOGGLE BUTTON */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--blue-slate-dark);
+}
+
+/* RESPONSIVE NAV */
+@media (max-width: 1023px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .ai-nav {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface-light);
+    backdrop-filter: blur(12px);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 8px 0;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    z-index: 2000;
+  }
+
+  .ai-nav.show {
+    display: flex;
+  }
+
+  .ai-nav a,
+  .ai-cta {
+    width: 100%;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 16px; /* increase font on mobile as well */
+  }
+}

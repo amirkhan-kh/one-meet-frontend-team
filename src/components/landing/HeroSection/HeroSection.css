@@ -1,0 +1,186 @@
+.hero-section {
+  min-height: calc(100vh - 80px); /* assumes header is 80px tall */
+  padding-top: 80px; /* prevent overlap under sticky header */
+  background: var(--white);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+
+.hero-content {
+  max-width: 800px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 🧠 Primary headline */
+.hero-title {
+  font-size: clamp(2rem, 5vw, 2.6rem);
+  font-weight: 700;
+  color: #0e0e0e;
+  margin-bottom: 1.2rem;
+  line-height: 1.3;
+}
+
+.hero-subtitle {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.65;
+  color: #1c1c1c;
+  max-width: 680px;
+  margin-bottom: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+
+  background-color: rgba(42, 67, 212, 0.05); /* subtle blue background */
+  padding: 1rem 1.4rem;
+  border-left: 4px solid var(--blue-primary);
+  border-radius: 8px;
+  letter-spacing: 0.3px;
+  font-style: italic;
+}
+
+
+/* 👇 Hand emoji */
+.hand-emoji {
+  font-size: 2rem;
+  margin-bottom: 1.8rem;
+  animation: bounceHand 2s infinite;
+}
+
+@keyframes bounceHand {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+
+/* ▶️ Final Play Button — rounded rectangle */
+.play-button {
+  position: relative;
+  width: 160px;
+  height: 66px;
+  background: var(--blue-primary);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 12px 36px rgba(42, 67, 212, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.play-button:hover {
+  transform: scale(1.07);
+  box-shadow: 0 16px 48px rgba(42, 67, 212, 0.55);
+}
+
+/* Triangle — rounded, bright, with strong shadow */
+.play-button::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-45%, -50%);
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-left: 24px solid #f8f8f8;
+  border-radius: 3px;
+  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.35));
+}
+
+/* Extra triangle shadow */
+.play-button::after {
+  content: '';
+  position: absolute;
+  left: calc(50% + 2px);
+  top: calc(50% + 2px);
+  transform: translate(-45%, -50%);
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-left: 24px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* 🎥 Video Modal */
+.video-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 80%;
+  max-width: 900px;
+  aspect-ratio: 16/9;
+  transform: scale(0.7);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.video-wrapper.open {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.close-video {
+  position: absolute;
+  top: -1rem;
+  right: -1rem;
+  background: var(--white);
+  color: var(--blue-midnight);
+  border: none;
+  border-radius: 50%;
+  padding: 0.3rem 0.6rem;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    padding: 0 16px;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+    line-height: 1.4;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.8rem;
+  }
+
+  .hand-emoji {
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .play-button {
+    width: 140px;
+    height: 56px;
+    border-radius: 12px;
+  }
+
+  .play-button::before,
+  .play-button::after {
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 20px solid #f8f8f8;
+  }
+
+  .play-button::after {
+    border-left: 20px solid rgba(0, 0, 0, 0.2);
+  }
+}
+
