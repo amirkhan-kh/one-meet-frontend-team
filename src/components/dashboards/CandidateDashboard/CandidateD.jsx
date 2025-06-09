@@ -7,7 +7,7 @@ export const CandidateD = () => {
     <>
       <DashboardHeader />
       <main className="min-h-screen pt-20">
-      CandidateD
+      {/* CandidateD */}
         <Outlet />
       </main>
       <DashboardFooter/>
