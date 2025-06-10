@@ -4,7 +4,6 @@ import LandingPage from "./pages/LandingPage";
 import SignupPage from "./components/auth/Signup/SignupPage";
 import LoginPage from "./components/auth/Login/LoginPage";
 import ForgotPassword from "./components/auth/Login/ForgotPassword";
-import { AdminD } from "./components/Dashboards/AdminDashboard/AdminD";
 import { CandidateD } from "./components/Dashboards/CandidateDashboard/CandidateD";
 import { CompanyD } from "./components/Dashboards/CompanyDashboard/CompanyD";
 import { RecruiterD } from "./components/Dashboards/RecruiterDashboard/RecruiterD";
@@ -19,6 +18,7 @@ import {
   ProfilerecruiterRec,
 } from "./pages/recruiter";
 import CompanyHomeD from "./pages/company/DashboardC";
+import { AdminD } from "./components/dashboards/AdminDashboard/AdminD.jsx";
 function App() {
   return (
     <Routes>
