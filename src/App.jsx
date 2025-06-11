@@ -4,9 +4,9 @@ import LandingPage from "./pages/LandingPage";
 import SignupPage from "./components/auth/Signup/SignupPage";
 import LoginPage from "./components/auth/Login/LoginPage";
 import ForgotPassword from "./components/auth/Login/ForgotPassword";
-import { CandidateD } from "./components/Dashboards/CandidateDashboard/CandidateD";
-import { CompanyD } from "./components/Dashboards/CompanyDashboard/CompanyD";
-import { RecruiterD } from "./components/Dashboards/RecruiterDashboard/RecruiterD";
+import {  CandidateDash } from "./components/dashboards/CandidateDashboard/CandidateDash";
+import {  CompanyDash } from "./components/dashboards/CompanyDashboard/CompanyDash";
+import {  RecruiterDash } from "./components/dashboards/RecruiterDashboard/RecruiterDash";
 import { Plans } from "./pages/company/Plans";
 import { ProfileCompany } from "./pages/company/ProfileCompany";
 import { Control, DataManagement, Payments, SystemLogs } from "./pages/admin";
@@ -18,7 +18,7 @@ import {
   ProfilerecruiterRec,
 } from "./pages/recruiter";
 import CompanyHomeD from "./pages/company/DashboardC";
-import { AdminD } from "./components/dashboards/AdminDashboard/AdminD.jsx";
+import { AdminDash } from "./components/dashboards/AdminDashboard/AdminDash.jsx";
 function App() {
   return (
     <Routes>
@@ -30,14 +30,14 @@ function App() {
       {/* Dashboards */}
 
       {/* Candidate */}
-      <Route path="/candidate-dashboard" element={<CandidateD />}>
+      <Route path="/candidate-dashboard" element={<CandidateDash />}>
         <Route path="feedback" element={<Feedback />} />
         <Route path="join-interview" element={<JoinInterviews />} />
         <Route path="profile-candidate" element={<ProfileCandidate />} />
       </Route>
 
       {/* Admin */}
-      <Route path="/admin-dashboard" element={<AdminD />}>
+      <Route path="/admin-dashboard" element={<AdminDash />}>
         <Route path="data-management" element={<DataManagement />} />
         <Route path="plans-payments" element={<Payments />} />
         <Route path="system-logs" element={<SystemLogs />} />
@@ -45,14 +45,14 @@ function App() {
       </Route>
 
       {/* Company */}
-      <Route path="/company-dashboard" element={<CompanyD />}>
+      <Route path="/company-dashboard" element={<CompanyDash />}>
         <Route index element={<CompanyHomeD />} /> {/* default/index route */}
         <Route path="plans" element={<Plans />} />
         <Route path="profile-company" element={<ProfileCompany />} />
       </Route>
 
       {/* Recruiter */}
-      <Route path="/recruiter-dashboard" element={<RecruiterD />}>
+      <Route path="/recruiter-dashboard" element={<RecruiterDash />}>
         <Route path="candidate-rec" element={<CandidateRec />} />
         <Route path="company-rec" element={<CompanyRec />} />
         <Route path="interviews-rec" element={<InterviewsRec />} />

@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
-import "./RecruiterD";
+import "./RecruiterDash";
 import { DashboardFooter } from "../../layouts/dashboard-footer";
 import { DashboardHeader } from "../../layouts/dashboard-header";
-export const RecruiterD = () => {
+export const RecruiterDash = () => {
   return (
     <>
       <DashboardHeader />
