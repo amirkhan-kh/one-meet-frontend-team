@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import "./RecruiterD";
 import { DashboardFooter } from "../../layouts/dashboard-footer";
 import { DashboardHeader } from "../../layouts/dashboard-header";
-export const RecruiterD = () => {
+export const RecruiterDashboard = () => {
   return (
     <>
       <DashboardHeader />
