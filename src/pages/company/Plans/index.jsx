@@ -3,7 +3,14 @@ import "./style.css";
 import { BsBarChartLine } from "react-icons/bs";
 import { MdDone } from "react-icons/md";
 import AvilablesPlans from "@/sections/company-pages/avilables-plans";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import PaymnetMethod from "@/sections/company-pages/payment-mthod";
 
 export const Plans = () => {
@@ -17,12 +24,8 @@ export const Plans = () => {
         recruiting process.
       </p>
 
-      <div
-        className={` p-4 bg-white rounded-md border border-[#dbd7d7] flex flex-col gap-2 sm:gap-4 mb-8`}
-      >
-        <h3
-          className={`text-[15px] font-semibold flex items-center gap-2 mb-8`}
-        >
+      <div className="p-4 bg-white rounded-md border border-[#dbd7d7] flex flex-col gap-2 sm:gap-4 mb-8">
+        <h3 className="text-[15px] font-semibold flex items-center gap-2 mb-8">
           Current Plan
         </h3>
         <span>
@@ -56,7 +59,9 @@ export const Plans = () => {
             </ul>
             <div className="w-[100%] md:w-[20%]">
               <Dialog>
-                <DialogTrigger className="ai-cta">Change Select Plan</DialogTrigger>
+                <DialogTrigger className="ai-cta">
+                  Change Select Plan
+                </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Are you absolutely sure?</DialogTitle>
@@ -71,8 +76,9 @@ export const Plans = () => {
           </div>
         </div>
       </div>
+
       <AvilablesPlans />
-      <PaymnetMethod/>
+      <PaymnetMethod />
     </div>
   );
 };
