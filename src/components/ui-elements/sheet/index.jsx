@@ -10,7 +10,7 @@ import {
 export const SheetNavigation = () => {
   return (
     <Sheet>
-      <SheetTrigger>☰</SheetTrigger>
+      <SheetTrigger className="menu-toggle">☰</SheetTrigger>
       <SheetContent side="left" className="bg-white">
         <SheetHeader>
           <SheetTitle>Are you absolutely sure?</SheetTitle>

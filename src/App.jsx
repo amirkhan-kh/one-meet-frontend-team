@@ -1,4 +1,4 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import {  Routes, Route } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage";
 import SignupPage from "./components/auth/Signup/SignupPage";
@@ -20,7 +20,6 @@ import { AdminDashboard } from "./components/dashboards/AdminDashboard/AdminD";
 import { CandidateDashboard } from "./components/dashboards/CandidateDashboard/CandidateD";
 function App() {
   return (
-    <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -58,7 +57,6 @@ function App() {
           <Route path="profile-recruiter" element={<ProfilerecruiterRec />} />
         </Route>
       </Routes>
-    </Router>
   );
 }
 

@@ -7,6 +7,7 @@ import {
 } from "../../../db/navLinks";
 import "./style.css";
 import { useEffect, useState } from "react";
+import { SheetNavigation } from "@/components/ui-elements/sheet";
 export const DashboardHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
@@ -75,8 +76,13 @@ export const DashboardHeader = () => {
             </ul>
           </nav>
         </div>
-
-        <div className="flex items-center gap-4">
+        <button
+            className="block sm:hidden"
+          >
+             <SheetNavigation/>
+          </button>
+        <div className="hidden sm:flex items-center gap-4">
+          
           <button
             className="hidden md:block  menu-toggle"
             onClick={toggleMenu}
