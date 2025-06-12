@@ -1,0 +1,12 @@
+.infobg{
+     background: linear-gradient(135deg, var(--blue-primary), var(--violet-primary));
+  padding: 12px 32px; /* wider */
+  color: var(--white) !important;
+  border-radius: 8px; /* subtle rounding, no circle */
+  font-weight: 700;
+  font-size: 16px;
+  
+  transition: all 0.4s ease;
+  border: none;
+  user-select: none;
+}

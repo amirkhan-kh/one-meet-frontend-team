@@ -1,6 +1,6 @@
-import { CandidateRec } from "./CandidatesRec";
-import { CompanyRec } from "./CompanyRec";
-import { ProfilerecruiterRec } from "./ProfileRecruiterRec";
-import { InterviewsRec } from "./InterviewsRec";
+export { default as CandidateRec } from './CandidatesRec'
+import { CompanyRec } from './CompanyRec'
+import { InterviewsRec } from './InterviewsRec'
+import { ProfilerecruiterRec } from './ProfileRecruiterRec'
 
-export { CandidateRec, CompanyRec, ProfilerecruiterRec, InterviewsRec}
+export { CompanyRec, InterviewsRec, ProfilerecruiterRec }
