@@ -2,7 +2,8 @@ import { Outlet } from "react-router-dom";
 import "./style.css";
 import { DashboardHeader } from "../../layouts/dashboard-header";
 import { DashboardFooter } from "../../layouts/dashboard-footer";
-export const AdminD = () => {
+
+export const AdminDashboard = () => {
   return (
     <>
       <DashboardHeader />
