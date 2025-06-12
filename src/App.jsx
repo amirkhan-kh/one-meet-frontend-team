@@ -20,6 +20,7 @@ import { CompanyDashboard } from "./components/dashboards/CompanyDashboard/Compa
 import { AdminDashboard } from "./components/dashboards/AdminDashboard/AdminD";
 import { CandidateDashboard } from "./components/dashboards/CandidateDashboard/CandidateD";
 import CompanyHomeD from "./pages/company/DashboardC";
+import ContactSupport from "./pages/contact-support/ContactSupport";  
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/contact-support" element={<ContactSupport />} />
 
       {/* Candidate */}
       <Route path="/candidate-dashboard" element={<CandidateDashboard />}>
