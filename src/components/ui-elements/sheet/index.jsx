@@ -6,9 +6,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import logo from "../../../assets/one_meet_logo.png";
-import { NavLink, useLocation } from "react-router";
-import { navigationAdminDashboard, navigationCandidateDashboard, navigationCompanyDashboard, navigationRecruiterDashboard } from "@/db/navLinks";
+import { navigationAdminDashboard, navigationCandidateDashboard, navigationCompanyDashboard, navigationRecruiterDashboard } from '@/db/navLinks'
+import { useLocation } from "react-router-dom";
+
 export const SheetNavigation = () => {
 
   const location = useLocation();
@@ -33,36 +33,26 @@ export const SheetNavigation = () => {
   }
   return (
     <Sheet>
-      <SheetTrigger className="menu-toggle">☰</SheetTrigger>
-      <SheetContent side="left" className="block sm:hidden  bg-white pt-18">
+      <SheetTrigger>☰</SheetTrigger>
+      <SheetContent side="left" className="bg-white">
         <SheetHeader>
-          <SheetTitle>
-            <a href="/" className="">
-              <img src={logo} alt="OneMeet Logo" className="w-6 h-6" />
-            </a>
-            <p className="text-[14px] mb-20 text-gray-400">
-              Streamlined recruiting management for businesses
-            </p>
-          </SheetTitle>
+          <SheetTitle>Are you absolutely sure?</SheetTitle>
           <SheetDescription>
-           <ul className="">
-            {currentLinks.map((item, i) => (
-              <NavLink key={i} to={item.pathName} className="underline-hover">
-                <li className=" underline-hover text-[14px] font-semibold py-3 px-0.5 my-0.5 hover:bg-[#3734d40c] rounded-sm">
-                  {item.navName}
-                </li>
-              </NavLink>
-            ))}
-          </ul>
-          <div className="flex items-center justify-between">
-          <button className="ai-cta">Login</button>
-            <span className="w-60"></span>
-            <span className="w-60"></span>
-            <span className="w-60"></span>
-          </div>
-
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
           </SheetDescription>
         </SheetHeader>
+        <nav>
+          {Array.isArray(currentLinks) ? (
+            <ul>
+              {currentLinks.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </nav>
       </SheetContent>
     </Sheet>
   );
