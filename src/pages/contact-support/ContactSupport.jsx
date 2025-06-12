@@ -17,6 +17,7 @@ const ContactSupport = () => {
            />
         <label className='mb-2 font-semibold' htmlFor="message">Message</label>
         <textarea
+          style={{ resize: 'none' }}
           id="message"
           name="message"
           className="input-field slim-input w-full max-w-110"
