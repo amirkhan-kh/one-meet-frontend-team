@@ -19,7 +19,6 @@ import CandidateRec from './pages/recruiter/CandidatesRec'
 import { CompanyDashboard } from './components/dashboards/CompanyDashboard/CompanyD'
 import { AdminDashboard } from './components/dashboards/AdminDashboard/AdminD'
 import { CandidateDashboard } from './components/dashboards/CandidateDashboard/CandidateD'
-import { RecruiterDashboard } from './components/dashboards/RecruiterDashboard/RecruiterD'
 function App() {
 	return (
 		<Routes>

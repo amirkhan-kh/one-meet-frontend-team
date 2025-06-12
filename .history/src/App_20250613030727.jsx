@@ -4,6 +4,7 @@ import ForgotPassword from './components/auth/Login/ForgotPassword'
 import LoginPage from './components/auth/Login/LoginPage'
 import SignupPage from './components/auth/Signup/SignupPage'
 import DashboardPage from './components/dashboards/RecruiterDashboard/components/dashboard'
+import { RecruiterD } from './components/Dashboards/RecruiterDashboard/RecruiterD'
 import { Control, DataManagement, Payments, SystemLogs } from './pages/admin'
 import { Feedback, JoinInterviews, ProfileCandidate } from './pages/candidate'
 import CompanyHomeD from './pages/company/DashboardC'
@@ -19,7 +20,6 @@ import CandidateRec from './pages/recruiter/CandidatesRec'
 import { CompanyDashboard } from './components/dashboards/CompanyDashboard/CompanyD'
 import { AdminDashboard } from './components/dashboards/AdminDashboard/AdminD'
 import { CandidateDashboard } from './components/dashboards/CandidateDashboard/CandidateD'
-import { RecruiterDashboard } from './components/dashboards/RecruiterDashboard/RecruiterD'
 function App() {
 	return (
 		<Routes>
