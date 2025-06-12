@@ -6,8 +6,7 @@ export const CompanyDashboard = () => {
   return (
     <>
       <DashboardHeader />
-      <main className="min-h-screen pt-20">
-    CompanyD
+      <main className="min-h-screen pt-20 bg-[#f6f7f9]">
         <Outlet />
       </main>
       <DashboardFooter />

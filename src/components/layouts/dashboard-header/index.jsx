@@ -47,42 +47,45 @@ export const DashboardHeader = () => {
 
   return (
     <header className="ai-header">
-      <div className="ai-container">
+      <div className="flex items-center justify-between px-4 py-2">
         <a href="/" className="ai-logo">
           OneMeet
         </a>
 
         <nav className="ai-nav">
-          <ul className="flex items-center ">
+          <ul className="flex items-center">
             {currentLinks.map((item, i) => (
               <NavLink key={i} to={item.pathName} className="underline-hover">
-                <li className=" underline-hover text-[14px] font-semibold">
+                <li className=" underline-hover text-[14px] font-semibold ">
                   {item.navName}
                 </li>
               </NavLink>
             ))}
           </ul>
         </nav>
-        <div className=" lg:hidden">
-          <nav className={`ai-nav ${menuOpen ? "show" : ""}`}>
-            <ul className="flex flex-col ">
-              {currentLinks.map((item, i) => (
-                <NavLink key={i} to={item.pathName} className="underline-hover">
-                  <li className=" underline-hover text-[14px] font-semibold ">
-                    {item.navName}
-                  </li>
-                </NavLink>
-              ))}
-            </ul>
+        <div className="bg-sky-600 block lg:hidden">
+          <nav className={`ai-nav ${menuOpen ? "show" : ""} `}>
+            <div className="bg-amber-600 relative">
+              <ul className="flex flex-col  left-0">
+                {currentLinks.map((item, i) => (
+                  <NavLink
+                    key={i}
+                    to={item.pathName}
+                    className="underline-hover"
+                  >
+                    <li className=" underline-hover text-[14px] font-semibold">
+                      {item.navName}
+                    </li>
+                  </NavLink>
+                ))}
+              </ul>
+            </div>
           </nav>
         </div>
-        <button
-            className="block sm:hidden"
-          >
-             <SheetNavigation/>
-          </button>
+        <button className="block sm:hidden">
+          <SheetNavigation />
+        </button>
         <div className="hidden sm:flex items-center gap-4">
-          
           <button
             className="hidden md:block  menu-toggle"
             onClick={toggleMenu}
@@ -91,10 +94,9 @@ export const DashboardHeader = () => {
           >
             ☰
           </button>
-       
+
           <button className="ai-cta">Login</button>
         </div>
-
       </div>
     </header>
   );
