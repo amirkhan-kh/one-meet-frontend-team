@@ -6,8 +6,11 @@ export const CandidateDashboard = () => {
   return (
     <>
       <DashboardHeader />
+      <main className="min-h-screen pt-20">
+      {/* CandidateD */}
+=======
       <main className="min-h-screen pt-20 bg-[#f6f7f9]">
-        CandidateDashboard
+      CandidateD
         <Outlet />
       </main>
       <DashboardFooter/>
