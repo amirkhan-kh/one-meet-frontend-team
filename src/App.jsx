@@ -1,4 +1,5 @@
-import {  Routes, Route } from "react-router-dom";
+import { Route, Routes } from 'react-router-dom'
+
 
 import LandingPage from "./pages/LandingPage";
 import SignupPage from "./components/auth/Signup/SignupPage";
@@ -52,8 +53,8 @@ function App() {
         <Route path="profile-recruiter" element={ <ProfilerecruiterRec/> }/>
       </Route>
       
-    </Routes>
+	</Routes>
   );
 }
 
-export default App;
+export default App
