@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import "./style.css";
 import { BsBarChartLine } from "react-icons/bs";
 import { MdDone } from "react-icons/md";
-import AvilablesPlans from "@/sections/company-pages/avilables-plans";
+import AvailablePlans from '@/sections/company-pages/availabile-section';
+import PaymentsMethod from '@/sections/company-pages/payments-method';
 import {
   Dialog,
   DialogContent,
@@ -11,7 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import PaymnetMethod from "@/sections/company-pages/payment-mthod";
 
 export const Plans = () => {
   return (
@@ -60,7 +60,7 @@ export const Plans = () => {
             <div className="w-[100%] md:w-[20%]">
               <Dialog>
                 <DialogTrigger className="ai-cta">
-                  Change Select Plan
+                  Change Subscribe Plan
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
@@ -77,8 +77,8 @@ export const Plans = () => {
         </div>
       </div>
 
-      <AvilablesPlans />
-      <PaymnetMethod />
+      <AvailablePlans />
+      <PaymentsMethod />
     </div>
   );
 };
