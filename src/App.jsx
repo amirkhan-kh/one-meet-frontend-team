@@ -1,24 +1,25 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom"
 
-import LandingPage from "./pages/LandingPage";
-import SignupPage from "./components/auth/Signup/SignupPage";
-import LoginPage from "./components/auth/Login/LoginPage";
-import ForgotPassword from "./components/auth/Login/ForgotPassword";
-import { AdminD } from "./components/Dashboards/AdminDashboard/AdminD";
-import { CandidateD } from "./components/Dashboards/CandidateDashboard/CandidateD";
-import { CompanyD } from "./components/Dashboards/CompanyDashboard/CompanyD";
-import { RecruiterD } from "./components/Dashboards/RecruiterDashboard/RecruiterD";
-import { Plans } from "./pages/company/Plans";
-import { ProfileCompany } from "./pages/company/ProfileCompany";
-import { Control, DataManagement, Payments, SystemLogs } from "./pages/admin";
-import { Feedback, JoinInterviews, ProfileCandidate } from "./pages/candidate";
+
+import ForgotPassword from "./components/auth/Login/ForgotPassword"
+import LoginPage from "./components/auth/Login/LoginPage"
+import SignupPage from "./components/auth/Signup/SignupPage"
+import { AdminD } from "./components/Dashboards/AdminDashboard/AdminD"
+import { CandidateD } from "./components/Dashboards/CandidateDashboard/CandidateD"
+import { CompanyD } from "./components/Dashboards/CompanyDashboard/CompanyD"
+import { RecruiterD } from "./components/Dashboards/RecruiterDashboard/RecruiterD"
+import { Control, DataManagement, Payments, SystemLogs } from "./pages/admin"
+import { Feedback, JoinInterviews, ProfileCandidate } from "./pages/candidate"
+import CompanyHomeD from "./pages/company/DashboardC"
+import { Plans } from "./pages/company/Plans"
+import { ProfileCompany } from "./pages/company/ProfileCompany"
+import LandingPage from "./pages/LandingPage"
 import {
   CandidateRec,
   CompanyRec,
   InterviewsRec,
   ProfilerecruiterRec,
-} from "./pages/recruiter";
-import CompanyHomeD from "./pages/company/DashboardC";
+} from "./pages/recruiter"
 function App() {
   return (
     <Routes>
@@ -28,7 +29,6 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
 
       {/* Dashboards */}
-
       {/* Candidate */}
       <Route path="/candidate-dashboard" element={<CandidateD />}>
         <Route path="feedback" element={<Feedback />} />
@@ -59,7 +59,6 @@ function App() {
         <Route path="profile-recruiter" element={<ProfilerecruiterRec />} />
       </Route>
     </Routes>
-  );
+  )
 }
-
 export default App
