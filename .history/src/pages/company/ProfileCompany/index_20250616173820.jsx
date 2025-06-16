@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import "./style.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // import { useDispatch, useSelector } from "react-redux";
@@ -31,8 +31,8 @@ console.log(status);
   //   dispatch(fetchCompanyById());
   // }, [dispatch]);
 
-  // if (status === 'loading') return <p>Yuklanmoqda...</p>;
-  // if (status === 'failed') return <p>Xatolik: {error}</p>;
+  if (status === 'loading') return <p>Yuklanmoqda...</p>;
+  if (status === 'failed') return <p>Xatolik: {error}</p>;
 
   return (
     <div className=" px-4 lg:px-40 py-8">
@@ -71,7 +71,13 @@ console.log(status);
                 Manage Subscription Plan
               </Button>
           </div>
-       
+          {companies.map((company) => (
+          <li key={company.id} className="p-4 border rounded bg-white shadow">
+            <p><strong>Nomi:</strong> {company.name}</p>
+            <p><strong>ID:</strong> {company.id}</p>
+            {/* boshqa ma'lumotlar ham bo‘lsa ko‘rsatishingiz mumkin */}
+          </li>
+        ))}
         </div>
 
 

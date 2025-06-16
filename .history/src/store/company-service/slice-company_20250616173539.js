@@ -46,7 +46,7 @@ const companySlice = createSlice({
         state.status = 'succeeded';
         state.companies = action.payload;
       })
-      .addCase(fetchCompanyById.rejected, (state, action) => {
+      .addCase(fetchCompanies.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error?.message || 'Xatolik yuz berdi';
       })

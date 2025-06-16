@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import "./style.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // import { useDispatch, useSelector } from "react-redux";

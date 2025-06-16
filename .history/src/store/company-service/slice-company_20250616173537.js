@@ -42,11 +42,11 @@ const companySlice = createSlice({
       .addCase(fetchCompanyById.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchCompanyById.fulfilled, (state, action) => {
+      .addCase(fetchCompanies.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.companies = action.payload;
       })
-      .addCase(fetchCompanyById.rejected, (state, action) => {
+      .addCase(fetchCompanies.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error?.message || 'Xatolik yuz berdi';
       })

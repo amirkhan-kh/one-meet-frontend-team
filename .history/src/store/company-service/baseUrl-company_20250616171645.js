@@ -5,6 +5,5 @@ export const companyUrlByToken = axios.create({
   withCredentials: true,
 });
 
-axios.defaults.withCredentials = true;
 
 export const companyURl = `${import.meta.env.VITE_COMPANY_API}`

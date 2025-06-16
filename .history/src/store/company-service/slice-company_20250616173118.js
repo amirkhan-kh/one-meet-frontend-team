@@ -4,11 +4,11 @@ import axios from "axios";
 
 
 //GET request
-export const fetchCompanyById = createAsyncThunk('company/fetchCompanyById', async (id) => {
+export const fetchCompanies = createAsyncThunk('company/fetchCompanies', async () => {
+  
   const response = await axios.get(`${companyURl}/company/${id}`);
   return response.data;
 });
-
 
 //PUT request
 export const updateCompany = createAsyncThunk(
@@ -39,14 +39,14 @@ const companySlice = createSlice({
   extraReducers: (builder) => {
     builder
       // GET
-      .addCase(fetchCompanyById.pending, (state) => {
+      .addCase(fetchCompanies.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchCompanyById.fulfilled, (state, action) => {
+      .addCase(fetchCompanies.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.companies = action.payload;
       })
-      .addCase(fetchCompanyById.rejected, (state, action) => {
+      .addCase(fetchCompanies.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error?.message || 'Xatolik yuz berdi';
       })

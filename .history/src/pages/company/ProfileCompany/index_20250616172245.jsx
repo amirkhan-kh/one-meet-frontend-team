@@ -1,18 +1,17 @@
 import { Input } from "@/components/ui/input";
 import "./style.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import { useDispatch, useSelector } from "react-redux";
-// import { fetchCompanyById } from "@/store/company-service/slice-company";
+import { useDispatch } from "react-redux";
+import { fetchCompanies } from "@/store/company-service/slice-company";
 
 export const ProfileCompany = () => {
 
-  // const dispatch = useDispatch();
-  // const { companies, status, error } = useSelector((state) => state.company);
+  const dispatch = useDispatch();
+  const { companies, status, error } = useSelector((state) => state.company);
   const [logo, setLogo] = useState(null);
   const fileInputRef = useRef(null);
-console.log(status);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -27,12 +26,12 @@ console.log(status);
 
   };
 
-  // useEffect(() => {
-  //   dispatch(fetchCompanyById());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchCompanies());
+  }, [dispatch]);
 
-  // if (status === 'loading') return <p>Yuklanmoqda...</p>;
-  // if (status === 'failed') return <p>Xatolik: {error}</p>;
+  if (status === 'loading') return <p>Yuklanmoqda...</p>;
+  if (status === 'failed') return <p>Xatolik: {error}</p>;
 
   return (
     <div className=" px-4 lg:px-40 py-8">
@@ -71,7 +70,6 @@ console.log(status);
                 Manage Subscription Plan
               </Button>
           </div>
-       
         </div>
 
 
