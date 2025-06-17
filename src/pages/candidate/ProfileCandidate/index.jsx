@@ -6,7 +6,7 @@ import Notifications from "@/components/dashboards/CandidateDashboard/components
 export const ProfileCandidate = () => {
   const [activeTab, setActiveTab] = useState("personal");
   return (
-    <div className="px-6 py-5">
+    <div className="container">
       <div className="mb-8">
         <p className="font-bold text-2xl mb-4">Your Profile</p>
         <p>Manage your personal information and account settings</p>
