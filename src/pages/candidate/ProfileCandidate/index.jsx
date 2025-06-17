@@ -1,8 +1,9 @@
 import { useState } from "react";
 import "./style.css";
-import PersonalInfo from "@/components/ProfileCandidate/PersonalInfo";
-import AccountSettings from "@/components/ProfileCandidate/AccountSettings";
-import Notifications from "@/components/ProfileCandidate/Notifications";
+import PersonalInfo from "@/components/dashboards/CandidateDashboard/components/PersonalInfo";
+import AccountSettings from "@/components/dashboards/CandidateDashboard/components/AccountSettings";
+import Notifications from "@/components/dashboards/CandidateDashboard/components/Notifications";
+
 export const ProfileCandidate = () => {
   const [activeTab, setActiveTab] = useState("personal");
   return (
@@ -56,7 +57,6 @@ export const ProfileCandidate = () => {
             </button>
           </div>
         </div>
-        <div>ProfileCandidate</div>
 
         {/* Content */}
         <div className="w-full border border-solid border-gray-200 rounded-lg p-5">
