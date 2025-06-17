@@ -20,6 +20,7 @@ import CandidateRec from './pages/recruiter/CandidatesRec'
 import { CompanyDashboard } from './components/dashboards/CompanyDashboard/CompanyD'
 import { AdminDashboard } from './components/dashboards/AdminDashboard/AdminD'
 import { CandidateDashboard } from './components/dashboards/CandidateDashboard/CandidateD'
+import CandidateHome from './pages/candidate/Dashboard'
 function App() {
 	return (
 		<Routes>
@@ -32,6 +33,7 @@ function App() {
 
 			{/* Candidate */}
 			<Route path='/candidate-dashboard' element={<CandidateDashboard />}>
+        <Route index element={<CandidateHome />} />
 				<Route path='feedback' element={<Feedback />} />
 				<Route path='join-interview' element={<JoinInterviews />} />
 				<Route

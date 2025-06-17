@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./style.css";
 import PersonalInfo from "@/components/dashboards/CandidateDashboard/components/PersonalInfo";
 import AccountSettings from "@/components/dashboards/CandidateDashboard/components/AccountSettings";
 import Notifications from "@/components/dashboards/CandidateDashboard/components/Notifications";
@@ -7,15 +6,15 @@ import Notifications from "@/components/dashboards/CandidateDashboard/components
 export const ProfileCandidate = () => {
   const [activeTab, setActiveTab] = useState("personal");
   return (
-    <div className="container">
+    <div className="px-6 py-5">
       <div className="mb-8">
         <p className="font-bold text-2xl mb-4">Your Profile</p>
         <p>Manage your personal information and account settings</p>
       </div>
-      <div className="flex gap-8">
+      <div className="flex gap-8 flex-col md:flex-row">
         {/* Sidebar */}
         <div>
-          <div className="w-[350px] border border-solid border-gray-200 rounded-lg p-10 text-center mb-5">
+          <div className="border border-solid border-gray-200 rounded-lg p-10 text-center mb-5">
             <div className="w-24 h-24 rounded-full bg-gray-200 mx-auto"></div>
             <button
               onClick={() => alert("Upload Photo")}
