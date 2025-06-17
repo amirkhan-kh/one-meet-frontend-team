@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import "./style.css";
 
 export default function CandidateHome() {
-  const [activeTab, setActiveTab] = useState("completed");
+  const [activeTab, setActiveTab] = useState("pending");
 
   return (
     <div className="">
@@ -32,7 +32,7 @@ export default function CandidateHome() {
                     : "bg-gray-200"
                 }`}
               >
-                0
+                2
               </span>
             </button>
 

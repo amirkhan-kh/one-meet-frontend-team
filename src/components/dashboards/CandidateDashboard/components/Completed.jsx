@@ -1,6 +1,6 @@
 import React from 'react';
 
-const evaluations = [
+const completed = [
   {
     evaluation: "AI Tutor Written Exercise",
     from: "xAI",
@@ -35,17 +35,17 @@ export default function Completed() {
         <table className="min-w-full rounded-2xl bg-white">
           <thead>
             <tr>
-              <th className="px-4 py-2 text-left border-b">Evaluation</th>
-              <th className="px-4 py-2 text-left border-b">From</th>
-              <th className="px-4 py-2 text-left border-b">Completed</th>
+              <th className="px-4 py-3 text-left border-b">Evaluation</th>
+              <th className="px-4 py-3 text-left border-b">From</th>
+              <th className="px-4 py-3 text-left border-b">Completed</th>
             </tr>
           </thead>
           <tbody>
-            {evaluations.map((item, index) => (
+            {completed.map((item, index) => (
               <tr key={index} className="hover:bg-gray-50">
-                <td className="px-4 py-2 border-b">{item.evaluation}</td>
-                <td className="px-4 py-2 border-b">{item.from}</td>
-                <td className="px-4 py-2 border-b">{item.completed}</td>
+                <td className="px-4 py-3 border-b">{item.evaluation}</td>
+                <td className="px-4 py-3 border-b">{item.from}</td>
+                <td className="px-4 py-3 border-b">{item.completed}</td>
               </tr>
             ))}
           </tbody>
