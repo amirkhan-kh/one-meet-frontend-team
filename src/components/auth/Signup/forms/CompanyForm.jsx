@@ -1,153 +1,140 @@
 import { useState } from "react";
-import LinkedInOnlyForm from "./LinkedInOnlyForm";
+import { useNavigate } from "react-router-dom";
 
-export default function CompanyForm({ goBack }) {
-  const [hasBusinessEmail, setHasBusinessEmail] = useState(null);
-
-  const handleChoice = (choice) => {
-    setHasBusinessEmail(choice);
-  };
-
-  if (hasBusinessEmail === null) {
-    return (
-      <div className="compact-form no-shadow w-full max-w-md space-y-4">
-        <p className="text-sm text-gray-700 text-left">Do you have a business email address?</p>
-
-        <div className="flex justify-between gap-4">
-          <button
-            onClick={() => handleChoice(true)}
-            className="ai-cta slim-cta active-cta w-full"
-          >
-            Yes
-          </button>
-          <button
-            onClick={() => handleChoice(false)}
-            className="ai-cta slim-cta inactive-cta w-full"
-          >
-            No
-          </button>
-        </div>
-
-        <div className="form-links">
-          <AnimatedLink href="#" onClick={goBack} label="← Back" />
-        </div>
-      </div>
-    );
-  }
-
-  return hasBusinessEmail ? (
-    <BusinessForm goBack={goBack} />
-  ) : (
-    <LinkedInOnlyForm goBack={goBack} />
-  );
-}
-
-function BusinessForm({ goBack }) {
+export default function CompanyForm() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
-    email: "",
-    password: "",
+    timezone: "",
+    companyLogo: null,
     companyName: "",
-    companyCountry: "",
+    linkedIn: "",
+    website: "",
   });
 
-  const isFilled =
-    form.firstName && form.lastName && form.email && form.password && form.companyName && form.companyCountry;
-
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (e) => {
+    setForm((prev) => ({ ...prev, companyLogo: e.target.files[0] }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting business:", form);
+
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      alert("No token found. Please log in again.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("firstName", form.firstName);
+    formData.append("lastName", form.lastName);
+    formData.append("timezone", form.timezone);
+    formData.append("companyName", form.companyName);
+    formData.append("linkedIn", form.linkedIn);
+    if (form.website) {
+      formData.append("website", form.website);
+    }
+    if (form.companyLogo) {
+      formData.append("companyLogo", form.companyLogo);
+    }
+
+    const res = await fetch("/company/profile", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    if (data.success) {
+      navigate("/dashboard"); // yoki sizda mavjud redirect sahifasi
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="compact-form no-shadow w-full max-w-md space-y-3">
-      <label htmlFor="firstName" className="form-label">First Name</label>
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
+      <h2 className="form-title">Complete Company Profile</h2>
+
+      <label>First name</label>
       <input
         type="text"
-        id="firstName"
         name="firstName"
-        className="input-field slim-input"
         value={form.firstName}
         onChange={handleChange}
         required
+        className="input-field"
       />
 
-      <label htmlFor="lastName" className="form-label">Last Name</label>
+      <label>Last name</label>
       <input
         type="text"
-        id="lastName"
         name="lastName"
-        className="input-field slim-input"
         value={form.lastName}
         onChange={handleChange}
         required
+        className="input-field"
       />
 
-      <label htmlFor="email" className="form-label">Business Email</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        className="input-field slim-input"
-        value={form.email}
-        onChange={handleChange}
-        required
-      />
-
-      <label htmlFor="password" className="form-label">Password</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        className="input-field slim-input"
-        value={form.password}
-        onChange={handleChange}
-        required
-      />
-
-      <label htmlFor="companyName" className="form-label">Company Name</label>
+      <label>Your timezone</label>
       <input
         type="text"
-        id="companyName"
+        name="timezone"
+        value={form.timezone}
+        onChange={handleChange}
+        required
+        className="input-field"
+        placeholder="e.g. UTC+5"
+      />
+
+      <label>Upload company logo</label>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="input-field"
+      />
+
+      <label>Company name</label>
+      <input
+        type="text"
         name="companyName"
-        className="input-field slim-input"
         value={form.companyName}
         onChange={handleChange}
         required
+        className="input-field"
       />
 
-      <label htmlFor="companyCountry" className="form-label">Country</label>
+      <label>LinkedIn page</label>
       <input
-        type="text"
-        id="companyCountry"
-        name="companyCountry"
-        className="input-field slim-input"
-        value={form.companyCountry}
+        type="url"
+        name="linkedIn"
+        value={form.linkedIn}
         onChange={handleChange}
         required
+        className="input-field"
+        placeholder="https://linkedin.com/company/..."
       />
 
-      <button
-        type="submit"
-        className={`ai-cta slim-cta ${isFilled ? "active-cta" : "inactive-cta"}`}
-      >
-        Sign Up
-      </button>
+      <label>Website (optional)</label>
+      <input
+        type="url"
+        name="website"
+        value={form.website}
+        onChange={handleChange}
+        className="input-field"
+        placeholder="https://yourcompany.com"
+      />
 
-      <div className="form-links">
-        <AnimatedLink href="#" onClick={goBack} label="← Back" />
-      </div>
+      <button type="submit" className="ai-cta active-cta w-full">Submit</button>
     </form>
-  );
-}
-
-function AnimatedLink({ href, label, onClick }) {
-  return (
-    <a href={href} onClick={onClick} className="animated-link">{label}</a>
   );
 }

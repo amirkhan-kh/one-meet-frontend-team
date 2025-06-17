@@ -1,100 +1,114 @@
 import { useState } from "react";
-import { FaGoogle, FaLinkedin } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-export default function CandidateForm({ goBack }) {
+export default function CandidateProfileForm() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
-    email: "",
-    password: "",
+    timezone: "",
+    profilePicture: null,
+    bio: "",
   });
 
-  const isFilled = form.firstName && form.lastName && form.email && form.password;
-
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (e) => {
+    setForm((prev) => ({ ...prev, profilePicture: e.target.files[0] }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting candidate:", form);
+
+    const token = localStorage.getItem("authToken"); // yoki contextdan olingan bo'lishi mumkin
+    if (!token) {
+      alert("No token found. Please log in again.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("firstName", form.firstName);
+    formData.append("lastName", form.lastName);
+    formData.append("timezone", form.timezone);
+    if (form.profilePicture) {
+      formData.append("profilePicture", form.profilePicture);
+    }
+    if (form.bio) {
+      formData.append("bio", form.bio);
+    }
+
+    const res = await fetch("/candidate/profile", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    if (data.success) {
+      navigate("/dashboard"); // yoki boshqa tegishli route
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="compact-form no-shadow w-full max-w-md space-y-3">
-      <label htmlFor="firstName" className="form-label">First Name</label>
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
+      <h2 className="form-title">Complete Your Profile</h2>
+
+      <label>First name</label>
       <input
         type="text"
-        id="firstName"
         name="firstName"
-        className="input-field slim-input"
         value={form.firstName}
         onChange={handleChange}
         required
+        className="input-field"
       />
 
-      <label htmlFor="lastName" className="form-label">Last Name</label>
+      <label>Last name</label>
       <input
         type="text"
-        id="lastName"
         name="lastName"
-        className="input-field slim-input"
         value={form.lastName}
         onChange={handleChange}
         required
+        className="input-field"
       />
 
-      <label htmlFor="email" className="form-label">Email</label>
+      <label>Your timezone</label>
       <input
-        type="email"
-        id="email"
-        name="email"
-        className="input-field slim-input"
-        value={form.email}
+        type="text"
+        name="timezone"
+        value={form.timezone}
         onChange={handleChange}
         required
+        className="input-field"
+        placeholder="e.g. UTC+5, GMT+3, etc."
       />
 
-      <label htmlFor="password" className="form-label">Password</label>
+      <label>Upload profile picture</label>
       <input
-        type="password"
-        id="password"
-        name="password"
-        className="input-field slim-input"
-        value={form.password}
-        onChange={handleChange}
-        required
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="input-field"
       />
 
-      <button
-        type="submit"
-        className={`ai-cta slim-cta ${isFilled ? "active-cta" : "inactive-cta"}`}
-      >
-        Sign Up
-      </button>
+      <label>Bio (optional)</label>
+      <textarea
+        name="bio"
+        value={form.bio}
+        onChange={handleChange}
+        className="input-field"
+        placeholder="Write a short bio about yourself"
+      />
 
-      <div className="separator">or</div>
-
-      <div className="oauth-buttons vertical-oauth">
-        <button className="btn-google" type="button" onClick={() => console.log("Google")}>
-          <FaGoogle size={20} style={{ color: "#4285F4", marginRight: "8px" }} />
-          Continue with Google
-        </button>
-        <button className="btn-linkedin" type="button" onClick={() => console.log("LinkedIn")}>
-          <FaLinkedin size={20} style={{ color: "#0A66C2", marginRight: "8px" }} />
-          Continue with LinkedIn
-        </button>
-      </div>
-
-      <div className="form-links">
-        <AnimatedLink href="#" onClick={goBack} label="← Back" />
-      </div>
+      <button type="submit" className="ai-cta active-cta w-full">Submit</button>
     </form>
-  );
-}
-
-function AnimatedLink({ href, label, onClick }) {
-  return (
-    <a href={href} onClick={onClick} className="animated-link">{label}</a>
   );
 }

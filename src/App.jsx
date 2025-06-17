@@ -14,6 +14,9 @@ import { CompanyDashboard } from './components/dashboards/CompanyDashboard/Compa
 import { CandidateDashboard } from './components/dashboards/CandidateDashboard/CandidateD'
 import { RecruiterDashboard } from './components/dashboards/RecruiterDashboard/RecruiterD'
 import { AdminDashboard } from './components/dashboards/AdminDashboard/AdminD';
+import OAuthCallback from "./components/auth/OAuthCallback";
+
+
 function App() {
   return (
     <Routes>
@@ -21,7 +24,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/forgot-password" element={<ForgotPassword  />} />
       <Route path="/signup" element={<SignupPage />} />
-
+      <Route path="/oauth/callback" element={<OAuthCallback />} />
       {/* Dashboards */}
 
 
