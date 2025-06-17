@@ -71,7 +71,7 @@ export const DashboardHeader = () => {
           <nav
             className={`ai-nav ${
               menuOpen ? "show" : ""
-            } translate-y-0 h-[230px]`}
+            } translate-y-0 h-[225px]`}
           >
             <div className="flex gap-4 w-full pr-2 ">
               <div className="">
@@ -83,7 +83,7 @@ export const DashboardHeader = () => {
                       className="underline-hover "
                     >
                       <li
-                        className="underline-hover text-[15px] font-semibold py-2"
+                        className="underline-hover text-[14px] font-semibold py-2"
                         onMouseEnter={() => setHoveredItem(item)}
                         onMouseLeave={() => setHoveredItem(null)}
                       >

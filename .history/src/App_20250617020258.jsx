@@ -46,7 +46,7 @@ function App() {
 
       {/* Company */}
       <Route path="/company-dashboard" element={ <CompanyDashboard/>} >
-	  	<Route index element={ <DashboardCompany/>}/>
+	  	<Route index element={ <CompanyHomeD/>}/>
         <Route path="plans" element={ <Plans/> }/>
         <Route path="profile-company" element={ <ProfileCompany/> }/>
       </Route>

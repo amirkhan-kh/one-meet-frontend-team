@@ -15,6 +15,7 @@ import { CandidateDashboard } from './components/dashboards/CandidateDashboard/C
 import { RecruiterDashboard } from './components/dashboards/RecruiterDashboard/RecruiterD'
 import { AdminDashboard } from './components/dashboards/AdminDashboard/AdminD';
 import DashboardCompany from './pages/company/DashboardCompany';
+import CompanyHomeD from './pages/company/DashboardC';
 function App() {
   return (
     <Routes>
@@ -46,7 +47,7 @@ function App() {
 
       {/* Company */}
       <Route path="/company-dashboard" element={ <CompanyDashboard/>} >
-	  	<Route index element={ <DashboardCompany/>}/>
+	  	<Route index element={ <CompanyHomeD/>}/>
         <Route path="plans" element={ <Plans/> }/>
         <Route path="profile-company" element={ <ProfileCompany/> }/>
       </Route>

@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   navigationAdminDashboard,
   navigationCompanyDashboard,
@@ -8,14 +8,17 @@ import {
 import "./style.css";
 import { useEffect, useState } from "react";
 import { SheetNavigation } from "@/components/ui-elements/sheet";
+
 import HoveredInfo from "@/components/ui-elements/hovered-info";
+
+
 export const DashboardHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
 
   const location = useLocation();
   const path = location.pathname;
-  const pathHome = "/";
+
   let currentLinks;
   switch (true) {
     case path.startsWith("/admin-dashboard"):
@@ -31,7 +34,7 @@ export const DashboardHeader = () => {
       currentLinks = navigationCandidateDashboard;
       break;
     default:
-      currentLinks = pathHome;
+      currentLinks = [];
   }
 
   useEffect(() => {
@@ -43,47 +46,49 @@ export const DashboardHeader = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
 
   return (
     <header className="ai-header">
+
       <div className="flex items-center justify-between px-6 py-3">
+
         <a href="/" className="ai-logo">
           OneMeet
         </a>
 
-        <nav className="ai-nav">
-          <ul className="flex items-center ">
+        <nav className="ai-nav hidden lg:block">
+          <ul className="flex items-center gap-6">
             {currentLinks.map((item, i) => (
               <NavLink key={i} to={item.pathName} className="underline-hover">
-                <li className=" underline-hover text-[14px] font-semibold">
-                  {item.navName}
-                </li>
+                <li className="text-[14px] font-semibold">{item.navName}</li>
               </NavLink>
             ))}
           </ul>
         </nav>
+
 
         {/* sm dan lg gacha block navigation */}
         <div className="hidden sm:block lg:hidden">
           <nav
             className={`ai-nav ${
               menuOpen ? "show" : ""
-            } translate-y-0 h-[230px]`}
+            } translate-y-0 h-[205px]`}
           >
-            <div className="flex gap-4 w-full pr-2 ">
+            <div className="flex gap-4 w-full pr-2">
               <div className="">
-                <ul className="text-left pl-[20px] w-[170px]">
+                <ul className="text-left pl-[20px]">
                   {currentLinks.map((item, i) => (
                     <NavLink
                       key={i}
                       to={item.pathName}
-                      className="underline-hover "
+                      className="underline-hover"
                     >
                       <li
-                        className="underline-hover text-[15px] font-semibold py-2"
+                        className="underline-hover text-[14px] font-semibold"
                         onMouseEnter={() => setHoveredItem(item)}
                         onMouseLeave={() => setHoveredItem(null)}
                       >
@@ -100,11 +105,12 @@ export const DashboardHeader = () => {
                       {hoveredItem.navName}
                     </h4>
                     <p>
-                      <HoveredInfo hoveredItem={hoveredItem} />
+                     <HoveredInfo hoveredItem={hoveredItem} />
+
                     </p>
                   </div>
                 ) : (
-                  <HoveredInfo hoveredItem={hoveredItem} />
+                     <HoveredInfo hoveredItem={hoveredItem} />
                 )}
               </div>
             </div>
@@ -131,6 +137,41 @@ export const DashboardHeader = () => {
           </div>
 
           <button className="hidden sm:block ai-cta">Login</button>
+          <div className="bg-sky-600 block lg:hidden">
+            <nav className={`ai-nav ${menuOpen ? "show" : ""} `}>
+              <div className=" relative">
+                <ul className="flex flex-col  left-0">
+                  {currentLinks.map((item, i) => (
+                    <NavLink
+                      key={i}
+                      to={item.pathName}
+                      className="underline-hover"
+                    >
+                      <li className=" underline-hover text-[14px] font-semibold">
+                        {item.navName}
+                      </li>
+                    </NavLink>
+                  ))}
+                </ul>
+              </div>
+            </nav>
+          </div>
+          <button className="block sm:hidden">
+            <SheetNavigation />
+          </button>
+          <div className="hidden sm:flex items-center gap-4">
+            <button
+              className="menu-toggle"
+              onClick={toggleMenu}
+              aria-label="Toggle navigation menu"
+              aria-expanded={menuOpen}
+            >
+              ☰
+            </button>
+
+            <button className="ai-cta">Login</button>
+
+          </div>
         </div>
       </div>
     </header>

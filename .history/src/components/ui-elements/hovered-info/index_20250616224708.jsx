@@ -10,7 +10,7 @@ const HoveredInfo = ({ hoveredItem }) => {
   
 
   return (
-    <div className=" w-full p-4 text-black ">
+    <div className=" w-full p-4 text-black bg">
       {hoveredItem ? (
         <>
           <p>{info?.title || "Ma'lumot mavjud emas."}</p>

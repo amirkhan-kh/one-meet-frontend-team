@@ -71,19 +71,19 @@ export const DashboardHeader = () => {
           <nav
             className={`ai-nav ${
               menuOpen ? "show" : ""
-            } translate-y-0 h-[230px]`}
+            } translate-y-0 h-[205px]`}
           >
-            <div className="flex gap-4 w-full pr-2 ">
+            <div className="flex gap-4 w-full pr-2">
               <div className="">
-                <ul className="text-left pl-[20px] w-[170px]">
+                <ul className="text-left pl-[20px]">
                   {currentLinks.map((item, i) => (
                     <NavLink
                       key={i}
                       to={item.pathName}
-                      className="underline-hover "
+                      className="underline-hover"
                     >
                       <li
-                        className="underline-hover text-[15px] font-semibold py-2"
+                        className="underline-hover text-[14px] font-semibold bg-amber-500 my-2"
                         onMouseEnter={() => setHoveredItem(item)}
                         onMouseLeave={() => setHoveredItem(null)}
                       >

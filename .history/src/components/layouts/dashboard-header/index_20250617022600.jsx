@@ -83,7 +83,7 @@ export const DashboardHeader = () => {
                       className="underline-hover "
                     >
                       <li
-                        className="underline-hover text-[15px] font-semibold py-2"
+                        className="underline-hover text-[16px] font-semibold py-2"
                         onMouseEnter={() => setHoveredItem(item)}
                         onMouseLeave={() => setHoveredItem(null)}
                       >

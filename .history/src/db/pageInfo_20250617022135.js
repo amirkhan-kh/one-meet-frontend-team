@@ -7,8 +7,8 @@ const pageInfo = {
   // Candidate Dashboard
   "/candidate-dashboard": { title: "Candidate Panel", description: "Dashboard for candidates." },
   "feedback": { title: "Feedback", description: "Provide your feedback on interviews here." },
-  "join-interview": { title: "Join Interview", description: "Page to join scheduled interviews." },
-  "profile-candidate": { title: "Profile", description: "Edit your candidate profile here." },
+  "/candidate-dashboard/join-interview": { title: "Join Interview", description: "Page to join scheduled interviews." },
+  "/candidate-dashboard/profile-candidate": { title: "Profile", description: "Edit your candidate profile here." },
 
   // Admin Dashboard
   "/admin-dashboard": { title: "Admin Panel", description: "Dashboard for administrators." },

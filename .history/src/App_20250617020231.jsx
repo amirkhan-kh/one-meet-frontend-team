@@ -14,7 +14,6 @@ import { CompanyDashboard } from './components/dashboards/CompanyDashboard/Compa
 import { CandidateDashboard } from './components/dashboards/CandidateDashboard/CandidateD'
 import { RecruiterDashboard } from './components/dashboards/RecruiterDashboard/RecruiterD'
 import { AdminDashboard } from './components/dashboards/AdminDashboard/AdminD';
-import DashboardCompany from './pages/company/DashboardCompany';
 function App() {
   return (
     <Routes>
