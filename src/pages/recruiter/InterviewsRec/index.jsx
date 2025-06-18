@@ -1,6 +1,4 @@
-'use client'
 
-import { MainLayout } from '@/components/dashboards/RecruiterDashboard/components/main-layout'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -43,6 +41,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { MainLayout } from '../CandidatesRec/layout/main-layout'
 
 export const InterviewsRec = () => {
 	const [interviews, setInterviews] = useState([])

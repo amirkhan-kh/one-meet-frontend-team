@@ -15,20 +15,4 @@ export const RecruiterD = () => {
 		</>
 	)
 }
-import { Outlet } from "react-router-dom";
-import "./RecruiterD";
-import { DashboardFooter } from "../../layouts/dashboard-footer";
-import { DashboardHeader } from "../../layouts/dashboard-header";
-export const RecruiterDashboard = () => {
-  return (
-    <>
-      <DashboardHeader />
-      <main className="min-h-screen pt-20">
-        RecruiterD
-        <Outlet />
-      </main>
-      <DashboardFooter />
-    </>
-  );
-};
->>>>>>> f4b89befb159fc11d1f60303a039e71d1a85f397
+7

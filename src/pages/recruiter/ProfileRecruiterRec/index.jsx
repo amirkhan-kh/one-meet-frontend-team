@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 
-import { MainLayout } from '@/components/dashboards/RecruiterDashboard/components/main-layout'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -18,6 +17,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import ProfileSkeleton from './components/ProfileSkeleton'
+import { MainLayout } from '../CandidatesRec/layout/main-layout'
 
 export const ProfilerecruiterRec = () => {
 	const [user, setUser] = useState(null)

@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 
-import { MainLayout } from '@/components/dashboards/RecruiterDashboard/components/main-layout'
 import {
 	Building2,
 	CheckCircle,
@@ -23,6 +22,7 @@ import {
 	RefreshCw,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { MainLayout } from '../CandidatesRec/layout/main-layout'
 
 export const CompanyRec=()=> {
 	const [companies, setCompanies] = useState([])
