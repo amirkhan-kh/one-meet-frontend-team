@@ -19,10 +19,11 @@ export const navigationRecruiterDashboard = [
     { navName: "Profile", pathName: "profile-recruiter"},
 ];
 export const navigationCandidateDashboard = [
-    { navName: "Home", pathName: "/"},
+    // { navName: "Home", pathName: "/"},
     { navName: "Dashboard", pathName: "/candidate-dashboard"},
-    { navName: "Join Interview", pathName: "join-interview"},
-    { navName: "Feedback", pathName: "feedback"},
+    // { navName: "Join Interview", pathName: "join-interview"},
+    // { navName: "Feedback", pathName: "feedback"},
+    { navName: "Help", pathName: "/help"},
     { navName: "Profile", pathName: "profile-candidate"},
 ]
 

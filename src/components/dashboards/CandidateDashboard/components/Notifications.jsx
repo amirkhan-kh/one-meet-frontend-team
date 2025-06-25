@@ -11,8 +11,8 @@ export default function Notifications() {
       description: "Get reminded about upcoming interviews",
     },
     {
-      title: "Feedback Notifications",
-      description: "Get notified when feedback is available",
+      title: "Marketing Notifications",
+      description: "Get notified about relevant marketing updates and promotions",
     },
   ];
   return (
