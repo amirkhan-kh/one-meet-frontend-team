@@ -42,7 +42,7 @@ function App() {
       <Route path="/complete-profile/company" element={<CompanyCompleteProfile />} />
 
       {/* Candidate Dashboard */}
-      <Route path="/candidate" element={<CandidateDashboard />}>
+      <Route path="/candidate-dashboard" element={<CandidateDashboard />}>
         <Route index element={<CandidateHome />} />
         <Route path="feedback" element={<Feedback />} />
         <Route path="join-interview" element={<JoinInterviews />} />
@@ -50,7 +50,7 @@ function App() {
       </Route>
 
       {/* Admin Dashboard */}
-      <Route path="/admin" element={<AdminDashboard />}>
+      <Route path="/admin-dashboard" element={<AdminDashboard />}>
         <Route index element={<ComapaniesTable />} />
         <Route path="candidate-table" element={<CandidateTable />} />
         <Route path="interviews-table" element={<InterviewsTable />} />
@@ -61,14 +61,14 @@ function App() {
       </Route>
 
       {/* Company Dashboard */}
-      <Route path="/company" element={<CompanyDashboard />}>
+      <Route path="/company-dashboard" element={<CompanyDashboard />}>
         <Route index element={<DashboardCompany />} />
         <Route path="plans" element={<Plans />} />
         <Route path="profile-company" element={<ProfileCompany />} />
       </Route>
 
       {/* Recruiter Dashboard */}
-      <Route path="/recruiter" element={<RecruiterDashboard />}>
+      <Route path="/recruiter-dashboard" element={<RecruiterDashboard />}>
         <Route path="candidate-rec" element={<CandidateRec />} />
         <Route path="company-rec" element={<CompanyRec />} />
         <Route path="interviews-rec" element={<InterviewsRec />} />
