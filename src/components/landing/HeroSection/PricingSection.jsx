@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 const plans = [
   {
-    name: 'Free',
+    name: 'Free Trial',
     price: '$0',
     recruiters: '1 recruiter',
-    interviews: '3 interviews / mo',
+    interviews: '3 interview credits',
     perks: [
       'All features included',
       'Screen + face recording',
@@ -16,28 +16,28 @@ const plans = [
     buttonText: 'Start Free',
   },
   {
-    name: 'Starter',
-    price: '$19/mo',
+    name: 'Starter Pack',
+    price: '$19',
     recruiters: 'Up to 5 recruiters',
-    interviews: '30 interviews / mo',
+    interviews: '30 interview credits',
     perks: [
-      'Everything in Free',
-      'Company dashboard access',
+      'Everything in Free Trial',
+      'Team dashboard access',
       'Multiple recruiters',
     ],
-    buttonText: 'Choose Starter',
+    buttonText: 'Buy Starter Pack',
   },
   {
-    name: 'Pro',
-    price: '$99/mo',
+    name: 'Pro Bundle',
+    price: '$99',
     recruiters: 'Up to 15 recruiters',
-    interviews: '300 interviews / mo',
+    interviews: '300 interview credits',
     perks: [
-      'Everything in Starter',
-      'Higher volume usage',
-      'More recruiters supported',
+      'Everything in Starter Pack',
+      'Bulk credit package',
+      'Advanced usage reporting',
     ],
-    buttonText: 'Choose Pro',
+    buttonText: 'Buy Pro Bundle',
   },
 ];
 
@@ -45,9 +45,9 @@ export default function PricingSection() {
   const navigate = useNavigate();
   return (
     <section className="pricing-section" id="pricing">
-      <h2 className="pricing-heading">Simple Pricing for Smart Hiring</h2>
+      <h2 className="pricing-heading">Top-Up Credits, Use Anytime</h2>
       <p className="pricing-subtitle">
-        Get started with AI-powered interviews. No setup. No credit card.
+        Pay only when you need more interview credits. No subscriptions. No commitment.
       </p>
       <div className="pricing-grid">
         {plans.map(plan => (
@@ -61,7 +61,9 @@ export default function PricingSection() {
                 <li key={idx}>{perk}</li>
               ))}
             </ul>
-            <button className="ai-cta" onClick={() => navigate('/signup')}>{plan.buttonText}</button>
+            <button className="ai-cta" onClick={() => navigate('/signup')}>
+              {plan.buttonText}
+            </button>
           </div>
         ))}
       </div>

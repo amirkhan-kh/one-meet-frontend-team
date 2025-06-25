@@ -4,6 +4,11 @@ import LandingPage from "./pages/LandingPage";
 import SignupPage from "./components/auth/Signup/SignupPage";
 import LoginPage from "./components/auth/Login/LoginPage";
 import ForgotPassword from "./components/auth/Login/ForgotPassword";
+import Verify from './components/auth/Signup/authVerify/Verify';
+
+import CandidateCompleteProfile from './components/auth/Signup/complete/CandidateCompleteProfile';
+import RecruiterCompleteProfile from './components/auth/Signup/complete/RecruiterCompleteProfile';
+import CompanyCompleteProfile from './components/auth/Signup/complete/CompanyCompleteProfile';
 
 import { Plans } from "./pages/company/Plans";
 import { ProfileCompany } from "./pages/company/ProfileCompany";
@@ -24,21 +29,28 @@ import CandidateHome from './pages/candidate/Dashboard';
 function App() {
   return (
     <Routes>
+      {/* Public */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/auth/verify" element={<Verify />} />
 
-      {/* Candidate */}
-      <Route path="/candidate-dashboard" element={<CandidateDashboard />}>
+      {/* Complete profile routes */}
+      <Route path="/complete-profile/candidate" element={<CandidateCompleteProfile />} />
+      <Route path="/complete-profile/recruiter" element={<RecruiterCompleteProfile />} />
+      <Route path="/complete-profile/company" element={<CompanyCompleteProfile />} />
+
+      {/* Candidate Dashboard */}
+      <Route path="/candidate" element={<CandidateDashboard />}>
         <Route index element={<CandidateHome />} />
         <Route path="feedback" element={<Feedback />} />
         <Route path="join-interview" element={<JoinInterviews />} />
         <Route path="profile-candidate" element={<ProfileCandidate />} />
       </Route>
 
-      {/* Admin */}
-      <Route path="/admin-dashboard" element={<AdminDashboard />}>
+      {/* Admin Dashboard */}
+      <Route path="/admin" element={<AdminDashboard />}>
         <Route index element={<ComapaniesTable />} />
         <Route path="candidate-table" element={<CandidateTable />} />
         <Route path="interviews-table" element={<InterviewsTable />} />
@@ -48,15 +60,15 @@ function App() {
         <Route path="admins-table" element={<AdminsTable />} />
       </Route>
 
-      {/* Company */}
-      <Route path="/company-dashboard" element={<CompanyDashboard />}>
+      {/* Company Dashboard */}
+      <Route path="/company" element={<CompanyDashboard />}>
         <Route index element={<DashboardCompany />} />
         <Route path="plans" element={<Plans />} />
         <Route path="profile-company" element={<ProfileCompany />} />
       </Route>
 
-      {/* Recruiter */}
-      <Route path="/recruiter-dashboard" element={<RecruiterDashboard />}>
+      {/* Recruiter Dashboard */}
+      <Route path="/recruiter" element={<RecruiterDashboard />}>
         <Route path="candidate-rec" element={<CandidateRec />} />
         <Route path="company-rec" element={<CompanyRec />} />
         <Route path="interviews-rec" element={<InterviewsRec />} />

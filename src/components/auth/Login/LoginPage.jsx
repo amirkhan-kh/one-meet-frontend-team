@@ -2,22 +2,63 @@ import { FaGoogle, FaLinkedin } from "react-icons/fa";
 import Logo from "../../../assets/one_meet_logo.png";
 import "../../../styles/forms.css";
 import { useState } from "react";
+import axios from "axios";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const isFilled = form.email.trim() !== "" && form.password.trim() !== "";
 
   const handleInputChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!isFilled || loading) return;
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await axios.post("https://api.onemeet.app/auth/login", {
+        email: form.email,
+        password: form.password,
+      });
+
+      const { data } = response;
+
+      if (data.success) {
+        const { accessToken, refreshToken, authRole } = data.data;
+
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        const rolePath = authRole.toLowerCase(); // e.g., "candidate", "recruiter", etc.
+        window.location.href = `/${rolePath}`;
+      } else {
+        setError(data.reason || "Login failed.");
+      }
+    } catch (err) {
+      setError(err.response?.data?.reason || "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="page-background">
       <div className="form-container compact-form no-shadow">
-        <img src={Logo} alt="OneMeet Logo" className="logo bigger-logo" />
-        <h1 className="hero-subtitle fixed-width-subtitle match-bg-subtitle">Welcome to OneMeet</h1>
+        <div className="logo-container">
+          <img src={Logo} alt="OneMeet Logo" className="logo bigger-logo" />
+        </div>
+        <h1 className="hero-subtitle fixed-width-subtitle match-bg-subtitle">
+          Welcome to OneMeet
+        </h1>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <label htmlFor="email" className="form-label">Email</label>
           <input
             type="email"
@@ -40,11 +81,14 @@ export default function Login() {
             required
           />
 
+          {error && <p className="form-error">{error}</p>}
+
           <button
             type="submit"
             className={`ai-cta slim-cta ${isFilled ? "active-cta" : "inactive-cta"}`}
+            disabled={!isFilled || loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 

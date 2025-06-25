@@ -1,19 +1,19 @@
-import { useState } from "react";
-import RoleFormRouter from "./RoleFormRouter";
+import { useState } from "react"
+import UnifiedSignupForm from "./UnifiedSignupForm"
+import { User, Briefcase, Building2 } from "lucide-react"
 import logo from "../../../assets/one_meet_logo.png";
-import { User, Briefcase, Building2 } from "lucide-react";
 
 export default function SignupPage() {
-  const [role, setRole] = useState(null);
+  const [role, setRole] = useState(null)
 
   return (
     <div className="page-background">
       <div className="form-container">
         {/* Top Logo & Welcome */}
-        <img src={logo} alt="OneMeet Logo" className="logo bigger-logo" />
-        <h1 className="hero-subtitle fixed-width-subtitle match-bg-subtitle">
-          Welcome to OneMeet
-        </h1>
+        <div className="logo-container">
+          <img src={logo} alt="OneMeet Logo" className="logo bigger-logo" />
+        </div>
+        <h1 className="hero-subtitle fixed-width-subtitle match-bg-subtitle">Welcome to OneMeet</h1>
 
         {!role ? (
           <>
@@ -22,26 +22,26 @@ export default function SignupPage() {
               <SignupButton
                 title="Sign up as Candidate"
                 icon={<User size={20} style={{ color: "#4285F4", marginRight: "8px" }} />}
-                onClick={() => setRole("candidate")}
+                onClick={() => setRole("CANDIDATE")}
               />
               <SignupButton
                 title="Sign up as Recruiter"
                 icon={<Briefcase size={20} style={{ color: "#22c55e", marginRight: "8px" }} />}
-                onClick={() => setRole("recruiter")}
+                onClick={() => setRole("RECRUITER")}
               />
               <SignupButton
                 title="Sign up as Company"
                 icon={<Building2 size={20} style={{ color: "#7c3aed", marginRight: "8px" }} />}
-                onClick={() => setRole("company")}
+                onClick={() => setRole("COMPANY")}
               />
             </div>
           </>
         ) : (
-          <RoleFormRouter role={role} goBack={() => setRole(null)} />
+          <UnifiedSignupForm role={role} goBack={() => setRole(null)} />
         )}
       </div>
     </div>
-  );
+  )
 }
 
 function SignupButton({ title, icon, onClick }) {
@@ -50,5 +50,5 @@ function SignupButton({ title, icon, onClick }) {
       {icon}
       {title}
     </button>
-  );
+  )
 }
