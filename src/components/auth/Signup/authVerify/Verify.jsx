@@ -14,12 +14,37 @@ export default function Verify() {
 
     if (token) {
       axios
-        .get(`https://api.onemeet.app/auth/verify`, { token })
+        .get("https://api.onemeet.app/auth/verify", {
+          params: { token },
+        })
         .then((res) => {
-          navigate("/home");
+          const { data } = res;
+          if (data.success) {
+            const { accessToken, refreshToken, authRole } = data.data;
+
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("refreshToken", refreshToken);
+
+            switch (authRole) {
+              case "CANDIDATE":
+                navigate("/complete-profile/candidate");
+                break;
+              case "RECRUITER":
+                navigate("/complete-profile/recruiter");
+                break;
+              case "COMPANY":
+                navigate("/complete-profile/company");
+                break;
+              default:
+                navigate("/");
+                break;
+            }
+          } else {
+            setError(data.reason || "Verification failed");
+          }
         })
         .catch((err) => {
-          setError(err.response?.data?.error || "Verification failed");
+          setError(err.response?.data?.reason || "Verification failed");
         });
     } else {
       setError("Token not found in URL");
@@ -37,14 +62,8 @@ export default function Verify() {
   return (
     <div className="spinner">
       <div className="lds-roller">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+        <div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div>
       </div>
       <div>Loading...</div>
     </div>
