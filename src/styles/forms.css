@@ -226,3 +226,10 @@
 .btn-linkedin:hover {
   background-color: #f0f0f0;
 }
+
+.form-error {
+  color: #e63946;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
