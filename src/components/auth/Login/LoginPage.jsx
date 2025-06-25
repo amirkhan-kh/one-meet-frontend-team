@@ -1,54 +1,76 @@
-import { FaGoogle, FaLinkedin } from "react-icons/fa";
-import Logo from "../../../assets/one_meet_logo.png";
-import "../../../styles/forms.css";
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../../../styles/forms.css";
+import Logo from "../../../assets/one_meet_logo.png";
 
-export default function Login() {
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [loading, setLoading] = useState(false);
+export default function CandidateCompleteProfile() {
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    timezone: "",
+    profilePicture: "",
+    bio: "",
+  });
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const isFilled = form.email.trim() !== "" && form.password.trim() !== "";
-
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!isFilled || loading) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("accessToken");
 
-  try {
-    setLoading(true);
-    setError("");
+    try {
+      setLoading(true);
+      setError("");
+      setMessage("");
 
-    const response = await axios.post("https://api.onemeet.app/auth/login", {
-      email: form.email,
-      password: form.password,
-    });
+      // Step 1: Create base user profile
+      const profileRes = await axios.post(
+        "https://api.onemeet.app/candidate/profile",
+        {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          timezone: form.timezone,
+          profilePicture: form.profilePicture,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    const { data } = response;
+      const userProfileId = profileRes.data.data.id;
 
-    if (data.success) {
-      const { accessToken, refreshToken, authRole } = data.data;
+      // Step 2: Submit candidate-specific details
+      await axios.post(
+        "https://api.onemeet.app/candidate/details",
+        {
+          user_profileId: userProfileId,
+          resume_url: "", // Optional
+          career_goals: form.bio,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-
-      // Normalize role to lowercase for routing
-      const rolePath = authRole.toLowerCase(); // candidate, recruiter, company, admin
-      window.location.href = `/${rolePath}`;
-    } else {
-      setError(data.reason || "Login failed.");
+      setMessage("Profile completed successfully.");
+      navigate("/candidate");
+    } catch (err) {
+      setError(err.response?.data?.message || "Submission failed.");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    setError(err.response?.data?.reason || "Something went wrong.");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <div className="page-background">
@@ -56,66 +78,70 @@ const handleSubmit = async (e) => {
         <div className="logo-container">
           <img src={Logo} alt="OneMeet Logo" className="logo bigger-logo" />
         </div>
-        <h1 className="hero-subtitle fixed-width-subtitle match-bg-subtitle">Welcome to OneMeet</h1>
+        <h1 className="hero-subtitle fixed-width-subtitle match-bg-subtitle">Complete Your Profile</h1>
 
         <form onSubmit={handleSubmit}>
-          <label htmlFor="email" className="form-label">Email</label>
+          <label className="form-label">First Name</label>
           <input
-            type="email"
-            id="email"
-            name="email"
+            name="firstName"
             className="input-field slim-input"
-            value={form.email}
-            onChange={handleInputChange}
+            placeholder="First name"
+            value={form.firstName}
+            onChange={handleChange}
             required
           />
 
-          <label htmlFor="password" className="form-label">Password</label>
+          <label className="form-label">Last Name</label>
           <input
-            type="password"
-            id="password"
-            name="password"
+            name="lastName"
             className="input-field slim-input"
-            value={form.password}
-            onChange={handleInputChange}
+            placeholder="Last name"
+            value={form.lastName}
+            onChange={handleChange}
             required
+          />
+
+          <label className="form-label">Your Timezone</label>
+          <input
+            name="timezone"
+            className="input-field slim-input"
+            placeholder="Your timezone (e.g., Europe/Warsaw)"
+            value={form.timezone}
+            onChange={handleChange}
+            required
+          />
+
+          <label className="form-label">Upload Profile Picture (URL)</label>
+          <input
+            name="profilePicture"
+            className="input-field slim-input"
+            placeholder="Image URL"
+            value={form.profilePicture}
+            onChange={handleChange}
+            required
+          />
+
+          <label className="form-label">Bio (optional)</label>
+          <input
+            name="bio"
+            className="input-field slim-input"
+            placeholder="Bio (optional)"
+            value={form.bio}
+            onChange={handleChange}
           />
 
           {error && <p className="form-error">{error}</p>}
+          {message && <p className="form-success">{message}</p>}
 
           <button
             type="submit"
-            className={`ai-cta slim-cta ${isFilled ? "active-cta" : "inactive-cta"}`}
-            disabled={!isFilled || loading}
+            className={`ai-cta slim-cta ${loading ? "inactive-cta" : "active-cta"}`}
+            disabled={loading}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Submitting..." : "Submit"}
           </button>
         </form>
-
-        <div className="separator">or</div>
-
-        <div className="oauth-buttons vertical-oauth">
-          <button className="btn-google">
-            <FaGoogle size={20} style={{ color: "#4285F4", marginRight: "8px" }} />
-            Continue with Google
-          </button>
-          <button className="btn-linkedin">
-            <FaLinkedin size={20} style={{ color: "#0A66C2", marginRight: "8px" }} />
-            Continue with LinkedIn
-          </button>
-        </div>
-
-        <div className="form-links">
-          <AnimatedLink href="/signup" label="Create an account" />
-          <AnimatedLink href="/forgot-password" label="Forgot password?" />
-        </div>
       </div>
     </div>
-  );
-}
-
-function AnimatedLink({ href, label }) {
-  return (
-    <a href={href} className="animated-link">{label}</a>
   );
 }
