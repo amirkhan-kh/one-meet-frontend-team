@@ -14,7 +14,9 @@ export default function Login() {
   return (
     <div className="page-background">
       <div className="form-container compact-form no-shadow">
-        <img src={Logo} alt="OneMeet Logo" className="logo bigger-logo" />
+        <div className="logo-container">
+          <img src={Logo} alt="OneMeet Logo" className="logo bigger-logo" />
+        </div>
         <h1 className="hero-subtitle fixed-width-subtitle match-bg-subtitle">Welcome to OneMeet</h1>
 
         <form>

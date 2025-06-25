@@ -2,12 +2,6 @@ import { useState } from "react";
 import axios from "axios";
 import { FaGoogle, FaLinkedin } from "react-icons/fa";
 import { useNavigate } from "react-router";
-import {
-  AlertDialog,
-  AlertDialogDescription,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { AlertCircleIcon } from "lucide-react";
 
 export default function UnifiedSignupForm({ role, goBack }) {
   const [form, setForm] = useState({
@@ -47,14 +41,14 @@ export default function UnifiedSignupForm({ role, goBack }) {
           </div>
         </div>
 
-        <button
+        {/* <button
           onClick={() => {
             navigate("/login");
           }}
           className="ai-cta slim-cta active-cta w-full"
         >
           Continue to Login
-        </button>
+        </button> */}
       </div>
     );
   }

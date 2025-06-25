@@ -21,11 +21,13 @@ import { CompanyDashboard } from './components/dashboards/CompanyDashboard/Compa
 import { AdminDashboard } from './components/dashboards/AdminDashboard/AdminD'
 import { CandidateDashboard } from './components/dashboards/CandidateDashboard/CandidateD'
 import CandidateHome from './pages/candidate/Dashboard'
+import Verify from './components/auth/Signup/authVerify/Verify'
 function App() {
 	return (
 		<Routes>
 			<Route path='/' element={<LandingPage />} />
 			<Route path='/login' element={<LoginPage />} />
+			<Route path='/auth/verify' element={<Verify />} />
 			<Route path='/forgot-password' element={<ForgotPassword />} />
 			<Route path='/signup' element={<SignupPage />} />
 
