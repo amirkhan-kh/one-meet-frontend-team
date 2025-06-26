@@ -1,3 +1,4 @@
+import { InterviewsRec } from './InterviewsRec'
 import { ProfilerecruiterRec } from './ProfileRecruiterRec'
 
-export { ProfilerecruiterRec }
+export { InterviewsRec, ProfilerecruiterRec }
