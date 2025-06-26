@@ -26,6 +26,8 @@ import { AdminsTable, CandidateTable, InterviewsTable, PaymentsTable, RecruiterT
 
 import CandidateHome from './pages/candidate/Dashboard';
 
+import TimezoneTest from './TimezoneTest'
+
 function App() {
   return (
     <Routes>
@@ -35,6 +37,8 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/verify" element={<Verify />} />
+      <Route path="/tz-test" element={<TimezoneTest />} />
+
 
       {/* Complete profile routes */}
       <Route path="/complete-profile/candidate" element={<CandidateCompleteProfile />} />
