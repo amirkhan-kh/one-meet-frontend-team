@@ -37,7 +37,7 @@ export default function Login() {
         localStorage.setItem("refreshToken", refreshToken);
 
         const rolePath = authRole.toLowerCase(); // e.g., "candidate", "recruiter", etc.
-        window.location.href = `/${rolePath}`;
+        window.location.href = `/${rolePath}-dashboard`;
       } else {
         setError(data.reason || "Login failed.");
       }
