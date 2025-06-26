@@ -1,7 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { MainLayout } from '../../CandidatesRec/layout/main-layout'
-
 
 const ProfileSkeleton = () => {
 	return (

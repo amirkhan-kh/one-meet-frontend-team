@@ -1,5 +1,4 @@
-const BASE_URL = 'http://localhost:8084'
-
+const BASE_URL = 'https://api.onemeet.app'
 // Mock data for fallback
 const mockUsers = [
 	{
@@ -202,3 +201,73 @@ export const api = {
 		},
 	},
 }
+
+class InterviewAPI {
+	// Helper method for making API requests
+	async request(endpoint, options = {}) {
+		const response = await fetch(`${BASE_URL}${endpoint}`, {
+			headers: {
+				'Content-Type': 'application/json',
+				...options.headers,
+			},
+			...options,
+		})
+
+		if (!response.ok) {
+			throw new Error(
+				`API Error: ${response.status} ${response.statusText}`
+			)
+		}
+
+		return response.json()
+	}
+
+	// Interview Management
+	async createInterview(data) {
+		return this.request('/interview/business/create', {
+			method: 'POST',
+			body: JSON.stringify(data),
+		})
+	}
+
+	async getInterview(id) {
+		return this.request(`/interview/business/${id}`)
+	}
+
+	async getInterviewsByRecruiter(recruiterId, page = 1, limit = 10) {
+		return this.request(
+			`/interview/business/recruiter/${recruiterId}/paged?page=${page}&limit=${limit}`
+		)
+	}
+
+	async getInterviewsByCompany(companyId, page = 1, limit = 10) {
+		return this.request(
+			`/interview/business/company/${companyId}/paged?page=${page}&limit=${limit}`
+		)
+	}
+
+	// Interview Configuration
+	async getInterviewConfig() {
+		return this.request('/interview/meta/config')
+	}
+
+	// Candidate Interview Operations
+	async startInterview(id) {
+		return this.request(`/interview/candidate/start/${id}`, {
+			method: 'POST',
+		})
+	}
+
+	async getCandidateInterview(id) {
+		return this.request(`/interview/candidate/get/${id}`)
+	}
+
+	async getCandidateInterviews(candidateId, page = 1, limit = 10) {
+		return this.request(
+			`/interview/candidate/get-all/${candidateId}/paged?page=${page}&limit=${limit}`
+		)
+	}
+}
+
+// Create an instance of the InterviewAPI class
+export const interviewAPI = new InterviewAPI()

@@ -16,12 +16,8 @@ import CompanyHomeD from './pages/company/DashboardC'
 import { Plans } from './pages/company/Plans'
 import { ProfileCompany } from './pages/company/ProfileCompany'
 import LandingPage from './pages/LandingPage'
-import {
-	CandidateRec,
-	CompanyRec,
-	InterviewsRec,
-	ProfilerecruiterRec,
-} from './pages/recruiter'
+import { ProfilerecruiterRec } from './pages/recruiter'
+import { InterviewsRec } from './pages/recruiter/InterviewsRec'
 function App() {
 	return (
 		<Routes>
@@ -61,8 +57,6 @@ function App() {
 			<Route path='/recruiter-dashboard' element={<RecruiterDashboard />}>
 				<Route index element={<RecDashboardPage />} />{' '}
 				{/* default/index route */}
-				<Route path='candidate-rec' element={<CandidateRec />} />
-				<Route path='company-rec' element={<CompanyRec />} />
 				<Route path='interviews-rec' element={<InterviewsRec />} />
 				<Route
 					path='profile-recruiter'
