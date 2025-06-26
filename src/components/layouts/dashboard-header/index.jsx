@@ -9,6 +9,7 @@ import "./style.css";
 import { useEffect, useState } from "react";
 import { SheetNavigation } from "@/components/ui-elements/sheet";
 import HoveredInfo from "@/components/ui-elements/hovered-info";
+import UserMenu from "@/components/ui-elements/user-menu/UserMenu";
 export const DashboardHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -130,7 +131,8 @@ export const DashboardHeader = () => {
             </button>
           </div>
 
-          <button className="hidden sm:block ai-cta">Login</button>
+          {/* <button className="hidden sm:block ai-cta">Login</button> */}
+          <UserMenu />
         </div>
       </div>
     </header>
