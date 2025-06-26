@@ -44,16 +44,16 @@ export default function CompanyForm({ goBack }) {
 
 function BusinessForm({ goBack }) {
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    // firstName: "",
+    // lastName: "",
     email: "",
     password: "",
-    companyName: "",
-    companyCountry: "",
+    // companyName: "",
+    // companyCountry: "",
   });
 
   const isFilled =
-    form.firstName && form.lastName && form.email && form.password && form.companyName && form.companyCountry;
+    form.email && form.password;
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -66,7 +66,7 @@ function BusinessForm({ goBack }) {
 
   return (
     <form onSubmit={handleSubmit} className="compact-form no-shadow w-full max-w-md space-y-3">
-      <label htmlFor="firstName" className="form-label">First Name</label>
+      {/* <label htmlFor="firstName" className="form-label">First Name</label>
       <input
         type="text"
         id="firstName"
@@ -86,7 +86,7 @@ function BusinessForm({ goBack }) {
         value={form.lastName}
         onChange={handleChange}
         required
-      />
+      /> */}
 
       <label htmlFor="email" className="form-label">Business Email</label>
       <input
@@ -110,7 +110,7 @@ function BusinessForm({ goBack }) {
         required
       />
 
-      <label htmlFor="companyName" className="form-label">Company Name</label>
+      {/* <label htmlFor="companyName" className="form-label">Company Name</label>
       <input
         type="text"
         id="companyName"
@@ -130,7 +130,7 @@ function BusinessForm({ goBack }) {
         value={form.companyCountry}
         onChange={handleChange}
         required
-      />
+      /> */}
 
       <button
         type="submit"

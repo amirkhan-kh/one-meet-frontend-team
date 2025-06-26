@@ -1,0 +1,19 @@
+import { asideNavigation } from '@/db/navLinks'
+import { NavLink } from 'react-router'
+
+export const AsideAdmin = () => {
+  return (
+    <aside>
+    <ul>
+      {asideNavigation.map(({ navName, pathName, icon: Icon: any}, idx) => (
+        <NavLink key={idx} to={pathName} className="underline-hover flex items-center gap-2">
+          <li className="text-[14px] font-semibold flex items-center gap-2">
+            <Icon className="text-lg" />
+            {navName}
+          </li>
+        </NavLink>
+      ))}
+    </ul>
+  </aside>
+  )
+}

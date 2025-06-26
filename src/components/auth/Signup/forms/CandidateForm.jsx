@@ -1,15 +1,17 @@
+import axios from "axios";
 import { useState } from "react";
 import { FaGoogle, FaLinkedin } from "react-icons/fa";
 
 export default function CandidateForm({ goBack }) {
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    // firstName: "",
+    // lastName: "",
     email: "",
-    password: "",
+    passwordHash: "",
+    authRole: "CANDIDATE",
   });
 
-  const isFilled = form.firstName && form.lastName && form.email && form.password;
+  const isFilled = form.email && form.passwordHash;
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -17,12 +19,15 @@ export default function CandidateForm({ goBack }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitting candidate:", form);
+    // console.log("Submitting candidate:", form);
+    axios.post("https://api.onemeet.app/auth/register", form)
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
   };
 
   return (
     <form onSubmit={handleSubmit} className="compact-form no-shadow w-full max-w-md space-y-3">
-      <label htmlFor="firstName" className="form-label">First Name</label>
+      {/* <label htmlFor="firstName" className="form-label">First Name</label>
       <input
         type="text"
         id="firstName"
@@ -31,9 +36,9 @@ export default function CandidateForm({ goBack }) {
         value={form.firstName}
         onChange={handleChange}
         required
-      />
+      /> */}
 
-      <label htmlFor="lastName" className="form-label">Last Name</label>
+      {/* <label htmlFor="lastName" className="form-label">Last Name</label>
       <input
         type="text"
         id="lastName"
@@ -42,7 +47,7 @@ export default function CandidateForm({ goBack }) {
         value={form.lastName}
         onChange={handleChange}
         required
-      />
+      /> */}
 
       <label htmlFor="email" className="form-label">Email</label>
       <input
@@ -59,9 +64,9 @@ export default function CandidateForm({ goBack }) {
       <input
         type="password"
         id="password"
-        name="password"
+        name="passwordHash"
         className="input-field slim-input"
-        value={form.password}
+        value={form.passwordHash}
         onChange={handleChange}
         required
       />

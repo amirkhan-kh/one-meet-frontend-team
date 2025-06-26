@@ -3,21 +3,17 @@ import { Route, Routes } from 'react-router-dom'
 import ForgotPassword from './components/auth/Login/ForgotPassword'
 import LoginPage from './components/auth/Login/LoginPage'
 import SignupPage from './components/auth/Signup/SignupPage'
-
-import AdminDashboard from './components/dashboards/AdminDashboard/AdminD'
-import { CandidateDashboard } from './components/dashboards/CandidateDashboard/CandidateD'
-import { CompanyDashboard } from './components/dashboards/CompanyDashboard/CompanyD'
-
-import { RecDashboardPage } from './components/dashboards/RecruiterDashboard/recruiter-components/charts/recruiter-dashboard'
-import { RecruiterDashboard } from './components/dashboards/RecruiterDashboard/RecruiterD'
 import { Control, DataManagement, Payments, SystemLogs } from './pages/admin'
 import { Feedback, JoinInterviews, ProfileCandidate } from './pages/candidate'
-import CompanyHomeD from './pages/company/DashboardC'
 import { Plans } from './pages/company/Plans'
 import { ProfileCompany } from './pages/company/ProfileCompany'
 import LandingPage from './pages/LandingPage'
-import { ProfilerecruiterRec } from './pages/recruiter'
-import { InterviewsRec } from './pages/recruiter/InterviewsRec'
+import {
+	CandidateRec,
+	CompanyRec,
+	InterviewsRec,
+	ProfilerecruiterRec,
+} from './pages/recruiter'
 function App() {
 	return (
 		<Routes>
@@ -27,8 +23,9 @@ function App() {
 			<Route path='/signup' element={<SignupPage />} />
 
 			{/* Dashboards */}
+
 			{/* Candidate */}
-			<Route path='/candidate-dashboard' element={<CandidateDashboard />}>
+			<Route path='/candidate-dashboard' element={<CandidateD />}>
 				<Route path='feedback' element={<Feedback />} />
 				<Route path='join-interview' element={<JoinInterviews />} />
 				<Route
@@ -38,7 +35,7 @@ function App() {
 			</Route>
 
 			{/* Admin */}
-			<Route path='/admin-dashboard' element={<AdminDashboard />}>
+			<Route path='/admin-dashboard' element={<AdminD />}>
 				<Route path='data-management' element={<DataManagement />} />
 				<Route path='plans-payments' element={<Payments />} />
 				<Route path='system-logs' element={<SystemLogs />} />
@@ -46,17 +43,15 @@ function App() {
 			</Route>
 
 			{/* Company */}
-			<Route path='/company-dashboard' element={<CompanyDashboard />}>
-				<Route index element={<CompanyHomeD />} />{' '}
-				{/* default/index route */}
+			<Route path='/company-dashboard' element={<CompanyD />}>
 				<Route path='plans' element={<Plans />} />
 				<Route path='profile-company' element={<ProfileCompany />} />
 			</Route>
 
 			{/* Recruiter */}
-			<Route path='/recruiter-dashboard' element={<RecruiterDashboard />}>
-				<Route index element={<RecDashboardPage />} />{' '}
-				{/* default/index route */}
+			<Route path='/recruiter-dashboard' element={<RecruiterD />}>
+				<Route path='candidate-rec' element={<CandidateRec />} />
+				<Route path='company-rec' element={<CompanyRec />} />
 				<Route path='interviews-rec' element={<InterviewsRec />} />
 				<Route
 					path='profile-recruiter'
@@ -66,4 +61,5 @@ function App() {
 		</Routes>
 	)
 }
+
 export default App
