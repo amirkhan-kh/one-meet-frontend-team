@@ -127,7 +127,7 @@ export default function CompanyCompleteProfile() {
       );
 
       setMessage("Company profile completed.");
-      navigate("/company-dashboard");
+      navigate("/company");
     } catch (err) {
       setError(err.response?.data?.message || "Submission failed");
     } finally {

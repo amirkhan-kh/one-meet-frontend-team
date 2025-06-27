@@ -127,7 +127,7 @@ useEffect(() => {
       );
 
       setMessage("Profile completed successfully.");
-      navigate("/candidate-dashboard");
+      navigate("/candidate");
     } catch (err) {
       setError(err.response?.data?.message || "Submission failed.");
     } finally {

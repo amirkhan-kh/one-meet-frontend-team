@@ -132,7 +132,7 @@ export default function RecruiterCompleteProfile() {
       );
 
       setMessage("Recruiter profile completed.");
-      navigate("/recruiter-dashboard");
+      navigate("/recruiter");
     } catch (err) {
       setError(err.response?.data?.message || "Submission failed.");
     } finally {

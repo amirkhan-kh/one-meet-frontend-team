@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   navigationAdminDashboard,
   navigationCompanyDashboard,
@@ -22,13 +22,13 @@ export const DashboardHeader = () => {
     case path.startsWith("/admin-dashboard"):
       currentLinks = navigationAdminDashboard;
       break;
-    case path.startsWith("/company-dashboard"):
+    case path.startsWith("/company"):
       currentLinks = navigationCompanyDashboard;
       break;
-    case path.startsWith("/recruiter-dashboard"):
+    case path.startsWith("/recruiter"):
       currentLinks = navigationRecruiterDashboard;
       break;
-    case path.startsWith("/candidate-dashboard"):
+    case path.startsWith("/candidate"):
       currentLinks = navigationCandidateDashboard;
       break;
     default:

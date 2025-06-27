@@ -25,6 +25,9 @@ import { ComapaniesTable } from './pages/admin/companies-table';
 import { AdminsTable, CandidateTable, InterviewsTable, PaymentsTable, RecruiterTable, ReportsTable } from './pages/admin';
 
 import CandidateHome from './pages/candidate/Dashboard';
+import { UsageCompany } from './pages/company/UsageCompany';
+import { RecruitersCompany } from './pages/company/RecrutersCompany';
+import ContactSupport from './pages/contact-support/ContactSupport';
 
 import TimezoneTest from './TimezoneTest'
 
@@ -37,16 +40,16 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/verify" element={<Verify />} />
-      <Route path="/tz-test" element={<TimezoneTest />} />
-
+       <Route path='/contact-support' element={<ContactSupport />} />
 
       {/* Complete profile routes */}
       <Route path="/complete-profile/candidate" element={<CandidateCompleteProfile />} />
       <Route path="/complete-profile/recruiter" element={<RecruiterCompleteProfile />} />
       <Route path="/complete-profile/company" element={<CompanyCompleteProfile />} />
 
-      {/* Candidate Dashboard */}
-      <Route path="/candidate-dashboard" element={<CandidateDashboard />}>
+
+      {/* Candidate */}
+      <Route path="/candidate" element={ <CandidateDashboard/>} >
         <Route index element={<CandidateHome />} />
         <Route path="feedback" element={<Feedback />} />
         <Route path="join-interview" element={<JoinInterviews />} />
@@ -64,22 +67,35 @@ function App() {
         <Route path="admins-table" element={<AdminsTable />} />
       </Route>
 
-      {/* Company Dashboard */}
-      <Route path="/company-dashboard" element={<CompanyDashboard />}>
-        <Route index element={<DashboardCompany />} />
-        <Route path="plans" element={<Plans />} />
-        <Route path="profile-company" element={<ProfileCompany />} />
+     
+
+      {/* Company */}
+      <Route path="/company" element={ <CompanyDashboard/>} >
+	  	<Route index element={ <DashboardCompany/>}/>
+        <Route path="plans" element={ <Plans/> }/>
+        <Route path='recruiters-compony' element={<RecruitersCompany/>}/>
+        <Route path="usage" element={ <UsageCompany/>}/>
+        <Route path="profile-company" element={ <ProfileCompany/> }/>
       </Route>
 
-      {/* Recruiter Dashboard */}
-      <Route path="/recruiter-dashboard" element={<RecruiterDashboard />}>
-        <Route path="candidate-rec" element={<CandidateRec />} />
-        <Route path="company-rec" element={<CompanyRec />} />
-        <Route path="interviews-rec" element={<InterviewsRec />} />
-        <Route path="profile-recruiter" element={<ProfilerecruiterRec />} />
-      </Route>
-    </Routes>
+      {/* Recruiter */}
+      <Route path="/recruiter" element={ <RecruiterDashboard/>} >
+        <Route path="candidate-rec" element={ <CandidateRec/> } />
+        <Route path="company-rec" element={ <CompanyRec/> }/>
+        <Route path="interviews-rec" element={ <InterviewsRec/> }/>
+        <Route path="profile-recruiter" element={ <ProfilerecruiterRec/> }/>
+        </Route>
+
+      </Routes>
+
+      
+
+      
+
+      
+
+      
   );
 }
 
-export default App;
+export default App
