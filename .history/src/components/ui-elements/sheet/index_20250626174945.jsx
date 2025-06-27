@@ -24,10 +24,10 @@ export const SheetNavigation = () => {
     case path.startsWith("/company"):
       currentLinks = navigationCompanyDashboard;
       break;
-    case path.startsWith("/recruiter"):
+    case path.startsWith("/recruiter-dashboard"):
       currentLinks = navigationRecruiterDashboard;
       break;
-    case path.startsWith("/candidate"):
+    case path.startsWith("/candidate-dashboard"):
       currentLinks = navigationCandidateDashboard;
       break;
     default:

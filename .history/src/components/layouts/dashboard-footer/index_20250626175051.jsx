@@ -29,7 +29,7 @@ export const DashboardFooter = () => {
     case path.startsWith("/recruiter"):
       currentLinks = navigationRecruiterDashboard;
       break;
-    case path.startsWith("/candidate"):
+    case path.startsWith("/candidate-dashboard"):
       currentLinks = navigationCandidateDashboard;
       break;
     default:

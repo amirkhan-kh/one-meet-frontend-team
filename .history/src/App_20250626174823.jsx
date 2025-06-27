@@ -28,7 +28,7 @@ function App() {
 
 
       {/* Candidate */}
-      <Route path="/candidate" element={ <CandidateDashboard/>} >
+      <Route path="/candidat" element={ <CandidateDashboard/>} >
         <Route path="feedback" element={ <Feedback/>}/>
         <Route path="join-interview" element={ <JoinInterviews/> }/>
         <Route path="profile-candidate" element={ <ProfileCandidate/>}/>

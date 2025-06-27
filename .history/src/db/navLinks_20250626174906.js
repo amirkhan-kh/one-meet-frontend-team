@@ -12,7 +12,7 @@ export const navigationCompanyDashboard = [
     { navName: "Profile", pathName: "profile-company"},
 ];
 export const navigationRecruiterDashboard = [
-    { navName: "Dashboard", pathName: "/recruiter"},
+    { navName: "Dashboard", pathName: "/recruiter-dashboard"},
     { navName: "Interview", pathName: "interviews-rec"},
     { navName: "Candidate", pathName: "candidate-rec"},
     { navName: "Company", pathName: "company-rec"},
@@ -20,7 +20,7 @@ export const navigationRecruiterDashboard = [
 ];
 export const navigationCandidateDashboard = [
     { navName: "Home", pathName: "/"},
-    { navName: "Dashboard", pathName: "/candidate"},
+    { navName: "Dashboard", pathName: "/candidate-dashboard"},
     { navName: "Join Interview", pathName: "join-interview"},
     { navName: "Feedback", pathName: "feedback"},
     { navName: "Profile", pathName: "profile-candidate"},

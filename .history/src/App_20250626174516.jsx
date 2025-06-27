@@ -28,7 +28,7 @@ function App() {
 
 
       {/* Candidate */}
-      <Route path="/candidate" element={ <CandidateDashboard/>} >
+      <Route path="/candidate-dashboard" element={ <CandidateDashboard/>} >
         <Route path="feedback" element={ <Feedback/>}/>
         <Route path="join-interview" element={ <JoinInterviews/> }/>
         <Route path="profile-candidate" element={ <ProfileCandidate/>}/>
@@ -56,7 +56,7 @@ function App() {
       </Route>
 
       {/* Recruiter */}
-      <Route path="/recruiter" element={ <RecruiterDashboard/>} >
+      <Route path="/recruiter-dashboard" element={ <RecruiterDashboard/>} >
         <Route path="candidate-rec" element={ <CandidateRec/> } />
         <Route path="company-rec" element={ <CompanyRec/> }/>
         <Route path="interviews-rec" element={ <InterviewsRec/> }/>

@@ -20,7 +20,7 @@ export const navigationRecruiterDashboard = [
 ];
 export const navigationCandidateDashboard = [
     { navName: "Home", pathName: "/"},
-    { navName: "Dashboard", pathName: "/candidate"},
+    { navName: "Dashboard", pathName: "/candidate-dashboard"},
     { navName: "Join Interview", pathName: "join-interview"},
     { navName: "Feedback", pathName: "feedback"},
     { navName: "Profile", pathName: "profile-candidate"},
