@@ -84,15 +84,45 @@ function App() {
         <Route path="profile-recruiter" element={ <ProfilerecruiterRec/> }/>
         </Route>
 
-      </Routes>
-
       
+    <Routes>
+      <Route path='/' element={<LandingPage />} />
+      <Route path='/login' element={<LoginPage />} />
+      <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route path='/signup' element={<SignupPage />} />
+      <Route path='/contact-support' element={<ContactSupport />} />
 
-      
+      {/* Candidate */}
+      <Route path='/candidate-dashboard' element={<CandidateDashboard />}>
+        <Route path='feedback' element={<Feedback />} />
+        <Route path='join-interview' element={<JoinInterviews />} />
+        <Route path='profile-candidate' element={<ProfileCandidate />} />
+      </Route>
 
-      
+      {/* Admin */}
+      <Route path='/admin-dashboard' element={<AdminDashboard />}>
+        <Route path='data-management' element={<DataManagement />} />
+        <Route path='plans-payments' element={<Payments />} />
+        <Route path='system-logs' element={<SystemLogs />} />
+        <Route path='account-control' element={<Control />} />
+      </Route>
 
-      
+      {/* Company */}
+      <Route path='/company-dashboard' element={<CompanyDashboard />}>
+        <Route index element={<CompanyHomeD />} />
+        <Route path='plans' element={<Plans />} />
+        <Route path='profile-company' element={<ProfileCompany />} />
+      </Route>
+
+      {/* Recruiter */}
+      <Route path='/recruiter-dashboard' element={<RecruiterDashboard />}>
+        <Route index element={<DashboardPage />} />
+        <Route path='candidate-rec' element={<CandidateRec />} />
+        <Route path='company-rec' element={<CompanyRec />} />
+        <Route path='interviews-rec' element={<InterviewsRec />} />
+        <Route path='profile-recruiter' element={<ProfilerecruiterRec />} />
+      </Route>
+    </Routes>
   );
 }
 

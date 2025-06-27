@@ -84,11 +84,27 @@ function App() {
         <Route path="profile-recruiter" element={ <ProfilerecruiterRec/> }/>
         </Route>
 
-      </Routes>
-
       
+      <Route path='/' element={<LandingPage />} />
+      <Route path='/login' element={<LoginPage />} />
+      <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route path='/signup' element={<SignupPage />} />
+      <Route path='/contact-support' element={<ContactSupport />} />
 
-      
+      {/* Candidate */}
+      <Route path='/candidate-dashboard' element={<CandidateDashboard />}>
+        <Route path='feedback' element={<Feedback />} />
+        <Route path='join-interview' element={<JoinInterviews />} />
+        <Route path='profile-candidate' element={<ProfileCandidate />} />
+      </Route>
+
+      {/* Admin */}
+      <Route path='/admin-dashboard' element={<AdminDashboard />}>
+        <Route path='data-management' element={<DataManagement />} />
+        <Route path='plans-payments' element={<Payments />} />
+        <Route path='system-logs' element={<SystemLogs />} />
+        <Route path='account-control' element={<Control />} />
+      </Route>
 
       
 

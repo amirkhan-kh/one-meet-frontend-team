@@ -81,8 +81,10 @@ export const Plans = () => {
       </div>
 
 
+=======
       <AvailablePlans />
       <PaymentsMethod />
     </div>
   );
 };
+>>>>>>> feature/help

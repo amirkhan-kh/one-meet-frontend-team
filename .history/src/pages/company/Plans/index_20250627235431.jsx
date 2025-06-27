@@ -80,9 +80,12 @@ export const Plans = () => {
         </div>
       </div>
 
+//      
 
+=======
       <AvailablePlans />
       <PaymentsMethod />
     </div>
   );
 };
+>>>>>>> feature/help

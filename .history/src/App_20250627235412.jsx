@@ -84,7 +84,7 @@ function App() {
         <Route path="profile-recruiter" element={ <ProfilerecruiterRec/> }/>
         </Route>
 
-      </Routes>
+      <
 
       
 

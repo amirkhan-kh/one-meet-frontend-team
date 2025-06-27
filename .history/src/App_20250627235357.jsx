@@ -84,7 +84,12 @@ function App() {
         <Route path="profile-recruiter" element={ <ProfilerecruiterRec/> }/>
         </Route>
 
-      </Routes>
+      
+      <Route path='/' element={<LandingPage />} />
+      <Route path='/login' element={<LoginPage />} />
+      <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route path='/signup' element={<SignupPage />} />
+      <Route path='/contact-support' element={<ContactSupport />} />
 
       
 

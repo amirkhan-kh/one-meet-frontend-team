@@ -27,7 +27,6 @@ import { AdminsTable, CandidateTable, InterviewsTable, PaymentsTable, RecruiterT
 import CandidateHome from './pages/candidate/Dashboard';
 import { UsageCompany } from './pages/company/UsageCompany';
 import { RecruitersCompany } from './pages/company/RecrutersCompany';
-import ContactSupport from './pages/contact-support/ContactSupport';
 
 function App() {
   return (
@@ -38,7 +37,6 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/verify" element={<Verify />} />
-         <Route path='/contact-support' element={<ContactSupport />} />
 
       {/* Complete profile routes */}
       <Route path="/complete-profile/candidate" element={<CandidateCompleteProfile />} />
@@ -84,13 +82,8 @@ function App() {
         <Route path="profile-recruiter" element={ <ProfilerecruiterRec/> }/>
         </Route>
 
-      </Routes>
-
       
-
-      
-
-      
+      </Route>
 
       
   );
