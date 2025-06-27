@@ -24,6 +24,9 @@ export const InterviewList = ({
 	})
 
 	useEffect(() => {
+		console.log('AccessToken:', localStorage.getItem('accessToken'))
+		console.log('recruiterId:', recruiterId)
+		console.log('companyId:', companyId)
 		loadInterviews()
 	}, [recruiterId, companyId, pagination.page])
 

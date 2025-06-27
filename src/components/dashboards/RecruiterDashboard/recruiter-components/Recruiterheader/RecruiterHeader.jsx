@@ -37,8 +37,6 @@ export const RecruiterDashboardHeader = () => {
 					OneMeet
 				</a>
 
-				<MobileNavigation currentPath={path} />
-
 				<div className='flex items-center gap-4'>
 					{/* Dashboard Link */}
 					<NavLink
@@ -59,7 +57,7 @@ export const RecruiterDashboardHeader = () => {
 
 					{/* Help Link */}
 					<NavLink
-						to='/help'
+						to='/contact-support'
 						className='hidden md:flex items-center gap-2 px-3 py-2 text-md font-medium text-gray-700 hover:text-blue-600 transition-colors'
 					>
 						<HelpCircle className='h-4 w-4' />
@@ -67,42 +65,47 @@ export const RecruiterDashboardHeader = () => {
 					</NavLink>
 
 					{/* Profile Dropdown */}
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button
-								variant='ghost'
-								className='relative h-12 w-12 rounded-full'
-							>
-								<ProfileAvatar user={user} />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent className='w-56' align='end'>
-							<div className='flex items-center justify-start gap-2 p-2'>
-								<div className='flex flex-col space-y-1 leading-none'>
-									<p className='font-medium'>{user.name}</p>
-									<p className='text-xs text-muted-foreground'>
-										{user.email}
-									</p>
+					<div className='flex items-center'>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button
+									variant='ghost'
+									className='relative h-12 w-12 rounded-full'
+								>
+									<ProfileAvatar user={user} />
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className='w-56' align='end'>
+								<div className='flex items-center justify-start gap-2 p-2'>
+									<div className='flex flex-col space-y-1 leading-none'>
+										<p className='font-medium'>
+											{user.name}
+										</p>
+										<p className='text-xs text-muted-foreground'>
+											{user.email}
+										</p>
+									</div>
 								</div>
-							</div>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem>
-								<BarChart3 className='mr-2 h-4 w-4' />
-								Profile
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<Settings className='mr-2 h-4 w-4' />
-								Settings
-							</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							<Link to='/'>
-								<DropdownMenuItem className='text-red-600'>
-									<LogOut className='mr-2 h-4 w-4' />
-									Log out
+								<DropdownMenuSeparator />
+								<DropdownMenuItem>
+									<BarChart3 className='mr-2 h-4 w-4' />
+									Profile
 								</DropdownMenuItem>
-							</Link>
-						</DropdownMenuContent>
-					</DropdownMenu>
+								<DropdownMenuItem>
+									<Settings className='mr-2 h-4 w-4' />
+									Settings
+								</DropdownMenuItem>
+								<DropdownMenuSeparator />
+								<Link to='/'>
+									<DropdownMenuItem className='text-red-600'>
+										<LogOut className='mr-2 h-4 w-4' />
+										Log out
+									</DropdownMenuItem>
+								</Link>
+							</DropdownMenuContent>
+						</DropdownMenu>
+						<MobileNavigation currentPath={path} />
+					</div>
 				</div>
 			</div>
 		</header>
