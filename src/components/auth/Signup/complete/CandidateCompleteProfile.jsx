@@ -12,18 +12,43 @@ export default function CandidateCompleteProfile() {
     profilePicture: null,
     bio: "",
   });
-  const [timezones, setTimezones] = useState([]);
+
+  const [timezones, setTimezones] = useState({});
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get("https://worldtimeapi.org/api/timezone")
-      .then((res) => setTimezones(res.data))
-      .catch(() => setTimezones([]));
-  }, []);
+useEffect(() => {
+  const token = localStorage.getItem("accessToken");
+
+  axios
+    .get("https://api.onemeet.app/user/time-zones", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      if (res.data.success && Array.isArray(res.data.data)) {
+        const grouped = res.data.data.reduce((acc, tz) => {
+          const parts = tz.split(" - ");
+          const region = parts[1]?.split("/")?.[0] || "Other";
+          if (!acc[region]) acc[region] = [];
+          acc[region].push(tz);
+          return acc;
+        }, {});
+        setTimezones(grouped);
+      } else {
+        console.warn("Timezone data is not an array");
+        setTimezones({});
+      }
+    })
+    .catch((err) => {
+      console.error("Timezone fetch error:", err);
+      setTimezones({});
+    });
+}, []);
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -34,82 +59,81 @@ export default function CandidateCompleteProfile() {
     }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const token = localStorage.getItem("accessToken");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("accessToken");
 
-  try {
-    setLoading(true);
-    setError("");
-    setMessage("");
+    try {
+      setLoading(true);
+      setError("");
+      setMessage("");
 
-    if (!form.profilePicture || !["image/jpeg", "image/jpg"].includes(form.profilePicture.type)) {
-      setError("Only JPEG images are allowed.");
+    if (
+  !form.profilePicture ||
+  !["image/jpeg", "image/jpg", "image/png"].includes(form.profilePicture.type)
+) {
+  setError("Only JPEG and PNG images are allowed.");
+  setLoading(false);
+  return;
+}
+
+
+      const formData = new FormData();
+      formData.append("file", form.profilePicture);
+
+      const mediaUpload = await axios.post(
+        "https://api.onemeet.app/media/business/upload-avatar",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const mediaId = mediaUpload.data?.data?.id;
+      if (!mediaId) throw new Error("Avatar upload failed");
+
+      const userRes = await axios.post(
+        "https://api.onemeet.app/user/create",
+        {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          timezone: form.timezone,
+          profilePicture: mediaId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const userProfileId = userRes.data.data.id;
+
+      await axios.post(
+        "https://api.onemeet.app/candidate/create",
+        {
+          user_profileId: userProfileId,
+          resume_url: "",
+          career_goals: form.bio,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setMessage("Profile completed successfully.");
+      navigate("/candidate");
+    } catch (err) {
+      setError(err.response?.data?.message || "Submission failed.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    // Step 0: Upload to MediaService
-    const formData = new FormData();
-    formData.append("file", form.profilePicture);
-
-    const mediaUpload = await axios.post(
-      "https://api.onemeet.app/media/business/upload-avatar",
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
-    const mediaId = mediaUpload.data?.data?.id;
-    if (!mediaId) throw new Error("Avatar upload failed");
-
-    // Step 1: Create user profile
-    const userRes = await axios.post(
-      "https://api.onemeet.app/user/create",
-      {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        timezone: form.timezone,
-        profilePicture: mediaId, // Use the ID from media
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const userProfileId = userRes.data.data.id;
-
-    // Step 2: Create candidate profile
-    await axios.post(
-      "https://api.onemeet.app/candidate/create",
-      {
-        user_profileId: userProfileId,
-        resume_url: "",
-        career_goals: form.bio,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    setMessage("Profile completed successfully.");
-    navigate("/candidate");
-  } catch (err) {
-    setError(err.response?.data?.message || "Submission failed.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
+  };
 
   return (
     <div className="page-background">
@@ -157,10 +181,14 @@ const handleSubmit = async (e) => {
             required
           >
             <option value="">Select your timezone</option>
-            {timezones.map((tz) => (
-              <option key={tz} value={tz}>
-                {tz}
-              </option>
+            {Object.keys(timezones).map((region) => (
+              <optgroup key={region} label={region}>
+                {timezones[region].map((tz) => (
+                  <option key={tz} value={tz}>
+                    {tz}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
 

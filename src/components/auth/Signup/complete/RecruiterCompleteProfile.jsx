@@ -13,17 +13,43 @@ export default function RecruiterCompleteProfile() {
     companyId: "",
     position: "",
   });
-  const [timezones, setTimezones] = useState([]);
+
+  const companies = [
+    { id: "3fa85f64-5717-4562-b3fc-2c963f66a111", name: "Tech Solutions LLC" },
+    { id: "3fa85f64-5717-4562-b3fc-2c963f66a222", name: "InnovateX" },
+    { id: "3fa85f64-5717-4562-b3fc-2c963f66a333", name: "FutureWorks Inc." },
+  ];
+
+  const [timezones, setTimezones] = useState({});
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
     axios
-      .get("https://worldtimeapi.org/api/timezone")
-      .then((res) => setTimezones(res.data))
-      .catch(() => setTimezones([]));
+      .get("https://api.onemeet.app/user/time-zones", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.success && Array.isArray(res.data.data)) {
+          const grouped = res.data.data.reduce((acc, tz) => {
+            const parts = tz.split(" - ");
+            const region = parts[1]?.split("/")?.[0] || "Other";
+            if (!acc[region]) acc[region] = [];
+            acc[region].push(tz);
+            return acc;
+          }, {});
+          setTimezones(grouped);
+        } else {
+          setTimezones({});
+        }
+      })
+      .catch(() => setTimezones({}));
   }, []);
 
   const handleChange = (e) => {
@@ -44,17 +70,41 @@ export default function RecruiterCompleteProfile() {
       setError("");
       setMessage("");
 
-      // TODO: Replace this with upload to MediaService later
-      const profilePicUrl = "https://placeholder.com/profile.jpg";
+      if (
+        !form.profilePicture ||
+        !["image/jpeg", "image/jpg", "image/png"].includes(form.profilePicture.type)
+      ) {
+        setError("Only JPEG and PNG images are allowed.");
+        setLoading(false);
+        return;
+      }
 
-      // Step 1: Create recruiter user profile
-      const profileRes = await axios.post(
-        "https://api.onemeet.app/recruiter/profile",
+      // Step 1: Upload profile picture
+      const formData = new FormData();
+      formData.append("file", form.profilePicture);
+
+      const uploadRes = await axios.post(
+        "https://api.onemeet.app/media/business/upload-avatar",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const mediaId = uploadRes.data?.data?.id;
+      if (!mediaId) throw new Error("Profile picture upload failed.");
+
+      // Step 2: Create user profile
+      const userRes = await axios.post(
+        "https://api.onemeet.app/user/create",
         {
           firstName: form.firstName,
           lastName: form.lastName,
           timezone: form.timezone,
-          profilePicture: profilePicUrl,
+          profilePicture: mediaId,
         },
         {
           headers: {
@@ -63,13 +113,14 @@ export default function RecruiterCompleteProfile() {
         }
       );
 
-      const userProfileId = profileRes.data.data.id;
+      const userProfile = userRes.data.data;
+      localStorage.setItem("userProfile", JSON.stringify(userProfile));
 
-      // Step 2: Submit recruiter-specific details
+      // Step 3: Create recruiter
       await axios.post(
-        "https://api.onemeet.app/recruiter/details",
+        "https://api.onemeet.app/recruiter/create",
         {
-          userProfileId: userProfileId,
+          userProfileId: userProfile.id,
           companyId: form.companyId,
           position: form.position,
         },
@@ -83,7 +134,7 @@ export default function RecruiterCompleteProfile() {
       setMessage("Recruiter profile completed.");
       navigate("/recruiter");
     } catch (err) {
-      setError(err.response?.data?.message || "Submission failed");
+      setError(err.response?.data?.message || "Submission failed.");
     } finally {
       setLoading(false);
     }
@@ -107,7 +158,6 @@ export default function RecruiterCompleteProfile() {
             id="firstName"
             name="firstName"
             className="input-field slim-input"
-            placeholder="First name"
             value={form.firstName}
             onChange={handleChange}
             required
@@ -119,7 +169,6 @@ export default function RecruiterCompleteProfile() {
             id="lastName"
             name="lastName"
             className="input-field slim-input"
-            placeholder="Last name"
             value={form.lastName}
             onChange={handleChange}
             required
@@ -135,10 +184,14 @@ export default function RecruiterCompleteProfile() {
             required
           >
             <option value="">Select your timezone</option>
-            {timezones.map((tz) => (
-              <option key={tz} value={tz}>
-                {tz}
-              </option>
+            {Object.keys(timezones).map((region) => (
+              <optgroup key={region} label={region}>
+                {timezones[region].map((tz) => (
+                  <option key={tz} value={tz}>
+                    {tz}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
 
@@ -152,17 +205,22 @@ export default function RecruiterCompleteProfile() {
             required
           />
 
-          <label htmlFor="companyId" className="form-label">Company ID (from search)</label>
-          <input
-            type="text"
+          <label htmlFor="companyId" className="form-label">Select Company</label>
+          <select
             id="companyId"
             name="companyId"
             className="input-field slim-input"
-            placeholder="Company ID"
             value={form.companyId}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Select a company</option>
+            {companies.map((company) => (
+              <option key={company.id} value={company.id}>
+                {company.name}
+              </option>
+            ))}
+          </select>
 
           <label htmlFor="position" className="form-label">Your Position</label>
           <input
@@ -170,7 +228,6 @@ export default function RecruiterCompleteProfile() {
             id="position"
             name="position"
             className="input-field slim-input"
-            placeholder="Your position"
             value={form.position}
             onChange={handleChange}
             required

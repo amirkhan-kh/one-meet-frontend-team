@@ -1,4 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   navigationAdminDashboard,
   navigationCompanyDashboard,
@@ -6,15 +7,14 @@ import {
   navigationCandidateDashboard,
 } from "../../../db/navLinks";
 import "./style.css";
-import { useEffect, useState } from "react";
+
 import { SheetNavigation } from "@/components/ui-elements/sheet";
-
 import HoveredInfo from "@/components/ui-elements/hovered-info";
-
+import UserMenu from "@/components/ui-elements/user-menu/UserMenu";
 
 export const DashboardHeader = () => {
-	const [menuOpen, setMenuOpen] = useState(false)
-	const [hoveredItem, setHoveredItem] = useState(null)
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState(null);
 
   const location = useLocation();
   const path = location.pathname;
@@ -24,13 +24,13 @@ export const DashboardHeader = () => {
     case path.startsWith("/admin-dashboard"):
       currentLinks = navigationAdminDashboard;
       break;
-    case path.startsWith("/company-dashboard"):
+    case path.startsWith("/company"):
       currentLinks = navigationCompanyDashboard;
       break;
-    case path.startsWith("/recruiter-dashboard"):
+    case path.startsWith("/recruiter"):
       currentLinks = navigationRecruiterDashboard;
       break;
-    case path.startsWith("/candidate-dashboard"):
+    case path.startsWith("/candidate"):
       currentLinks = navigationCandidateDashboard;
       break;
     default:
@@ -38,28 +38,23 @@ export const DashboardHeader = () => {
   }
 
   useEffect(() => {
-    function handleResize() {
-      if (window.innerWidth > 768) {
-        setMenuOpen(false);
-      }
-    }
+    const handleResize = () => {
+      if (window.innerWidth > 768) setMenuOpen(false);
+    };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const toggleMenu = () => {
-    setMenuOpen((prev) => !prev);
-  };
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   return (
     <header className="ai-header">
-
       <div className="flex items-center justify-between px-6 py-3">
-
         <a href="/" className="ai-logo">
           OneMeet
         </a>
 
+        {/* Desktop nav */}
         <nav className="ai-nav hidden lg:block">
           <ul className="flex items-center gap-6">
             {currentLinks.map((item, i) => (
@@ -70,23 +65,14 @@ export const DashboardHeader = () => {
           </ul>
         </nav>
 
-
-        {/* sm dan lg gacha block navigation */}
+        {/* Medium screen nav */}
         <div className="hidden sm:block lg:hidden">
-          <nav
-            className={`ai-nav ${
-              menuOpen ? "show" : ""
-            } translate-y-0 h-[205px]`}
-          >
+          <nav className={`ai-nav ${menuOpen ? "show" : ""} translate-y-0 h-[205px]`}>
             <div className="flex gap-4 w-full pr-2">
-              <div className="">
+              <div>
                 <ul className="text-left pl-[20px]">
                   {currentLinks.map((item, i) => (
-                    <NavLink
-                      key={i}
-                      to={item.pathName}
-                      className="underline-hover"
-                    >
+                    <NavLink key={i} to={item.pathName} className="underline-hover">
                       <li
                         className="underline-hover text-[14px] font-semibold"
                         onMouseEnter={() => setHoveredItem(item)}
@@ -98,70 +84,29 @@ export const DashboardHeader = () => {
                   ))}
                 </ul>
               </div>
-              <div className=" w-full">
+              <div className="w-full">
                 {hoveredItem ? (
                   <div>
-                    <h4 className="font-light text-lg mb-2 ms-4">
-                      {hoveredItem.navName}
-                    </h4>
-                    <p>
-                     <HoveredInfo hoveredItem={hoveredItem} />
-
-                    </p>
+                    <h4 className="font-light text-lg mb-2 ms-4">{hoveredItem.navName}</h4>
+                    <HoveredInfo hoveredItem={hoveredItem} />
                   </div>
                 ) : (
-                     <HoveredInfo hoveredItem={hoveredItem} />
+                  <HoveredInfo hoveredItem={hoveredItem} />
                 )}
               </div>
             </div>
           </nav>
         </div>
 
-				{/* sm gacha ko'rinuvchi sheet navbar */}
-				<div className='flex items-center gap-4'>
-					<div className='block sm:hidden'>
-						<button>
-							<SheetNavigation />
-						</button>
-					</div>
-
-					<div className='hidden sm:block'>
-						<button
-							className='hidden sm:block lg:hidden  menu-toggle'
-							onClick={toggleMenu}
-							aria-label='Toggle navigation menu'
-							aria-expanded={menuOpen}
-						>
-							☰
-						</button>
-					</div>
-
-          <button className="hidden sm:block ai-cta">Login</button>
-=========
-          <button className="hidden sm:block ai-cta">Login</button>
-          <div className="bg-sky-600 block lg:hidden">
-            <nav className={`ai-nav ${menuOpen ? "show" : ""} `}>
-              <div className="bg-amber-600 relative">
-                <ul className="flex flex-col  left-0">
-                  {currentLinks.map((item, i) => (
-                    <NavLink
-                      key={i}
-                      to={item.pathName}
-                      className="underline-hover"
-                    >
-                      <li className=" underline-hover text-[14px] font-semibold">
-                        {item.navName}
-                      </li>
-                    </NavLink>
-                  ))}
-                </ul>
-              </div>
-            </nav>
-          </div>
-          <button className="block sm:hidden">
+        {/* Mobile and controls */}
+        <div className="flex items-center gap-4">
+          {/* Mobile-only sheet nav button */}
+          <div className="block sm:hidden">
             <SheetNavigation />
-          </button>
-          <div className="hidden sm:flex items-center gap-4">
+          </div>
+
+          {/* Medium screen toggle button */}
+          <div className="hidden sm:block lg:hidden">
             <button
               className="menu-toggle"
               onClick={toggleMenu}
@@ -170,9 +115,12 @@ export const DashboardHeader = () => {
             >
               ☰
             </button>
+          </div>
 
+          {/* Desktop login + user menu */}
+          <div className="hidden sm:flex items-center gap-4">
             <button className="ai-cta">Login</button>
-
+            <UserMenu />
           </div>
         </div>
       </div>
