@@ -75,7 +75,7 @@ export const CompanyHeader = () => {
                  </NavLink>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <NavLink to="/contact-support">
+                  <NavLink to="/">
 
                     Help
                   </NavLink>

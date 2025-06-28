@@ -75,10 +75,10 @@ export const CompanyHeader = () => {
                  </NavLink>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <NavLink to="/contact-support">
-
-                    Help
+                  <NavLink>
+                    
                   </NavLink>
+                    Help
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={deleteToken}>
                     Logout

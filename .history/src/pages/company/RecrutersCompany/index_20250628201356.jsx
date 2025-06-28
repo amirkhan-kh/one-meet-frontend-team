@@ -6,15 +6,15 @@ export const RecruitersCompany = () => {
       <div>
         <h2 className="text-3xl font-bold mb-6">RecruitersCompany</h2>
         <div>
-          <h3 className="text-2xl font-semibold mb-4">Confirmed Recruiters</h3>
+          <h3 className="text-2xl font">Confirmed Recruiters</h3>
 
         </div>
         <div>
-          <h3 className="text-2xl font-semibold mb-4">Sent Invitations</h3>
+          <h3 className="text-2xl font">Sent Invitations</h3>
 
         </div>
         <div>
-          <h3 className="text-2xl font-semibold mb-4">Incoming Join requests</h3>
+          <h3 className="text-2xl font">Incoming Join requests</h3>
         </div>
       </div>
     </div>

@@ -75,10 +75,8 @@ export const CompanyHeader = () => {
                  </NavLink>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <NavLink to="/contact-support">
-
+                  <NavLink></NavLink>
                     Help
-                  </NavLink>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={deleteToken}>
                     Logout
