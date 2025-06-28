@@ -126,10 +126,7 @@ export const MobileNavigation = () => {
 					</Button>
 				</SheetTrigger>
 
-				<SheetContent
-					side='left'
-					className='w-80 border-none bg-gradient-to-br from-white via-gray-50/50 to-blue-50/30 backdrop-blur-xl shadow-2xl'
-				>
+				<SheetContent side='left' className='w-80 border-none '>
 					{/* Header with close button */}
 					<div className='flex items-center justify-between mb-8 pt-4'>
 						<div className='flex items-center space-x-3'>
