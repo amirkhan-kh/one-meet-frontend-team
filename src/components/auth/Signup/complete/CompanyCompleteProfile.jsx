@@ -14,17 +14,36 @@ export default function CompanyCompleteProfile() {
     linkedin: "",
     website: "",
   });
-  const [timezones, setTimezones] = useState([]);
+
+  const [timezones, setTimezones] = useState({});
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
     axios
-      .get("https://worldtimeapi.org/api/timezone")
-      .then((res) => setTimezones(res.data))
-      .catch(() => setTimezones([]));
+      .get("https://api.onemeet.app/user/time-zones", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.success && Array.isArray(res.data.data)) {
+          const grouped = res.data.data.reduce((acc, tz) => {
+            const parts = tz.split(" - ");
+            const region = parts[1]?.split("/")?.[0] || "Other";
+            if (!acc[region]) acc[region] = [];
+            acc[region].push(tz);
+            return acc;
+          }, {});
+          setTimezones(grouped);
+        } else {
+          setTimezones({});
+        }
+      })
+      .catch(() => setTimezones({}));
   }, []);
 
   const handleChange = (e) => {
@@ -45,17 +64,41 @@ export default function CompanyCompleteProfile() {
       setError("");
       setMessage("");
 
-      // TODO: Upload file to MediaService later
-      const logoUrl = "https://placeholder.com/logo.jpg";
+      if (
+        !form.logoFile ||
+        !["image/jpeg", "image/jpg", "image/png"].includes(form.logoFile.type)
+      ) {
+        setError("Only JPEG and PNG images are allowed.");
+        setLoading(false);
+        return;
+      }
 
-      // Step 1: Create user profile
-      const profileRes = await axios.post(
-        "https://api.onemeet.app/company/profile",
+      // Step 1: Upload logo to media service
+      const formData = new FormData();
+      formData.append("file", form.logoFile);
+
+      const mediaUpload = await axios.post(
+        "https://api.onemeet.app/media/business/upload-avatar",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const mediaId = mediaUpload.data?.data?.id;
+      if (!mediaId) throw new Error("Logo upload failed");
+
+      // Step 2: Create user profile
+      const userRes = await axios.post(
+        "https://api.onemeet.app/user/create",
         {
           firstName: form.firstName,
           lastName: form.lastName,
           timezone: form.timezone,
-          profilePicture: logoUrl,
+          profilePicture: mediaId,
         },
         {
           headers: {
@@ -64,17 +107,17 @@ export default function CompanyCompleteProfile() {
         }
       );
 
-      const userProfileId = profileRes.data.data.id;
+      const userProfileId = userRes.data.data.id;
 
-      // Step 2: Submit company details
+      // Step 3: Create company
       await axios.post(
-        "https://api.onemeet.app/company/details",
+        "https://api.onemeet.app/company/create",
         {
           ownerUserId: userProfileId,
           name: form.name,
           website: form.website,
           linkedin: form.linkedin,
-          logoUrl: logoUrl,
+          logoUrl: mediaId,
         },
         {
           headers: {
@@ -110,7 +153,6 @@ export default function CompanyCompleteProfile() {
             id="firstName"
             name="firstName"
             className="input-field slim-input"
-            placeholder="First name"
             value={form.firstName}
             onChange={handleChange}
             required
@@ -122,13 +164,12 @@ export default function CompanyCompleteProfile() {
             id="lastName"
             name="lastName"
             className="input-field slim-input"
-            placeholder="Last name"
             value={form.lastName}
             onChange={handleChange}
             required
           />
 
-          <label htmlFor="timezone" className="form-label">Your Timezone</label>
+          <label htmlFor="timezone" className="form-label">Timezone</label>
           <select
             id="timezone"
             name="timezone"
@@ -138,14 +179,18 @@ export default function CompanyCompleteProfile() {
             required
           >
             <option value="">Select your timezone</option>
-            {timezones.map((tz) => (
-              <option key={tz} value={tz}>
-                {tz}
-              </option>
+            {Object.keys(timezones).map((region) => (
+              <optgroup key={region} label={region}>
+                {timezones[region].map((tz) => (
+                  <option key={tz} value={tz}>
+                    {tz}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
 
-          <label htmlFor="logoFile" className="form-label">Upload Company Logo</label>
+          <label htmlFor="logoFile" className="form-label">Company Logo</label>
           <input
             type="file"
             id="logoFile"
@@ -161,7 +206,6 @@ export default function CompanyCompleteProfile() {
             id="name"
             name="name"
             className="input-field slim-input"
-            placeholder="Company name"
             value={form.name}
             onChange={handleChange}
             required
@@ -173,7 +217,6 @@ export default function CompanyCompleteProfile() {
             id="linkedin"
             name="linkedin"
             className="input-field slim-input"
-            placeholder="LinkedIn page"
             value={form.linkedin}
             onChange={handleChange}
             required
@@ -185,7 +228,6 @@ export default function CompanyCompleteProfile() {
             id="website"
             name="website"
             className="input-field slim-input"
-            placeholder="Website (optional)"
             value={form.website}
             onChange={handleChange}
           />

@@ -9,7 +9,7 @@ export const CandidateDashboard = () => {
       <DashboardHeader />
       <main className="min-h-screen pt-20 bg-[#f6f7f9]">
         {/* CandidateD */}
-        CandidateDashboard
+        {/* CandidateDashboard */}
         <Outlet />
       </main>
       <DashboardFooter />
