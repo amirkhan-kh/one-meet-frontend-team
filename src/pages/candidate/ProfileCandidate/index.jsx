@@ -1,10 +1,69 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PersonalInfo from "@/components/dashboards/CandidateDashboard/components/PersonalInfo";
 import AccountSettings from "@/components/dashboards/CandidateDashboard/components/AccountSettings";
 import Notifications from "@/components/dashboards/CandidateDashboard/components/Notifications";
+import axios from "axios";
 
 export const ProfileCandidate = () => {
   const [activeTab, setActiveTab] = useState("personal");
+  const [userMe, setUserMe] = useState(null);
+  const [profilePicture, setProfilePicture] = useState("");
+  
+  const token = localStorage.getItem("accessToken");
+
+  const getUser = () => {
+    axios
+      .get("https://api.onemeet.app/user/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const userData = res.data.data;
+        setUserMe(userData);
+
+        if (userData.profilePicture) {
+          axios
+            .get(
+              `https://api.onemeet.app/media/business/files/${userData.profilePicture}`,
+              {
+                headers: { Authorization: `Bearer ${token}` },
+                responseType: "blob",
+              }
+            )
+            .then((res) => {
+              const imageUrl = URL.createObjectURL(res.data);
+              setProfilePicture(imageUrl);
+            })
+            .catch((err) => {
+              console.error("Rasmni olishda xatolik:", err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleUploadPhoto = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const formData = new FormData();
+      formData.append("file", e.target.files[0]);      
+
+      axios
+        .post("https://api.onemeet.app/media/business/upload-avatar", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(() => {
+          getUser();
+        })
+        .catch((err) => {
+          console.error("Rasm yuklashda xatolik:", err);
+        });
+    }
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
     <div className="container">
       <div className="mb-8">
@@ -15,13 +74,30 @@ export const ProfileCandidate = () => {
         {/* Sidebar */}
         <div>
           <div className="border border-solid border-gray-200 rounded-lg p-10 text-center mb-5">
-            <div className="w-24 h-24 rounded-full bg-gray-200 mx-auto"></div>
-            <button
-              onClick={() => alert("Upload Photo")}
-              className="bg-gray-50 px-4 py-2 rounded mt-3 border border-solid border-gray-300 hover:bg-gray-100"
+            <div className="w-24 h-24 rounded-full bg-gray-200 mx-auto flex items-center justify-center overflow-hidden text-2xl font-bold text-white">
+              {profilePicture ? (
+                <img
+                  src={profilePicture}
+                  alt="Profile Picture"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : (
+                <span className="text-black text-4xl">{userMe?.firstName?.charAt(0)}{userMe?.lastName?.charAt(0)}</span>
+              )}
+            </div>
+            <label
+              htmlFor="upload-photo"
+              className="cursor-pointer bg-gray-50 px-4 py-2 rounded mt-3 border border-solid border-gray-300 hover:bg-gray-100 inline-block"
             >
               Upload Photo
-            </button>
+            </label>
+            <input
+              id="upload-photo"
+              type="file"
+              accept="image/*"
+              onChange={handleUploadPhoto}
+              className="hidden"
+            />
           </div>
           <div className="w-full p-4 border border-solid border-gray-200 rounded-lg">
             <button
