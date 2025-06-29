@@ -14,39 +14,51 @@ export default function UserMenu() {
   };
 
   const handleLogout = () => {
-    const token = localStorage.getItem('accessToken');
-    axios.post('https://api.onemeet.app/auth/logout', {}, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then(() => {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('userData');
-      navigate('/login');
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+    const token = localStorage.getItem("accessToken");
+    axios
+      .post(
+        "https://api.onemeet.app/auth/logout",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then(() => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userData");
+        navigate("/login");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem("accessToken");
     if (token) {
-      axios.get('https://api.onemeet.app/user/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      axios
+        .get("https://api.onemeet.app/user/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then((res) => {
           const userData = res.data.data;
           setUser(userData);
           if (userData.profilePicture) {
-            axios.get(`https://api.onemeet.app/media/candidate/get-by-id/${userData.profilePicture}`, {
-              headers: { Authorization: `Bearer ${token}` },
-            })
+            axios
+              .get(
+                `https://api.onemeet.app/media/business/files/${userData.profilePicture}`,
+                {
+                  headers: { Authorization: `Bearer ${token}` },
+                  responseType: "blob",
+                }
+              )
               .then((res) => {
-                setProfilePicture(res.data.data);
+                const imageUrl = URL.createObjectURL(res.data);
+                setProfilePicture(imageUrl);
               })
               .catch((err) => {
-                console.error('Rasmni olishda xatolik:', err);
+                console.error("Rasmni olishda xatolik:", err);
               });
           }
         })
@@ -54,7 +66,7 @@ export default function UserMenu() {
           console.error(err);
         });
     } else {
-      navigate('/login'); 
+      navigate("/login");
     }
   }, []);
 
@@ -66,20 +78,21 @@ export default function UserMenu() {
       >
         {profilePicture ? (
           <img
-            src={profilePicture.fileUrl}
-            alt={profilePicture.fileName}
+            src={profilePicture}
+            alt="User profile"
             className="w-10 h-10 rounded-lg object-cover"
           />
         ) : (
           <div className="bg-black text-white w-10 h-10 rounded-lg flex items-center justify-center">
-            {user ? user.firstName.charAt(0) + user.lastName.charAt(0) : 'U'}
+            {user ? user.firstName.charAt(0) + user.lastName.charAt(0) : ""}
           </div>
         )}
+
         <div>
           <p className="text-sm font-semibold">
-            {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}
+            {user ? `${user.firstName} ${user.lastName}` : "Loading..."}
           </p>
-          <p className="text-xs">{user ? user.email : ''}</p>
+          <p className="text-xs">{user ? user.email : ""}</p>
         </div>
       </div>
 
