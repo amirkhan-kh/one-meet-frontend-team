@@ -179,7 +179,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom' // React Route
 const NavLink = ({ to, onClick, className, children }) => {
 	const location = useLocation() // Sahifaning hozirgi yo'nalishini olish
 	const navigate = useNavigate() // Sahifaga navigatsiya qilish
-	const isActive = location.pathname === to // Agar sahifa hozirgi to'liq manzilga mos kelsa, aktiv deb belgilash
+	const isActive = location.pathname === to
 
 	return (
 		<Link
