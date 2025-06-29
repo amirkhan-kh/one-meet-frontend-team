@@ -98,6 +98,7 @@ function App() {
 
 			{/* Recruiter Dashboard */}
 			<Route path='/recruiter' element={<RecruiterDashboard />}>
+				<Route index element={<InterviewsRec />} />
 				<Route path='interviews-rec' element={<InterviewsRec />} />
 				<Route path='usage' element={<UsageRec />} />
 				<Route
