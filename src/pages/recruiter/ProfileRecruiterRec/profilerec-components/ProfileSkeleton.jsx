@@ -1,3 +1,4 @@
+import { MainLayout } from '@/components/dashboards/RecruiterDashboard/recruiter-components/main-layout'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 

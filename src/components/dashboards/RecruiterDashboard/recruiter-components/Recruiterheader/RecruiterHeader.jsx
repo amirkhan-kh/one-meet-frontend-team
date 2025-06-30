@@ -6,28 +6,41 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { BarChart3, HelpCircle, LogOut, Settings } from 'lucide-react'
-import { useState } from 'react'
+import { interviewAPI } from '@/lib/api'
+import { BarChart3, HelpCircle, LogOut } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { MobileNavigation } from './mobile-navigation'
 import { ProfileAvatar } from './profile-avatar'
 
 export const RecruiterDashboardHeader = () => {
-	const [user, setUser] = useState({
-		name: 'John Doe',
-		email: 'john@example.com',
-		avatar: undefined,
-	})
-
+	const [user, setUser] = useState(null)
 	const location = useLocation()
 	const path = location.pathname
 
-	const getInitials = name => {
-		return name
-			.split(' ')
-			.map(n => n[0])
-			.join('')
-			.toUpperCase()
+	useEffect(() => {
+		// Load user data from localStorage
+		const userData = interviewAPI.getCurrentUser()
+		setUser(userData)
+	}, [])
+
+	const handleLogout = () => {
+		localStorage.removeItem('accessToken')
+		localStorage.removeItem('userData')
+		window.location.href = '/login'
+	}
+
+	if (!user) {
+		return (
+			<header className='border-b bg-white py-10'>
+				<div className='container mx-auto flex items-center justify-between '>
+					<a href='/' className='text-xl font-bold text-blue-600'>
+						OneMeet
+					</a>
+					<div className='text-sm text-gray-500'>Loading...</div>
+				</div>
+			</header>
+		)
 	}
 
 	return (
@@ -40,7 +53,7 @@ export const RecruiterDashboardHeader = () => {
 				<div className='flex items-center gap-4'>
 					{/* Dashboard Link */}
 					<NavLink
-						to='/recruiter-dashboard/interviews-rec'
+						to='/recruiter/interviews-rec'
 						className='hidden md:flex items-center gap-2 px-3 py-2 text-md font-medium text-gray-700 hover:text-blue-600 transition-colors'
 					>
 						Dashboard
@@ -48,7 +61,7 @@ export const RecruiterDashboardHeader = () => {
 
 					{/* Usage Link */}
 					<NavLink
-						to='/recruiter-dashboard/usage'
+						to='/recruiter/usage'
 						className='hidden md:flex items-center gap-2 px-3 py-2 text-md font-medium text-gray-700 hover:text-blue-600 transition-colors'
 					>
 						<BarChart3 className='h-4 w-4' />
@@ -87,17 +100,19 @@ export const RecruiterDashboardHeader = () => {
 									</div>
 								</div>
 								<DropdownMenuSeparator />
-								<DropdownMenuItem>
-									<BarChart3 className='mr-2 h-4 w-4' />
-									Profile
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<Settings className='mr-2 h-4 w-4' />
-									Settings
-								</DropdownMenuItem>
+								<Link to={'/recruiter/profile-recruiter'}>
+									<DropdownMenuItem>
+										<BarChart3 className='mr-2 h-4 w-4' />
+										Profile
+									</DropdownMenuItem>
+								</Link>
+
 								<DropdownMenuSeparator />
 								<Link to='/'>
-									<DropdownMenuItem className='text-red-600'>
+									<DropdownMenuItem
+										onClick={handleLogout}
+										className='text-red-600'
+									>
 										<LogOut className='mr-2 h-4 w-4' />
 										Log out
 									</DropdownMenuItem>

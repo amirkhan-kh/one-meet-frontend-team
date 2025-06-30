@@ -12,7 +12,7 @@ export const CandidateDashboard = () => {
         {/* CandidateDashboard */}
         <Outlet />
       </main>
-      <DashboardFooter />
+      {/* <DashboardFooter /> */}
     </>
   );
 };

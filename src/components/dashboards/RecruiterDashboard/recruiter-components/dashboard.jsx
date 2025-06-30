@@ -1,39 +1,51 @@
-import { EnhancedRecruitmentAnalytics } from './charts/enhanced-recruitment-analytics'
-import { MainLayout } from './main-layout'
-import Quickactions from './quickactions'
-import RecentActivity from './recentactivity'
-import StatsGrid from './statsgrid'
-import TopCandidates from './topcandidates'
+import React from 'react'
+import { InterviewCharts } from './charts/enhanced-recruitment-analytics'
+import { PerformanceMetrics } from './preformance-metric'
+import { QuickActions } from './quickactions'
+import { UsageSummary } from './usage-summary'
 
-export const DashboardPage = () => {
+export function DashboardPage() {
+	const [selectedYear, setSelectedYear] = React.useState('2025')
+	const [selectedMonth, setSelectedMonth] = React.useState('01')
+
 	return (
-		<MainLayout>
-			<div className='space-y-6'>
-				<div>
-					<h1 className='text-2xl font-bold text-gray-900'>
-						Welcome back!
+		<div className='min-h-screen bg-gray-50'>
+			<div className='container mx-auto px-6 py-8 max-w-7xl'>
+				{/* Header */}
+				<div className='mb-8'>
+					<h1 className='text-3xl font-bold text-gray-900'>
+						Interview Analytics
 					</h1>
-					<p className='text-gray-600'>
-						Here's what's happening with your recruitment activities
+					<p className='text-gray-600 mt-1'>
+						Advanced recruitment insights dashboard
 					</p>
 				</div>
 
-				{/* Stats Grid */}
-				<StatsGrid />
+				{/* Usage Summary */}
+				<UsageSummary
+					selectedYear={selectedYear}
+					selectedMonth={selectedMonth}
+					onYearChange={setSelectedYear}
+					onMonthChange={setSelectedMonth}
+				/>
 
 				{/* Main Content Grid */}
-				<div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-					{/* Recent Activity */}
-					<RecentActivity />
-					{/* Top Candidates */}
-					<TopCandidates />
-				</div>
+				<div className='grid grid-cols-1 xl:grid-cols-4 gap-6 mt-8'>
+					{/* Charts Section */}
+					<div className='xl:col-span-3 space-y-6'>
+						<InterviewCharts
+							selectedYear={selectedYear}
+							selectedMonth={selectedMonth}
+						/>
+						<PerformanceMetrics />
+					</div>
 
-				{/* Enhanced Analytics Chart */}
-				<EnhancedRecruitmentAnalytics />
-				{/* Quick Actions */}
-				<Quickactions />
+					{/* Sidebar */}
+					<div className='xl:col-span-1'>
+						<QuickActions />
+					</div>
+				</div>
 			</div>
-		</MainLayout>
+		</div>
 	)
 }

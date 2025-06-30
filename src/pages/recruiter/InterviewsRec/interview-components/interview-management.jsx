@@ -16,19 +16,27 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog'
 import { Loader2, Plus } from 'lucide-react'
-import { useState } from 'react'
-import { toast } from 'sonner'
+import { useEffect, useState } from 'react'
 import { InterviewDetails } from './interview-details'
 import { InterviewForm } from './interview-form'
 import { InterviewList } from './interview-list'
 
-export const InterviewManagement = ({ recruiterId, companyId }) => {
+import { interviewAPI } from '@/lib/api'
+import { toast } from 'sonner'
+
+export const InterviewManagement = () => {
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 	const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 	const [selectedInterview, setSelectedInterview] = useState(null)
 	const [isDeleting, setIsDeleting] = useState(false)
 	const [refreshKey, setRefreshKey] = useState(0)
+	const [currentUser, setCurrentUser] = useState(null)
+
+	useEffect(() => {
+		const userData = interviewAPI.getCurrentUser()
+		setCurrentUser(userData)
+	}, [])
 
 	const handleCreateSuccess = () => {
 		setIsCreateModalOpen(false)
@@ -57,7 +65,7 @@ export const InterviewManagement = ({ recruiterId, companyId }) => {
 			setIsDeleting(true)
 			// TODO: Implement delete API call
 			await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
-			toast.success('Interview deleted successfully')
+			toast.info('Interview deleted coming soon')
 			setIsDeleteDialogOpen(false)
 			setSelectedInterview(null)
 			setRefreshKey(prev => prev + 1)
@@ -69,6 +77,18 @@ export const InterviewManagement = ({ recruiterId, companyId }) => {
 		}
 	}
 
+	if (!currentUser) {
+		return (
+			<div className='flex items-center justify-center p-8'>
+				<Loader2 className='h-6 w-6 animate-spin' />
+				<span className='ml-2'>Loading...</span>
+			</div>
+		)
+	}
+
+	const canCreateInterviews =
+		currentUser.authRole === 'RECRUITER' || currentUser.authRole === 'ADMIN'
+
 	return (
 		<div className='space-y-6'>
 			{/* Header */}
@@ -78,44 +98,47 @@ export const InterviewManagement = ({ recruiterId, companyId }) => {
 						Interview Management
 					</h1>
 					<p className='text-gray-600'>
-						Create and manage interview schedules for your
-						candidates
+						{currentUser.authRole === 'RECRUITER'
+							? 'Create and manage interview schedules for your candidates'
+							: 'View your scheduled interviews'}
 					</p>
 				</div>
-				<Button
-					onClick={() => setIsCreateModalOpen(true)}
-					className='bg-blue-600 hover:bg-blue-700'
-				>
-					<Plus className='mr-2 h-4 w-4' />
-					Create Interview
-				</Button>
+				{canCreateInterviews && (
+					<Button
+						onClick={() => setIsCreateModalOpen(true)}
+						className='bg-blue-600 hover:bg-blue-700'
+					>
+						<Plus className='mr-2 h-4 w-4' />
+						Create Interview
+					</Button>
+				)}
 			</div>
 
 			{/* Interview List */}
 			<InterviewList
-				key={refreshKey}
-				recruiterId={recruiterId}
-				companyId={companyId}
+				refreshKey={refreshKey}
 				onView={handleView}
 				onEdit={handleEdit}
 				onDelete={handleDelete}
 			/>
 
 			{/* Create Interview Modal */}
-			<Dialog
-				open={isCreateModalOpen}
-				onOpenChange={setIsCreateModalOpen}
-			>
-				<DialogContent className='max-w-4xl max-h-[90vh] overflow-y-auto'>
-					<DialogHeader>
-						<DialogTitle>Create New Interview</DialogTitle>
-					</DialogHeader>
-					<InterviewForm
-						onSuccess={handleCreateSuccess}
-						onCancel={() => setIsCreateModalOpen(false)}
-					/>
-				</DialogContent>
-			</Dialog>
+			{canCreateInterviews && (
+				<Dialog
+					open={isCreateModalOpen}
+					onOpenChange={setIsCreateModalOpen}
+				>
+					<DialogContent className='max-w-4xl max-h-[90vh] overflow-y-auto'>
+						<DialogHeader>
+							<DialogTitle>Create New Interview</DialogTitle>
+						</DialogHeader>
+						<InterviewForm
+							onSuccess={handleCreateSuccess}
+							onCancel={() => setIsCreateModalOpen(false)}
+						/>
+					</DialogContent>
+				</Dialog>
+			)}
 
 			{/* Interview Details Modal */}
 			<Dialog

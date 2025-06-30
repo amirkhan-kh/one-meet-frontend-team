@@ -5,8 +5,9 @@ import { RecruiterDashboardHeader } from './recruiter-components/Recruiterheader
 export const RecruiterDashboard = () => {
 	return (
 		<>
+			{/* dashboard recruiter un */}
 			<RecruiterDashboardHeader />
-			<main className='min-h-screen pt-20 bg-[#f6f7f9]'>
+			<main className='min-h-screen bg-[#f6f7f9]'>
 				<Toaster position='top-center' richColors />
 				<Outlet />
 			</main>
