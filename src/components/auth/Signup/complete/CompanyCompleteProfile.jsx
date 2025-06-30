@@ -127,6 +127,18 @@ export default function CompanyCompleteProfile() {
       );
 
       setMessage("Company profile completed.");
+      	const accessToken = localStorage.getItem('accessToken')
+			const userResponse = await axios.get(
+				'https://api.onemeet.app/auth/me',
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				}
+			)
+
+			const userData = userResponse.data.data
+			localStorage.setItem('userData', JSON.stringify(userData))
       navigate("/company");
     } catch (err) {
       setError(err.response?.data?.message || "Submission failed");
