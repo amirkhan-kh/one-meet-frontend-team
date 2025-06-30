@@ -111,42 +111,31 @@ export default function CompanyCompleteProfile() {
 
 			const userProfileId = userRes.data.data.id
 
-			// Step 3: Create company
-			await axios.post(
-				'https://api.onemeet.app/company/create',
-				{
-					ownerUserId: userProfileId,
-					name: form.name,
-					website: form.website,
-					linkedin: form.linkedin,
-					logoUrl: mediaId,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			)
+      // Step 3: Create company
+      await axios.post(
+        "https://api.onemeet.app/company/create",
+        {
+          ownerUserId: userProfileId,
+          name: form.name,
+          website: form.website,
+          linkedin: form.linkedin,
+          logoUrl: mediaId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-			setMessage('Company profile completed.')
-			const accessToken = localStorage.getItem('accessToken')
-			const userResponse = await axios.get(
-				'https://api.onemeet.app/auth/me',
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				}
-			)
-			const userData = userResponse.data.data
-			localStorage.setItem('userData', JSON.stringify(userData))
-			navigate('/company')
-		} catch (err) {
-			setError(err.response?.data?.message || 'Submission failed')
-		} finally {
-			setLoading(false)
-		}
-	}
+      setMessage("Company profile completed.");
+      navigate("/company");
+    } catch (err) {
+      setError(err.response?.data?.message || "Submission failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
 	return (
 		<div className='page-background'>

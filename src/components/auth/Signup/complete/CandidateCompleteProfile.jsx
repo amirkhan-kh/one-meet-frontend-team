@@ -136,6 +136,7 @@ export default function CandidateCompleteProfile() {
 					},
 				}
 			)
+
 			const userData = userResponse.data.data
 			localStorage.setItem('userData', JSON.stringify(userData))
 			navigate('/candidate')

@@ -124,39 +124,29 @@ export default function RecruiterCompleteProfile() {
 			const userProfile = userRes.data.data
 			localStorage.setItem('userProfile', JSON.stringify(userProfile))
 
-			// Step 3: Create recruiter
-			await axios.post(
-				'https://api.onemeet.app/recruiter/create',
-				{
-					userProfileId: userProfile.id,
-					companyId: form.companyId,
-					position: form.position,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			)
-			setMessage('Recruiter profile completed.')
-			const accessToken = localStorage.getItem('accessToken')
-			const userResponse = await axios.get(
-				'https://api.onemeet.app/auth/me',
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				}
-			)
-			const userData = userResponse.data.data
-			localStorage.setItem('userData', JSON.stringify(userData))
-			navigate('/recruiter')
-		} catch (err) {
-			setError(err.response?.data?.message || 'Submission failed.')
-		} finally {
-			setLoading(false)
-		}
-	}
+      // Step 3: Create recruiter
+      await axios.post(
+        "https://api.onemeet.app/recruiter/create",
+        {
+          userProfileId: userProfile.id,
+          companyId: form.companyId,
+          position: form.position,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setMessage("Recruiter profile completed.");
+      navigate("/recruiter");
+    } catch (err) {
+      setError(err.response?.data?.message || "Submission failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
 	return (
 		<div className='page-background'>
