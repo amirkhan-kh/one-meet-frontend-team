@@ -3,55 +3,49 @@ import PersonalInfo from "@/components/dashboards/CandidateDashboard/components/
 import AccountSettings from "@/components/dashboards/CandidateDashboard/components/AccountSettings";
 import Notifications from "@/components/dashboards/CandidateDashboard/components/Notifications";
 import axios from "axios";
+import { useUserMe } from "@/lib/hook/useUserMe";
 
 export const ProfileCandidate = () => {
   const [activeTab, setActiveTab] = useState("personal");
-  const [userMe, setUserMe] = useState(null);
   const [profilePicture, setProfilePicture] = useState("");
-  
+
   const token = localStorage.getItem("accessToken");
 
-  const getUser = () => {
-    axios
-      .get("https://api.onemeet.app/user/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        const userData = res.data.data;
-        setUserMe(userData);
+  const { user, loading, error } = useUserMe();
 
-        if (userData.profilePicture) {
-          axios
-            .get(
-              `https://api.onemeet.app/media/business/files/${userData.profilePicture}`,
-              {
-                headers: { Authorization: `Bearer ${token}` },
-                responseType: "blob",
-              }
-            )
-            .then((res) => {
-              const imageUrl = URL.createObjectURL(res.data);
-              setProfilePicture(imageUrl);
-            })
-            .catch((err) => {
-              console.error("Rasmni olishda xatolik:", err);
-            });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const getUser = () => {
+    if (user && user.profilePicture) {
+      axios
+        .get(
+          `https://api.onemeet.app/media/business/files/${user.profilePicture}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            responseType: "blob",
+          }
+        )
+        .then((res) => {
+          const imageUrl = URL.createObjectURL(res.data);
+          setProfilePicture(imageUrl);
+        })
+        .catch((err) => {
+          console.error("Rasmni olishda xatolik:", err);
+        });
+    }
   };
 
   const handleUploadPhoto = (e) => {
     if (e.target.files && e.target.files[0]) {
       const formData = new FormData();
-      formData.append("file", e.target.files[0]);      
+      formData.append("file", e.target.files[0]);
 
       axios
-        .post("https://api.onemeet.app/media/business/upload-avatar", formData, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        .post(
+          "https://api.onemeet.app/media/business/upload-avatar",
+          formData,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
         .then(() => {
           getUser();
         })
@@ -61,8 +55,10 @@ export const ProfileCandidate = () => {
     }
   };
   useEffect(() => {
-    getUser();
-  }, []);
+    if (user) {
+      getUser();
+    }
+  }, [user]);
 
   return (
     <div className="container">
@@ -82,7 +78,10 @@ export const ProfileCandidate = () => {
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <span className="text-black text-4xl">{userMe?.firstName?.charAt(0)}{userMe?.lastName?.charAt(0)}</span>
+                <span className="text-black text-4xl">
+                  {user?.firstName?.charAt(0)}
+                  {user?.lastName?.charAt(0)}
+                </span>
               )}
             </div>
             <label

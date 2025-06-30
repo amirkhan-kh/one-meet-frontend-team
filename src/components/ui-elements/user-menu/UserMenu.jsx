@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { FaSignOutAlt } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { useUserMe } from "@/lib/hook/useUserMe";
 
 export default function UserMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const navigate = useNavigate();
+
+  const { user, loading, error } = useUserMe();
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -35,40 +37,35 @@ export default function UserMenu() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
+    if (user && user.profilePicture) {
+      const token = localStorage.getItem("accessToken");
       axios
-        .get("https://api.onemeet.app/user/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          const userData = res.data.data;
-          setUser(userData);
-          if (userData.profilePicture) {
-            axios
-              .get(
-                `https://api.onemeet.app/media/business/files/${userData.profilePicture}`,
-                {
-                  headers: { Authorization: `Bearer ${token}` },
-                  responseType: "blob",
-                }
-              )
-              .then((res) => {
-                const imageUrl = URL.createObjectURL(res.data);
-                setProfilePicture(imageUrl);
-              })
-              .catch((err) => {
-                console.error("Rasmni olishda xatolik:", err);
-              });
+        .get(
+          `https://api.onemeet.app/media/business/files/${user.profilePicture}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            responseType: "blob",
           }
+        )
+        .then((res) => {
+          const imageUrl = URL.createObjectURL(res.data);
+          setProfilePicture(imageUrl);
         })
         .catch((err) => {
-          console.error(err);
+          console.error("Rasmni olishda xatolik:", err);
         });
-    } else {
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
       navigate("/login");
     }
   }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Xatolik: {error.message || error}</p>;
 
   return (
     <div className="relative">
@@ -92,7 +89,7 @@ export default function UserMenu() {
           <p className="text-sm font-semibold">
             {user ? `${user.firstName} ${user.lastName}` : "Loading..."}
           </p>
-          <p className="text-xs">{user ? user.email : ""}</p>
+          <p className="text-xs">{user?.email}</p>
         </div>
       </div>
 

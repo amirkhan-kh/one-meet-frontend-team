@@ -1,39 +1,7 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useUserMe } from "@/lib/hook/useUserMe";
 
 export default function PersonalInfo() {
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-  });
-
-  useEffect(() => {
-    axios
-      .get("https://api.onemeet.app/user/me", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        const userData = res.data.data;
-        setUser({
-          firstName: userData.firstName || "",
-          lastName: userData.lastName || "",
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
-  };
+  const { user, loading, error } = useUserMe();
 
   return (
     <div>
@@ -46,8 +14,8 @@ export default function PersonalInfo() {
         <input
           type="text"
           name="fullName"
-          value={user.firstName + " " + user.lastName}
-          onChange={handleChange}
+          value={user?.firstName + " " + user?.lastName}
+          // onChange={handleChange}
           className="mt-1 block w-full border border-gray-300 rounded-md p-2"
           placeholder="Enter your first name"
         />
