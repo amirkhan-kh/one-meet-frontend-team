@@ -30,3 +30,4 @@ export const ProfileAvatar = ({ user, size = 'md' }) => {
 		</Avatar>
 	)
 }
+

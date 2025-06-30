@@ -36,12 +36,6 @@ export const InterviewManagement = () => {
 	useEffect(() => {
 		const userData = interviewAPI.getCurrentUser()
 		setCurrentUser(userData)
-
-		if (!interviewAPI.isAuthenticated()) {
-			toast.error('Please log in to access interviews')
-			// Redirect to login page
-			window.location.href = '/login'
-		}
 	}, [])
 
 	const handleCreateSuccess = () => {
