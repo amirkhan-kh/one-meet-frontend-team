@@ -541,13 +541,11 @@ export const InterviewList = ({ onEdit, onView, onDelete, refreshKey }) => {
 
 	const loadInterviews = async () => {
 		if (!currentUser) {
-			
 			return
 		}
 
 		try {
 			setIsLoading(true)
-			
 
 			let response
 
@@ -564,8 +562,6 @@ export const InterviewList = ({ onEdit, onView, onDelete, refreshKey }) => {
 
 			// User role ga qarab turli xil API chaqiruvlar
 			if (currentUser.authRole === 'RECRUITER') {
-				
-
 				// Filters obyektini tozalash - faqat kerakli qiymatlarni yuborish
 				const cleanFilters = {}
 
@@ -584,14 +580,11 @@ export const InterviewList = ({ onEdit, onView, onDelete, refreshKey }) => {
 					pageable
 				)
 			} else if (currentUser.authRole === 'CANDIDATE') {
-			
 				response = await interviewAPI.getCandidateInterviews(
 					currentUser.id,
 					pageable
 				)
 			} else if (currentUser.authRole === 'COMPANY') {
-			
-
 				// COMPANY uchun ham filtersni tozalash
 				const cleanFilters = {}
 				// Faqat status ni yuborish, sort parametrlarini emas
@@ -607,8 +600,6 @@ export const InterviewList = ({ onEdit, onView, onDelete, refreshKey }) => {
 			} else {
 				throw new Error(`Noma'lum user role: ${currentUser.authRole}`)
 			}
-
-			
 
 			// Response strukturasini tekshirish
 			// API qaytargan ma'lumotlar: { success: true, data: { content: [...], totalElements: 2, ... } }
@@ -635,8 +626,6 @@ export const InterviewList = ({ onEdit, onView, onDelete, refreshKey }) => {
 				totalElements,
 				totalPages,
 			}))
-
-		
 		} catch (error) {
 			console.error('loadInterviews xatosi:', {
 				message: error.message,
@@ -826,7 +815,7 @@ export const InterviewList = ({ onEdit, onView, onDelete, refreshKey }) => {
 								onClick={handleRetry}
 								className='ml-auto'
 							>
-								Qaytadan urinish
+								Try again
 							</Button>
 						)}
 					</div>
@@ -847,7 +836,7 @@ export const InterviewList = ({ onEdit, onView, onDelete, refreshKey }) => {
 								: 'No interviews scheduled for you yet.'}
 						</p>
 						<Button onClick={handleRetry} variant='outline'>
-							Qaytadan yuklash
+							Try again
 						</Button>
 					</CardContent>
 				</Card>
