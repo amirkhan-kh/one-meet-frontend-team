@@ -63,7 +63,7 @@ function App() {
 			/>
 
 			{/* Candidate Dashboard */}
-			<Route path='/candidate-dashboard' element={<CandidateDashboard />}>
+			<Route path='/candidate' element={<CandidateDashboard />}>
 				<Route index element={<CandidateHome />} />
 				{/* <Route path='feedback' element={<Feedback />} /> */}
 				{/* <Route path='join-interview' element={<JoinInterviews />} /> */}
