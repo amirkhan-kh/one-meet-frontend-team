@@ -249,12 +249,6 @@ class InterviewAPI {
 	getCurrentUser() {
 		return this.getUserData()
 	}
-
-	isAuthenticated() {
-		const accessToken = localStorage.getItem('accessToken')
-		const userData = this.getUserData()
-		return !!(accessToken && userData)
-	}
 }
 
 export const interviewAPI = new InterviewAPI()
