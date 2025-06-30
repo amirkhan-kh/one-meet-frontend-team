@@ -141,33 +141,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-
-// localStorage'dan user ma'lumotlarini olish
-const getUserFromLocalStorage = () => {
-	try {
-		const userData = JSON.parse(localStorage.getItem('userData'))
-		const userProfile = JSON.parse(localStorage.getItem('userProfile'))
-		const savedBio = localStorage.getItem('userBio')
-
-		if (userData && userProfile) {
-			return {
-				fullName: `${userProfile.firstName} ${userProfile.lastName}`,
-				email: userData.email,
-				bio: savedBio || '', // agar bio saqlangan bo'lsa, o‘shani oladi
-			}
-		}
-	} catch (e) {
-		console.error('Error parsing localStorage user data', e)
-	}
-	return {
-		fullName: '',
-		email: '',
-		bio: '',
-	}
-}
 
 export const PersonalInformation = () => {
 	const [user, setUser] = useState({
@@ -178,11 +155,51 @@ export const PersonalInformation = () => {
 	const [formData, setFormData] = useState(user)
 	const [isSaving, setIsSaving] = useState(false)
 
-	// Komponent yuklanganda localStorage'dan userni o'qish
 	useEffect(() => {
-		const localUser = getUserFromLocalStorage()
-		setUser(localUser)
-		setFormData(localUser)
+		const fetchUser = async () => {
+			const token = localStorage.getItem('accessToken')
+			const savedBio = localStorage.getItem('userBio') || ''
+
+			if (!token) return
+
+			try {
+				// 1. /auth/me dan email
+				const authRes = await axios.get(
+					'https://api.onemeet.app/auth/me',
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				)
+				const email = authRes.data.data.email
+
+				// 2. /user/me dan ism-familiya
+				const userRes = await axios.get(
+					'https://api.onemeet.app/user/me',
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				)
+				const userData = userRes.data.data
+				const fullName = `${userData.firstName} ${userData.lastName}`
+
+				const result = {
+					fullName,
+					email,
+					bio: savedBio,
+				}
+
+				setUser(result)
+				setFormData(result)
+			} catch (error) {
+				console.error('User maʼlumotlarini olishda xatolik:', error)
+			}
+		}
+
+		fetchUser()
 	}, [])
 
 	const handleSave = async () => {
@@ -190,10 +207,10 @@ export const PersonalInformation = () => {
 			setIsSaving(true)
 			await new Promise(resolve => setTimeout(resolve, 1000))
 
-			// Ma’lumotni yangilab statega va localStorage'ga yozamiz
 			const updatedUser = { ...user, ...formData }
 			setUser(updatedUser)
-			localStorage.setItem('userBio', updatedUser.bio) // faqat bio'ni saqlaymiz
+			localStorage.setItem('userBio', updatedUser.bio)
+
 			toast.success('Personal information updated successfully')
 		} catch {
 			toast.error('Failed to update personal information')
