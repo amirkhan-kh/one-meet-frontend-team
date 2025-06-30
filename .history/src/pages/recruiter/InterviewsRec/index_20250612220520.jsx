@@ -1,4 +1,3 @@
-'use client'
 
 import { MainLayout } from '@/components/dashboards/RecruiterDashboard/components/main-layout'
 import {

@@ -1,5 +1,3 @@
-'use client'
-
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -73,7 +71,7 @@ export const InterviewManagement = () => {
 			setIsDeleting(true)
 			// TODO: Implement delete API call
 			await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
-			toast.success('Interview deleted successfully')
+			toast.info('Interview deleted coming soon')
 			setIsDeleteDialogOpen(false)
 			setSelectedInterview(null)
 			setRefreshKey(prev => prev + 1)
