@@ -23,7 +23,7 @@ export const navigationCandidateDashboard = [
     { navName: "Dashboard", pathName: "/candidate-dashboard"},
     // { navName: "Join Interview", pathName: "join-interview"},
     // { navName: "Feedback", pathName: "feedback"},
-    { navName: "Help", pathName: "/help"},
+    { navName: "Help", pathName: "/contact-support"},
     { navName: "Profile", pathName: "profile-candidate"},
 ]
 
