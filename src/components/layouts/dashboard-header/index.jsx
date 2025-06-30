@@ -119,7 +119,7 @@ export const DashboardHeader = () => {
 
           {/* Desktop login + user menu */}
           <div className="hidden sm:flex items-center gap-4">
-            <button className="ai-cta">Login</button>
+            {/* <button className="ai-cta">Login</button> */}
             <UserMenu />
           </div>
         </div>
