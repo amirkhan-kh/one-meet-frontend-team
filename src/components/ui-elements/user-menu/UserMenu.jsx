@@ -85,7 +85,7 @@ export default function UserMenu() {
           </div>
         )}
 
-        <div>
+        <div className="md:block hidden ">
           <p className="text-sm font-semibold">
             {user ? `${user.firstName} ${user.lastName}` : "Loading..."}
           </p>
