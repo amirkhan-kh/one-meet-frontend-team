@@ -3,17 +3,21 @@ import { FaSignOutAlt } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { useUserMe } from "@/lib/hook/useUserMe";
+import { useUser } from "@/lib/hook/useUser";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogOut } from "lucide-react";
 
 export default function UserMenu() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
   const navigate = useNavigate();
 
   const { user, loading, error } = useUserMe();
-
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
+  const userData = useUser();
 
   const handleLogout = () => {
     const token = localStorage.getItem("accessToken");
@@ -68,43 +72,40 @@ export default function UserMenu() {
   if (error) return <p>Xatolik: {error.message || error}</p>;
 
   return (
-    <div className="relative">
-      <div
-        onClick={toggleMenu}
-        className="flex items-center cursor-pointer space-x-2"
-      >
-        {profilePicture ? (
-          <img
-            src={profilePicture}
-            alt="User profile"
-            className="w-10 h-10 rounded-lg object-cover"
-          />
-        ) : (
-          <div className="bg-black text-white w-10 h-10 rounded-lg flex items-center justify-center">
-            {user ? user.firstName.charAt(0) + user.lastName.charAt(0) : ""}
+    <div className="flex items-center">
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center cursor-pointer space-x-2">
+            <div>
+              {profilePicture ? (
+                <img
+                  src={profilePicture}
+                  alt="User profile"
+                  className="w-10 h-10 rounded-lg object-cover"
+                />
+              ) : (
+                <div className="bg-black text-white w-10 h-10 rounded-lg flex items-center justify-center">
+                  {user
+                    ? user.firstName.charAt(0) + user.lastName.charAt(0)
+                    : ""}
+                </div>
+              )}
+            </div>
+            <div className="md:block hidden text-start">
+              <p className="text-sm font-semibold">
+                {user ? `${user.firstName} ${user.lastName}` : "Loading..."}
+              </p>
+              <p className="text-xs">{userData?.user?.email}</p>
+            </div>
           </div>
-        )}
-
-        <div className="md:block hidden ">
-          <p className="text-sm font-semibold">
-            {user ? `${user.firstName} ${user.lastName}` : "Loading..."}
-          </p>
-          <p className="text-xs">{user?.email}</p>
-        </div>
-      </div>
-
-      {isMenuOpen && (
-        <div className="absolute right-0 mt-2 w-52 bg-white border rounded-lg shadow-lg p-2 z-50">
-          <ul>
-            <li
-              onClick={handleLogout}
-              className="flex items-center px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-            >
-              <FaSignOutAlt className="mr-2" /> Log out
-            </li>
-          </ul>
-        </div>
-      )}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+            <LogOut className="mr-2 h-4 w-4" />
+            Log out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

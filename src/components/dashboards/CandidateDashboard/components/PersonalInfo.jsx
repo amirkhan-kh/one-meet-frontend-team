@@ -1,4 +1,7 @@
+import { useUser } from "@/lib/hook/useUser";
+
 export default function PersonalInfo({ formData, handleInputChange, userPut, isChanged, resetForm }) {
+  const userData = useUser();
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
@@ -32,8 +35,7 @@ export default function PersonalInfo({ formData, handleInputChange, userPut, isC
         <input
           type="email"
           name="email"
-          // value={formData.email}
-          // onChange={handleInputChange}
+          value={userData?.user?.email}
           className="mt-1 block w-full border border-gray-300 rounded-md p-2"
           placeholder="Enter your email"
         />
