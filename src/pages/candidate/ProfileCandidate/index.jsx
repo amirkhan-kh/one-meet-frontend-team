@@ -15,6 +15,11 @@ export const ProfileCandidate = () => {
     profilePicture: "",
   });
   const [newPicture, setNewPicture] = useState(null);
+  const [initialData, setInitialData] = useState({
+    firstName: "",
+    lastName: "",
+    profilePicture: "",
+  });
 
   const token = localStorage.getItem("accessToken");
   const { user, loading, error } = useUserMe();
@@ -39,7 +44,6 @@ export const ProfileCandidate = () => {
     }
   };
 
-  
   const handleUploadPhoto = (e) => {
     if (e.target.files && e.target.files[0]) {
       const formDataUpload = new FormData();
@@ -56,7 +60,7 @@ export const ProfileCandidate = () => {
         .then((res) => {
           setNewPicture(res.data.data.id);
           console.log("Rasm yuklandi:", res.data.data.id);
-          
+
           // getUser();
         })
         .catch((err) => {
@@ -64,15 +68,17 @@ export const ProfileCandidate = () => {
         });
     }
   };
-  
+
   useEffect(() => {
     if (user) {
       getUser();
-      setFormData({
+      const userData = {
         firstName: user.firstName || "",
         lastName: user.lastName || "",
         profilePicture: newPicture || "",
-      });
+      };
+      setFormData(userData);
+      setInitialData(userData);
     }
   }, [user, newPicture]);
 
@@ -80,6 +86,12 @@ export const ProfileCandidate = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const isChanged = JSON.stringify(formData) !== JSON.stringify(initialData);
+
+  const resetForm = () => {
+  setFormData(initialData);
+};
 
   const userPut = () => {
     axios
@@ -166,19 +178,20 @@ export const ProfileCandidate = () => {
             </button>
           </div>
         </div>
-      <div className="w-full border border-solid border-gray-200 rounded-lg p-5">
-        {activeTab === "personal" && (
-          <PersonalInfo
-            formData={formData}
-            handleInputChange={handleInputChange}
-            userPut={userPut}
-          />
-        )}
-        {activeTab === "account" && <AccountSettings />}
-        {activeTab === "notifications" && <Notifications />}
+        <div className="w-full border border-solid border-gray-200 rounded-lg p-5">
+          {activeTab === "personal" && (
+            <PersonalInfo
+              formData={formData}
+              handleInputChange={handleInputChange}
+              userPut={userPut}
+              isChanged={isChanged}
+              resetForm={resetForm}
+            />
+          )}
+          {activeTab === "account" && <AccountSettings />}
+          {activeTab === "notifications" && <Notifications />}
+        </div>
       </div>
-      </div>
-
     </div>
   );
 };
