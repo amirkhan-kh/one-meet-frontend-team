@@ -1,34 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { useCanById } from "@/lib/hook/useCanByUser";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-export default function Pending() {
-  const [pending, setPending] = useState([]);
-  const userId = useCanById();
-  const canId = userId?.userId?.id;
-
-  useEffect(() => {
-    if (canId) {
-      axios
-        .get(
-          `https://api.onemeet.app/interview/candidate/get-all/${canId}/paged?status=STARTED`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.data.success) {
-            setPending(res.data.data.content);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  }, [canId]);
+export default function Pending({ pendingData }) {
   return (
     <div>
       <div className="overflow-x-auto">
@@ -36,30 +9,28 @@ export default function Pending() {
           <thead>
             <tr>
               <th className="px-4 py-3 text-left border-b">Company</th>
-              {/* <th className="px-4 py-3 text-left border-b">Language</th> */}
-              {/* <th className="px-4 py-3 text-left border-b">Profession</th> */}
               <th className="px-4 py-3 text-left border-b">Completed</th>
-              <th className="px-4 py-3 text-left border-b">Status</th>
+              <th className="px-4 py-3 text-left border-b">Start</th>
             </tr>
           </thead>
           <tbody>
-            {pending.length > 0 ? (
-              pending.map((item, index) => (
+            {pendingData.length > 0 ? (
+              pendingData.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-4 py-3 border-b">{item.companyId}</td>
-                  {/* <td className="px-4 py-3 border-b">{item.language}</td> */}
-                  {/* <td className="px-4 py-3 border-b">{item.profession}</td> */}
                   <td className="px-4 py-3 border-b">
                     {item.deadline
                       ? new Date(item.deadline).toLocaleDateString()
                       : "Not completed"}
                   </td>
-                  <td className="px-4 py-3 border-b">{item.status}</td>
+                  <td className="px-4 py-3 border-b">
+                    <Button className={"cursor-pointer"}>Start</Button>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td className="px-4 py-3 border-b text-center" colSpan={5}>
+                <td className="px-4 py-3 border-b text-center" colSpan={3}>
                   Ma'lumot topilmadi
                 </td>
               </tr>

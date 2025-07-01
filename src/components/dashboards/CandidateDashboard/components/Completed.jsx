@@ -1,33 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useCanById } from "@/lib/hook/useCanByUser";
+import React from "react";
 
-export default function Completed() {
-  const [completed, setCompleted] = useState([]);
-  const userId = useCanById();  
-  const canId = userId?.userId?.id;
-
-  useEffect(() => {
-    if (canId) {
-      axios
-        .get(
-          `https://api.onemeet.app/interview/candidate/get-all/${canId}/paged`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.data.success) {
-            setCompleted(res.data.data.content);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  }, [canId]);
+export default function Completed({ completedData }) {
   return (
     <div>
       <div className="overflow-x-auto">
@@ -35,18 +8,16 @@ export default function Completed() {
           <thead>
             <tr>
               <th className="px-4 py-3 text-left border-b">Type</th>
-              {/* <th className="px-4 py-3 text-left border-b">Language</th> */}
               <th className="px-4 py-3 text-left border-b">Profession</th>
               <th className="px-4 py-3 text-left border-b">Completed</th>
               <th className="px-4 py-3 text-left border-b">Status</th>
             </tr>
           </thead>
           <tbody>
-            {completed.length > 0 ? (
-              completed.map((item, index) => (
+            {completedData.length > 0 ? (
+              completedData.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-4 py-3 border-b">{item.type}</td>
-                  {/* <td className="px-4 py-3 border-b">{item.language}</td> */}
                   <td className="px-4 py-3 border-b">{item.profession}</td>
                   <td className="px-4 py-3 border-b">
                     {item.deadline
@@ -58,7 +29,7 @@ export default function Completed() {
               ))
             ) : (
               <tr>
-                <td className="px-4 py-3 border-b text-center" colSpan={5}>
+                <td className="px-4 py-3 border-b text-center" colSpan={4}>
                   Ma'lumot topilmadi
                 </td>
               </tr>
