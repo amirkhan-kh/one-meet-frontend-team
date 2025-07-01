@@ -1,16 +1,22 @@
-import { useEffect, useState } from "react";
-import PersonalInfo from "@/components/dashboards/CandidateDashboard/components/PersonalInfo";
 import AccountSettings from "@/components/dashboards/CandidateDashboard/components/AccountSettings";
 import Notifications from "@/components/dashboards/CandidateDashboard/components/Notifications";
-import axios from "axios";
+import PersonalInfo from "@/components/dashboards/CandidateDashboard/components/PersonalInfo";
 import { useUserMe } from "@/lib/hook/useUserMe";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export const ProfileCandidate = () => {
   const [activeTab, setActiveTab] = useState("personal");
   const [profilePicture, setProfilePicture] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    timezone: "",
+    profilePicture: "",
+  });
+  const [newPicture, setNewPicture] = useState(null);
 
   const token = localStorage.getItem("accessToken");
-
   const { user, loading, error } = useUserMe();
 
   const getUser = () => {
@@ -33,32 +39,61 @@ export const ProfileCandidate = () => {
     }
   };
 
+  
   const handleUploadPhoto = (e) => {
     if (e.target.files && e.target.files[0]) {
-      const formData = new FormData();
-      formData.append("file", e.target.files[0]);
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", e.target.files[0]);
 
       axios
         .post(
           "https://api.onemeet.app/media/business/upload-avatar",
-          formData,
+          formDataUpload,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         )
-        .then(() => {
-          getUser();
+        .then((res) => {
+          setNewPicture(res.data.data.id);
+          console.log("Rasm yuklandi:", res.data.data.id);
+          
+          // getUser();
         })
         .catch((err) => {
           console.error("Rasm yuklashda xatolik:", err);
         });
     }
   };
+  
   useEffect(() => {
     if (user) {
       getUser();
+      setFormData({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        profilePicture: newPicture || "",
+      });
     }
-  }, [user]);
+  }, [user, newPicture]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const userPut = () => {
+    axios
+      .put(`https://api.onemeet.app/user/update/${user.id}`, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        getUser();
+        console.log("Foydalanuvchi yangilandi", res.data);
+      })
+      .catch((err) => {
+        console.error("Yangilashda xatolik:", err);
+      });
+  };
 
   return (
     <div className="container">
@@ -101,9 +136,9 @@ export const ProfileCandidate = () => {
           <div className="w-full p-4 border border-solid border-gray-200 rounded-lg">
             <button
               onClick={() => setActiveTab("personal")}
-              className={`w-full text-center px-4 py-2 rounded  ${
+              className={`w-full text-center px-4 py-2 rounded ${
                 activeTab === "personal"
-                  ? " text-[#2a43d4] hover:bg-gray-100 border border-solid border-gray-300"
+                  ? "text-[#2a43d4] hover:bg-gray-100 border border-solid border-gray-300"
                   : "hover:bg-gray-100"
               }`}
             >
@@ -131,14 +166,19 @@ export const ProfileCandidate = () => {
             </button>
           </div>
         </div>
-
-        {/* Content */}
-        <div className="w-full border border-solid border-gray-200 rounded-lg p-5">
-          {activeTab === "personal" && <PersonalInfo />}
-          {activeTab === "account" && <AccountSettings />}
-          {activeTab === "notifications" && <Notifications />}
-        </div>
+      <div className="w-full border border-solid border-gray-200 rounded-lg p-5">
+        {activeTab === "personal" && (
+          <PersonalInfo
+            formData={formData}
+            handleInputChange={handleInputChange}
+            userPut={userPut}
+          />
+        )}
+        {activeTab === "account" && <AccountSettings />}
+        {activeTab === "notifications" && <Notifications />}
       </div>
+      </div>
+
     </div>
   );
 };
