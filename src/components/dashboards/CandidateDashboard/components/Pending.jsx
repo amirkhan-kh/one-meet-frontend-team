@@ -9,7 +9,7 @@ export default function Pending({ pendingData }) {
           <thead>
             <tr>
               <th className="px-4 py-3 text-left border-b">Company</th>
-              <th className="px-4 py-3 text-left border-b">Completed</th>
+              <th className="px-4 py-3 text-left border-b">Deadline</th>
               <th className="px-4 py-3 text-left border-b">Start</th>
             </tr>
           </thead>
