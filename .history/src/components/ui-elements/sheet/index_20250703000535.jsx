@@ -44,6 +44,7 @@ export const SheetNavigation = () => {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger className="menu-toggle">☰</SheetTrigger>
 
+<<<<<<< HEAD
       <SheetContent side="left" className="bg-white pt-19">
         <SheetHeader>
           <SheetTitle>
@@ -79,6 +80,7 @@ export const SheetNavigation = () => {
           </SheetDescription>
         </SheetHeader>
       </SheetContent>
+=======
 <SheetContent side="left" className="bg-white pt-19">
   <SheetHeader>
     <SheetTitle>
@@ -102,10 +104,14 @@ export const SheetNavigation = () => {
           </NavLink>
         ))}
       </ul>
-     
+      {/* <div className="flex">
+      <button className="ai-cta">Login</button>
+        <span className="w-[500px]"></span>
+      </div> */}
     </SheetDescription>
   </SheetHeader>
 </SheetContent>
+>>>>>>> origin/main
     </Sheet>
   );
 };

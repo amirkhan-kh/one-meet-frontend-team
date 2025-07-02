@@ -102,10 +102,14 @@ export const SheetNavigation = () => {
           </NavLink>
         ))}
       </ul>
-     
+      {/* <div className="flex">
+      <button className="ai-cta">Login</button>
+        <span className="w-[500px]"></span>
+      </div> */}
     </SheetDescription>
   </SheetHeader>
 </SheetContent>
+>>>>>>> origin/main
     </Sheet>
   );
 };
