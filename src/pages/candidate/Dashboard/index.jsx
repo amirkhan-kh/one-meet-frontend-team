@@ -1,10 +1,56 @@
 import Completed from "@/components/dashboards/CandidateDashboard/components/Completed";
 import Pending from "@/components/dashboards/CandidateDashboard/components/Pending";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useCanById } from "@/lib/hook/useCanByUser";
 import "./style.css";
 
 export default function CandidateHome() {
   const [activeTab, setActiveTab] = useState("pending");
+  const [completedData, setCompletedData] = useState([]);
+  const [pendingData, setPendingData] = useState([]);
+  const [completedLength, setCompletedLength] = useState(0);
+  const [pendingLength, setPendingLength] = useState(0);
+  const userId = useCanById();
+  const canId = userId?.userId?.id;
+
+  useEffect(() => {
+    if (canId) {
+      axios
+        .get(
+          `https://api.onemeet.app/interview/candidate/get-all/${canId}/paged`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            const allData = res.data.data.content;
+
+            const completed = allData.filter(
+              (item) =>
+                item.status === "CREATED" ||
+                item.status === "STARTED" ||
+                item.status === "IN_PROGRESS" ||
+                item.status === "COMPLETED" ||
+                item.status === "EXPIRED"
+            );
+            const pending = allData.filter((item) => item.status === "STARTED");
+
+            setCompletedData(completed);
+            setPendingData(pending);
+
+            setCompletedLength(completed.length);
+            setPendingLength(pending.length);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [canId]);
 
   return (
     <div className="">
@@ -32,7 +78,7 @@ export default function CandidateHome() {
                     : "bg-gray-200"
                 }`}
               >
-                2
+                {pendingLength}
               </span>
             </button>
 
@@ -52,7 +98,7 @@ export default function CandidateHome() {
                     : "bg-gray-200"
                 }`}
               >
-                5
+                {completedLength}
               </span>
             </button>
           </div>
@@ -61,8 +107,10 @@ export default function CandidateHome() {
 
       {/* Content */}
       <div className="container">
-        {activeTab === "pending" && <Pending />}
-        {activeTab === "completed" && <Completed />}
+        {activeTab === "pending" && <Pending pendingData={pendingData} />}
+        {activeTab === "completed" && (
+          <Completed completedData={completedData} />
+        )}
       </div>
     </div>
   );

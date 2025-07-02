@@ -3,12 +3,8 @@ import React from "react";
 export default function Notifications() {
   const data = [
     {
-      title: "Email Notifications",
-      description: "Receive email updates about your interviews",
-    },
-    {
-      title: "Interview Reminders",
-      description: "Get reminded about upcoming interviews",
+      title: "Interview Deadline Reminders",
+      description: "Get notified as interview deadlines approach so you don’t miss your opportunity",
     },
     {
       title: "Marketing Notifications",

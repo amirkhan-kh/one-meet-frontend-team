@@ -1,66 +1,41 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useUser } from "@/lib/hook/useUser";
 
-export default function PersonalInfo() {
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-  });
-
-  useEffect(() => {
-    axios
-      .get("https://api.onemeet.app/user/me", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        const userData = res.data.data;
-        setUser({
-          firstName: userData.firstName || "",
-          lastName: userData.lastName || "",
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
-  };
-
+export default function PersonalInfo({ formData, handleInputChange, userPut, isChanged, resetForm }) {
+  const userData = useUser();
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
-          Full Name
-        </label>
+        <label className="block text-sm font-medium text-gray-700">First Name</label>
         <input
           type="text"
-          name="fullName"
-          value={user.firstName + " " + user.lastName}
-          onChange={handleChange}
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleInputChange}
           className="mt-1 block w-full border border-gray-300 rounded-md p-2"
           placeholder="Enter your first name"
         />
       </div>
+
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
-          Email Address
-        </label>
+        <label className="block text-sm font-medium text-gray-700">Last Name</label>
+        <input
+          type="text"
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleInputChange}
+          className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+          placeholder="Enter your last name"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Email</label>
         <input
           type="email"
           name="email"
-          // value={user.email}
-          // onChange={handleChange}
+          value={userData?.user?.email}
           className="mt-1 block w-full border border-gray-300 rounded-md p-2"
           placeholder="Enter your email"
         />
@@ -70,19 +45,22 @@ export default function PersonalInfo() {
         <label className="block text-sm font-medium text-gray-700">Bio</label>
         <textarea
           name="bio"
-          // value={user.bio}
-          // onChange={handleChange}
+          // value={formData.bio}
+          // onChange={handleInputChange}
           className="mt-1 block w-full border border-gray-300 rounded-md p-2"
           placeholder="Enter your bio"
-          rows="4"
         />
       </div>
 
       <div className="flex justify-start gap-4">
-        <button className="px-4 py-2 bg-[#2a43d4] text-white rounded-md">
+        <button
+          onClick={userPut}
+          disabled={!isChanged}
+          className={`px-4 py-2 rounded-md ${isChanged ? 'bg-[#2a43d4] text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+        >
           Save Changes
         </button>
-        <button className="px-4 py-2 text-gray-700 hover:bg-gray-100 border rounded-md">
+        <button onClick={resetForm} className="px-4 py-2 text-gray-700 hover:bg-gray-100 border rounded-md">
           Cancel
         </button>
       </div>
