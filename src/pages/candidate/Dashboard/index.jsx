@@ -31,13 +31,13 @@ export default function CandidateHome() {
 
             const completed = allData.filter(
               (item) =>
-                item.status === "CREATED" ||
+                item.status === "PENDING" ||
                 item.status === "STARTED" ||
                 item.status === "IN_PROGRESS" ||
                 item.status === "COMPLETED" ||
                 item.status === "EXPIRED"
             );
-            const pending = allData.filter((item) => item.status === "CREATED");
+            const pending = allData.filter((item) => item.status === "PENDING");
 
             setCompletedData(completed);
             setPendingData(pending);
