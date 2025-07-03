@@ -34,6 +34,7 @@ export default function CandidateHome() {
                 item.status === "STARTED" ||
                 item.status === "IN_PROGRESS" ||
                 item.status === "COMPLETED" ||
+                item.status === "UNCOMPLETED" ||
                 item.status === "EXPIRED"
             );
             const pending = allData.filter((item) => item.status === "PENDING");
