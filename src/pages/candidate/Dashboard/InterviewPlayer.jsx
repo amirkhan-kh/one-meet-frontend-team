@@ -36,7 +36,6 @@ const summarize = async () => {
   try {
     setStatus('loading');
     setAudioUrl('');
-    console.log('📦 Sending final summarize request...');
 
     const response = await fetch(`https://api.onemeet.app/interview/candidate/${interviewId}/summarize`, {
       method: 'POST',
@@ -178,7 +177,6 @@ const summarize = async () => {
               now - silenceStart > SILENCE_THRESHOLD_MS &&
               statusRef.current === 'userSpeaking'
             ) {
-              console.log('🤫 Silence for 5s detected. Stopping...');
               stopRecording();
               setStatus('loading');
               summarize();

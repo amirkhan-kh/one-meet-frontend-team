@@ -13,7 +13,9 @@ export default function Pending({ pendingData }) {
         <table className="min-w-full rounded-2xl bg-white">
           <thead>
             <tr>
-              <th className="px-4 py-3 text-left border-b">Company</th>
+              <th className="px-4 py-3 text-left border-b">Profession</th>
+              <th className="px-4 py-3 text-left border-b">From</th>
+              <th className="px-4 py-3 text-left border-b">Duration</th>
               <th className="px-4 py-3 text-left border-b">Deadline</th>
               <th className="px-4 py-3 text-left border-b">Start</th>
             </tr>
@@ -22,7 +24,9 @@ export default function Pending({ pendingData }) {
             {pendingData.length > 0 ? (
               pendingData.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50">
+                  <td className="px-4 py-3 border-b">{item.profession}</td>
                   <td className="px-4 py-3 border-b">{item.companyId}</td>
+                  <td className="px-4 py-3 border-b">{item.durationMinutes}</td>
                   <td className="px-4 py-3 border-b">
                     {item.deadline
                       ? new Date(item.deadline).toLocaleDateString()

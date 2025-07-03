@@ -31,7 +31,6 @@ export default function CandidateHome() {
 
             const completed = allData.filter(
               (item) =>
-                item.status === "PENDING" ||
                 item.status === "STARTED" ||
                 item.status === "IN_PROGRESS" ||
                 item.status === "COMPLETED" ||
@@ -90,7 +89,7 @@ export default function CandidateHome() {
                   : "text-gray-500 hover:text-black"
               }`}
             >
-              Completed
+              Past
               <span
                 className={`ml-1 text-xs px-2 py-[1px] rounded-full ${
                   activeTab === "completed"
