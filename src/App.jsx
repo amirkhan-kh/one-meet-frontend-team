@@ -36,6 +36,9 @@ import { RecruitersCompany } from './pages/company/RecrutersCompany'
 import { UsageCompany } from './pages/company/UsageCompany'
 import ContactSupport from './pages/contact-support/ContactSupport'
 import UsageRec from './pages/recruiter/UsageRec'
+import PreCheckPage from './pages/candidate/Dashboard/PreCheckPage'
+import InterviewWrapper from './pages/candidate/Dashboard/InterviewWrapper'
+import FinishPage from './pages/candidate/Dashboard/FinishPage'
 
 function App() {
 	return (
@@ -63,8 +66,12 @@ function App() {
 			/>
 
 			{/* Candidate Dashboard */}
+			<Route path='/candidate/interview/:id' element={<InterviewWrapper />}/>
 			<Route path='/candidate' element={<CandidateDashboard />}>
 				<Route index element={<CandidateHome />} />
+				<Route path='precheck' element={<PreCheckPage />} />
+				{/* <Route path="interview/:id" element={<InterviewWrapper />} /> */}
+				<Route path="finish" element={<FinishPage />} />
 				{/* <Route path='feedback' element={<Feedback />} /> */}
 				{/* <Route path='join-interview' element={<JoinInterviews />} /> */}
 				<Route

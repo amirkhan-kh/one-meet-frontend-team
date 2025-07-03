@@ -2,6 +2,11 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 
 export default function Pending({ pendingData }) {
+  const handleStart = (id) => {
+    localStorage.setItem("entryId", id); // id ni saqlaymiz
+    window.location.href = "/candidate/precheck";
+  };
+
   return (
     <div>
       <div className="overflow-x-auto">
@@ -24,7 +29,12 @@ export default function Pending({ pendingData }) {
                       : "Not completed"}
                   </td>
                   <td className="px-4 py-3 border-b">
-                    <Button className={"cursor-pointer"}>Start</Button>
+                    <Button
+                      className={"cursor-pointer"}
+                      onClick={() => handleStart(item.id)} // item.id ni yuboramiz
+                    >
+                      Start
+                    </Button>
                   </td>
                 </tr>
               ))
