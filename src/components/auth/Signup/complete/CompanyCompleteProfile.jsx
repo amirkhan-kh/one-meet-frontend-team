@@ -151,8 +151,8 @@ export default function CompanyCompleteProfile() {
 	}
 
 	return (
-		<div className='page-background'>
-			<div className='form-container compact-form no-shadow'>
+		<div className='page-background overflow'>
+			<div className='form-container padding compact-form no-shadow'>
 				<div className='logo-container'>
 					<img
 						src={Logo}
