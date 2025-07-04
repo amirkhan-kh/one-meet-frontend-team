@@ -13,16 +13,20 @@ export const ProfileCandidate = () => {
     lastName: "",
     timezone: "",
     profilePicture: "",
+    bio: "",
   });
-  const [newPicture, setNewPicture] = useState(null);
+
   const [initialData, setInitialData] = useState({
     firstName: "",
     lastName: "",
     profilePicture: "",
+    bio: "",
   });
 
+  const [newPicture, setNewPicture] = useState(null);
   const token = localStorage.getItem("accessToken");
-  const { user, loading, error } = useUserMe();
+  const { user } = useUserMe();
+  const [candidateId, setCandidateId] = useState(null);
 
   const getUser = () => {
     if (user && user.profilePicture) {
@@ -44,6 +48,42 @@ export const ProfileCandidate = () => {
     }
   };
 
+  const getCandidateByUser = () => {
+    if (user && user.id) {
+      axios
+        .get(`https://api.onemeet.app/candidate/by-user/${user.id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          const bioData = res.data.data.career_goals || "";
+          setFormData((prev) => ({ ...prev, bio: bioData }));
+          setInitialData((prev) => ({ ...prev, bio: bioData }));
+          const bioId = res.data.data.id;
+          setCandidateId(bioId);
+        })
+        .catch((err) => {
+          console.error("Bio olishda xatolik:", err);
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      getUser();
+      getCandidateByUser();
+
+      const userData = {
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        profilePicture: newPicture || "",
+        bio: "", // Bio getCandidateByUser dan keladi
+      };
+
+      setFormData(userData);
+      setInitialData(userData);
+    }
+  }, [user, newPicture]);
+
   const handleUploadPhoto = (e) => {
     if (e.target.files && e.target.files[0]) {
       const formDataUpload = new FormData();
@@ -59,9 +99,6 @@ export const ProfileCandidate = () => {
         )
         .then((res) => {
           setNewPicture(res.data.data.id);
-          console.log("Rasm yuklandi:", res.data.data.id);
-
-          // getUser();
         })
         .catch((err) => {
           console.error("Rasm yuklashda xatolik:", err);
@@ -69,29 +106,27 @@ export const ProfileCandidate = () => {
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      getUser();
-      const userData = {
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        profilePicture: newPicture || "",
-      };
-      setFormData(userData);
-      setInitialData(userData);
-    }
-  }, [user, newPicture]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const isChanged = JSON.stringify(formData) !== JSON.stringify(initialData);
+  const isChangedUser =
+    formData.firstName !== initialData.firstName ||
+    formData.lastName !== initialData.lastName;
 
-  const resetForm = () => {
-  setFormData(initialData);
-};
+  const isChangedBio = formData.bio !== initialData.bio;
+
+  const handleSave = () => {
+    if (isChangedUser && isChangedBio) {
+      userPut();
+      bioPut();
+    } else if (isChangedUser) {
+      userPut();
+    } else if (isChangedBio) {
+      bioPut();
+    }
+  };
 
   const userPut = () => {
     axios
@@ -100,11 +135,30 @@ export const ProfileCandidate = () => {
       })
       .then((res) => {
         getUser();
-        console.log("Foydalanuvchi yangilandi", res.data);
+        window.location.reload();
       })
       .catch((err) => {
-        console.error("Yangilashda xatolik:", err);
+        console.error("User yangilashda xatolik:", err);
       });
+  };
+
+  const bioPut = () => {
+    axios
+      .put(
+        `https://api.onemeet.app/candidate/updateCandidate/${candidateId}`,
+        { career_goals: formData.bio, user_profileId: user.id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      .then((res) => {
+        getCandidateByUser();
+      })
+      .catch((err) => {
+        console.error("Bio yangilashda xatolik:", err);
+      });
+  };
+
+  const resetForm = () => {
+    setFormData(initialData);
   };
 
   return (
@@ -183,8 +237,9 @@ export const ProfileCandidate = () => {
             <PersonalInfo
               formData={formData}
               handleInputChange={handleInputChange}
-              userPut={userPut}
-              isChanged={isChanged}
+              handleSave={handleSave}
+              isChangedUser={isChangedUser}
+              isChangedBio={isChangedBio}
               resetForm={resetForm}
             />
           )}
