@@ -39,6 +39,7 @@ import UsageRec from './pages/recruiter/UsageRec'
 import PreCheckPage from './pages/candidate/Dashboard/PreCheckPage'
 import InterviewWrapper from './pages/candidate/Dashboard/InterviewWrapper'
 import FinishPage from './pages/candidate/Dashboard/FinishPage'
+import ResetPassword from './components/auth/Login/ResetPassword'
 
 function App() {
 	return (
@@ -50,6 +51,7 @@ function App() {
 			<Route path='/forgot-password' element={<ForgotPassword />} />
 			<Route path='/auth/verify' element={<Verify />} />
 			<Route path='/contact-support' element={<ContactSupport />} />
+			<Route path='/reset-password' element={<ResetPassword />} />
 
 			{/* Complete profile routes */}
 			<Route
