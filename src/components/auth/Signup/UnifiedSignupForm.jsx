@@ -1,4 +1,3 @@
-// UnifiedSignupForm.jsx
 import { useState } from "react"
 import axios from "axios"
 import { FaGoogle, FaLinkedin } from "react-icons/fa"
@@ -12,6 +11,7 @@ export default function UnifiedSignupForm({ role, goBack }) {
 
   const [success, setSuccess] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const isFilled = form.email && form.passwordHash
 
@@ -21,6 +21,7 @@ export default function UnifiedSignupForm({ role, goBack }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    setIsLoading(true)
     axios
       .post("https://api.onemeet.app/auth/register", form)
       .then((res) => {
@@ -30,6 +31,9 @@ export default function UnifiedSignupForm({ role, goBack }) {
       })
       .catch((err) => {
         alert(err.response?.data?.reason || "Registration failed.")
+      })
+      .finally(() => {
+        setIsLoading(false)
       })
   }
 
@@ -75,8 +79,9 @@ export default function UnifiedSignupForm({ role, goBack }) {
       <button
         type="submit"
         className={`ai-cta slim-cta ${isFilled ? "active-cta" : "inactive-cta"}`}
+        disabled={isLoading}
       >
-        Sign Up as {role.toLowerCase()}
+        {isLoading ? "Signing up as " + role.toLowerCase() + "..." : `Sign Up as ${role.toLowerCase()}`}
       </button>
 
       <div className="form-links">
