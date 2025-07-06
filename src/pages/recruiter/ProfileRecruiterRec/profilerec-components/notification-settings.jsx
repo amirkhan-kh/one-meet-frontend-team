@@ -8,9 +8,9 @@ import { toast } from 'sonner'
 
 export const NotificationSettings = () => {
 	const [settings, setSettings] = useState({
-		emailNotifications: false,
-		interviewReminders: false,
-		feedbackNotifications: false,
+		newSubmissionNotificationsEnabled: false,
+		interviewDeadlineAlertsEnabled: false,
+		marketingNotificationsEnabled: false,
 	})
 	const [isSaving, setIsSaving] = useState(false)
 
@@ -30,9 +30,9 @@ export const NotificationSettings = () => {
 
 	const handleCancel = () => {
 		setSettings({
-			emailNotifications: false,
-			interviewReminders: false,
-			feedbackNotifications: false,
+			newSubmissionNotificationsEnabled: false,
+			interviewDeadlineAlertsEnabled: false,
+			marketingNotificationsEnabled: false,
 		})
 	}
 
@@ -47,75 +47,78 @@ export const NotificationSettings = () => {
 				<div className='space-y-6'>
 					<div className='flex items-start space-x-3'>
 						<Checkbox
-							id='emailNotifications'
-							checked={settings.emailNotifications}
+							id='newSubmissionNotificationsEnabled'
+							checked={settings.newSubmissionNotificationsEnabled}
 							onCheckedChange={checked =>
 								setSettings(prev => ({
 									...prev,
-									emailNotifications: checked,
+									newSubmissionNotificationsEnabled: checked,
 								}))
 							}
 							className='mt-1'
 						/>
 						<div className='flex-1'>
 							<Label
-								htmlFor='emailNotifications'
+								htmlFor='newSubmissionNotificationsEnabled'
 								className='text-sm font-medium text-gray-900'
 							>
-								Email Notifications
+								New Interview Submissions
 							</Label>
 							<p className='text-sm text-gray-600 mt-1'>
-								Receive email updates about your interviews
+								Receive a notification when a candidate
+								completes their interview.
 							</p>
 						</div>
 					</div>
 
 					<div className='flex items-start space-x-3'>
 						<Checkbox
-							id='interviewReminders'
-							checked={settings.interviewReminders}
+							id='interviewDeadlineAlertsEnabled'
+							checked={settings.interviewDeadlineAlertsEnabled}
 							onCheckedChange={checked =>
 								setSettings(prev => ({
 									...prev,
-									interviewReminders: checked,
+									interviewDeadlineAlertsEnabled: checked,
 								}))
 							}
 							className='mt-1'
 						/>
 						<div className='flex-1'>
 							<Label
-								htmlFor='interviewReminders'
+								htmlFor='interviewDeadlineAlertsEnabled'
 								className='text-sm font-medium text-gray-900'
 							>
-								Interview Reminders
+								Interview Expiration Alerts
 							</Label>
 							<p className='text-sm text-gray-600 mt-1'>
-								Get reminded about upcoming interviews
+								Get notified when a candidate hasn't completed
+								an interview close to the deadline.
 							</p>
 						</div>
 					</div>
 
 					<div className='flex items-start space-x-3'>
 						<Checkbox
-							id='feedbackNotifications'
-							checked={settings.feedbackNotifications}
+							id='marketingNotificationsEnabled'
+							checked={settings.marketingNotificationsEnabled}
 							onCheckedChange={checked =>
 								setSettings(prev => ({
 									...prev,
-									feedbackNotifications: checked,
+									marketingNotificationsEnabled: checked,
 								}))
 							}
 							className='mt-1'
 						/>
 						<div className='flex-1'>
 							<Label
-								htmlFor='feedbackNotifications'
+								htmlFor='marketingNotificationsEnabled'
 								className='text-sm font-medium text-gray-900'
 							>
-								Feedback Notifications
+								Marketing Notifications
 							</Label>
 							<p className='text-sm text-gray-600 mt-1'>
-								Get notified when feedback is available
+								Get notified about new features, promotions, or
+								product updates.
 							</p>
 						</div>
 					</div>

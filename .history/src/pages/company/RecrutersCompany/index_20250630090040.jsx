@@ -1,0 +1,42 @@
+import { Table } from "@/components/ui/table";
+import React from "react";
+
+export const RecruitersCompany = () => {
+  return (
+    <div className="p-8">
+      <div>
+        <h2 className="text-3xl font-bold mb-6">RecruitersCompany</h2>
+        <div>
+          <h3 className="text-2xl font-semibold mb-4">Confirmed Recruiters</h3>
+          <Table>
+            <TableCaption>A list of your recent invoices.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Invoice</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Method</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">INV001</TableCell>
+                <TableCell>Paid</TableCell>
+                <TableCell>Credit Card</TableCell>
+                <TableCell className="text-right">$250.00</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+        <div>
+          <h3 className="text-2xl font-semibold mb-4">Sent Invitations</h3>
+        </div>
+        <div>
+          <h3 className="text-2xl font-semibold mb-4">
+            Incoming Join requests
+          </h3>
+        </div>
+      </div>
+    </div>
+  );
+};
