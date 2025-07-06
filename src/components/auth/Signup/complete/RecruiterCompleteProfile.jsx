@@ -141,6 +141,7 @@ export default function RecruiterCompleteProfile() {
 
 			setMessage('Recruiter profile completed.')
 			const accessToken = localStorage.getItem('accessToken')
+
 			const userResponse = await axios.get(
 				'https://api.onemeet.app/auth/me',
 				{
