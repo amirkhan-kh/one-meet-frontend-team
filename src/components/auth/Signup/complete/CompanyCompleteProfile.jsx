@@ -120,6 +120,7 @@ export default function CompanyCompleteProfile() {
 					website: form.website,
 					linkedin: form.linkedin,
 					logoUrl: mediaId,
+					profileCompleted: true,
 				},
 				{
 					headers: {
