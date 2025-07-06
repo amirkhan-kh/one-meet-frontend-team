@@ -101,6 +101,7 @@ export default function CompanyCompleteProfile() {
 					lastName: form.lastName,
 					timezone: form.timezone,
 					profilePicture: mediaId,
+					profileCompleted: true,
 				},
 				{
 					headers: {
@@ -120,7 +121,6 @@ export default function CompanyCompleteProfile() {
 					website: form.website,
 					linkedin: form.linkedin,
 					logoUrl: mediaId,
-					profileCompleted: true,
 				},
 				{
 					headers: {

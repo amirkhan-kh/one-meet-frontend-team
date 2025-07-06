@@ -102,6 +102,7 @@ export default function CandidateCompleteProfile() {
 					lastName: form.lastName,
 					timezone: form.timezone,
 					profilePicture: mediaId,
+					profileCompleted: true,
 				},
 				{
 					headers: {
@@ -115,9 +116,9 @@ export default function CandidateCompleteProfile() {
 			await axios.post(
 				'https://api.onemeet.app/candidate/create',
 				{
-					user_profileId: userProfileId,
-					resume_url: '',
-					career_goals: form.bio,
+					userProfileId: userProfileId,
+					resumeUrl: '',
+					careerGoals: form.bio,
 				},
 				{
 					headers: {
