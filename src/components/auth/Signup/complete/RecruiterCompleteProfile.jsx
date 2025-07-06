@@ -113,6 +113,7 @@ export default function RecruiterCompleteProfile() {
 					lastName: form.lastName,
 					timezone: form.timezone,
 					profilePicture: mediaId,
+					profileCompleted: true,
 				},
 				{
 					headers: {
