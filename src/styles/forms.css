@@ -241,3 +241,27 @@
   font-size: 0.9rem;
 }
 
+.search-results-dropdown {
+	background: white;
+	border: 1px solid #ccc;
+	margin-top: -10px;
+	list-style: none;
+	padding: 0;
+	z-index: 999;
+	position: absolute;
+	width: 100%;
+	max-height: 200px;
+	overflow-y: auto;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-results-dropdown li {
+	padding: 10px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.search-results-dropdown li:hover {
+	background-color: #f0f0f0;
+}
+

@@ -14,19 +14,9 @@ export default function RecruiterCompleteProfile() {
 		position: '',
 	})
 
-	const companies = [
-		{
-			id: '3fa85f64-5717-4562-b3fc-2c963f66a111',
-			name: 'Tech Solutions LLC',
-		},
-		{ id: '3fa85f64-5717-4562-b3fc-2c963f66a222', name: 'InnovateX' },
-		{
-			id: '3fa85f64-5717-4562-b3fc-2c963f66a333',
-			name: 'FutureWorks Inc.',
-		},
-	]
-
 	const [timezones, setTimezones] = useState({})
+	const [searchQuery, setSearchQuery] = useState('')
+	const [searchResults, setSearchResults] = useState([])
 	const [error, setError] = useState('')
 	const [message, setMessage] = useState('')
 	const [loading, setLoading] = useState(false)
@@ -58,6 +48,28 @@ export default function RecruiterCompleteProfile() {
 			.catch(() => setTimezones({}))
 	}, [])
 
+	useEffect(() => {
+		const token = localStorage.getItem('accessToken')
+		if (!searchQuery.trim()) return
+
+		const timeout = setTimeout(() => {
+			axios
+				.get(`https://api.onemeet.app/company/search?query=${searchQuery}`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+				.then(res => {
+					if (res.data.success && Array.isArray(res.data.data)) {
+						setSearchResults(res.data.data)
+					}
+				})
+				.catch(() => setSearchResults([]))
+		}, 300)
+
+		return () => clearTimeout(timeout)
+	}, [searchQuery])
+
 	const handleChange = e => {
 		const { name, value, files } = e.target
 		if (name === 'profilePicture') {
@@ -78,9 +90,7 @@ export default function RecruiterCompleteProfile() {
 
 			if (
 				!form.profilePicture ||
-				!['image/jpeg', 'image/jpg', 'image/png'].includes(
-					form.profilePicture.type
-				)
+				!['image/jpeg', 'image/jpg', 'image/png'].includes(form.profilePicture.type)
 			) {
 				setError('Only JPEG and PNG images are allowed.')
 				setLoading(false)
@@ -141,16 +151,11 @@ export default function RecruiterCompleteProfile() {
 			)
 
 			setMessage('Recruiter profile completed.')
-			const accessToken = localStorage.getItem('accessToken')
-
-			const userResponse = await axios.get(
-				'https://api.onemeet.app/auth/me',
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				}
-			)
+			const userResponse = await axios.get('https://api.onemeet.app/auth/me', {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
 
 			const userData = userResponse.data.data
 			localStorage.setItem('userData', JSON.stringify(userData))
@@ -166,11 +171,7 @@ export default function RecruiterCompleteProfile() {
 		<div className='page-background'>
 			<div className='form-container compact-form no-shadow'>
 				<div className='logo-container'>
-					<img
-						src={Logo}
-						alt='OneMeet Logo'
-						className='logo bigger-logo'
-					/>
+					<img src={Logo} alt='OneMeet Logo' className='logo bigger-logo' />
 				</div>
 
 				<h1 className='hero-subtitle fixed-width-subtitle match-bg-subtitle'>
@@ -239,24 +240,36 @@ export default function RecruiterCompleteProfile() {
 						required
 					/>
 
-					<label htmlFor='companyId' className='form-label'>
-						Select Company
+					<label htmlFor='companySearch' className='form-label'>
+						Search Company
 					</label>
-					<select
-						id='companyId'
-						name='companyId'
+					<input
+						type='text'
+						id='companySearch'
+						name='companySearch'
 						className='input-field slim-input'
-						value={form.companyId}
-						onChange={handleChange}
+						placeholder='Type company name...'
+						value={searchQuery}
+						onChange={e => setSearchQuery(e.target.value)}
 						required
-					>
-						<option value=''>Select a company</option>
-						{companies.map(company => (
-							<option key={company.id} value={company.id}>
-								{company.name}
-							</option>
-						))}
-					</select>
+					/>
+
+					{searchResults.length > 0 && (
+						<ul className='search-results-dropdown'>
+							{searchResults.map(company => (
+								<li
+									key={company.id}
+									onClick={() => {
+										setForm({ ...form, companyId: company.id })
+										setSearchQuery(company.name)
+										setSearchResults([])
+									}}
+								>
+									{company.name}
+								</li>
+							))}
+						</ul>
+					)}
 
 					<label htmlFor='position' className='form-label'>
 						Your Position
@@ -276,9 +289,7 @@ export default function RecruiterCompleteProfile() {
 
 					<button
 						type='submit'
-						className={`ai-cta slim-cta ${
-							loading ? 'inactive-cta' : 'active-cta'
-						}`}
+						className={`ai-cta slim-cta ${loading ? 'inactive-cta' : 'active-cta'}`}
 						disabled={loading}
 					>
 						{loading ? 'Submitting...' : 'Submit'}
