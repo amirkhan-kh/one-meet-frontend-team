@@ -85,26 +85,43 @@ export const ProfileCandidate = () => {
   }, [user, newPicture]);
 
   const handleUploadPhoto = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const formDataUpload = new FormData();
-      formDataUpload.append("file", e.target.files[0]);
+  if (e.target.files && e.target.files[0]) {
+    const formDataUpload = new FormData();
+    formDataUpload.append("file", e.target.files[0]);
 
-      axios
-        .post(
-          "https://api.onemeet.app/media/business/upload-avatar",
-          formDataUpload,
-          {
+    axios
+      .post(
+        "https://api.onemeet.app/media/business/upload-avatar",
+        formDataUpload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((res) => {
+        const uploadedId = res.data.data.id;
+
+        // Formdagi profilePicture ni yangilash
+        const updatedFormData = { ...formData, profilePicture: uploadedId };
+        setFormData(updatedFormData);
+        setNewPicture(uploadedId);
+
+        // User ma'lumotlarini yangilash
+        axios
+          .put(`https://api.onemeet.app/user/update/${user.id}`, updatedFormData, {
             headers: { Authorization: `Bearer ${token}` },
-          }
-        )
-        .then((res) => {
-          setNewPicture(res.data.data.id);
-        })
-        .catch((err) => {
-          console.error("Rasm yuklashda xatolik:", err);
-        });
-    }
-  };
+          })
+          .then(() => {
+            getUser(); // yangi rasmni ko‘rsatish uchun
+          })
+          .catch((err) => {
+            console.error("User rasm yangilashda xatolik:", err);
+          });
+      })
+      .catch((err) => {
+        console.error("Rasm yuklashda xatolik:", err);
+      });
+  }
+};
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -135,7 +152,7 @@ export const ProfileCandidate = () => {
       })
       .then((res) => {
         getUser();
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((err) => {
         console.error("User yangilashda xatolik:", err);
