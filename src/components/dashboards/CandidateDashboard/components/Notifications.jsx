@@ -7,13 +7,20 @@ export default function Notifications() {
     interviewReminderEnabled: true,
     marketingNotificationsEnabled: true,
   });
+  const [initialSettings, setInitialSettings] = useState(null); // Store initial settings
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const userId = useUserMe();
   const [dataId, setDataId] = useState(null);
 
-  // Assume userProfileId is available (e.g., from auth context or props)
   const userProfileId = userId?.user?.id;
+
+  // Check if settings have changed
+  const hasChanges = initialSettings
+    ? settings.interviewReminderEnabled !== initialSettings.interviewReminderEnabled ||
+      settings.marketingNotificationsEnabled !== initialSettings.marketingNotificationsEnabled
+    : false;
+
   // Fetch notification settings on component mount
   useEffect(() => {
     const fetchSettings = async () => {
@@ -29,13 +36,13 @@ export default function Notifications() {
             }
           );
           if (response.data.success) {
-            setSettings({
-              interviewReminderEnabled:
-                response.data.data.interviewReminderEnabled,
-              marketingNotificationsEnabled:
-                response.data.data.marketingNotificationsEnabled,
-            });
-            setDataId(response.data.data.id); 
+            const fetchedSettings = {
+              interviewReminderEnabled: response.data.data.interviewReminderEnabled,
+              marketingNotificationsEnabled: response.data.data.marketingNotificationsEnabled,
+            };
+            setSettings(fetchedSettings);
+            setInitialSettings(fetchedSettings); // Store initial settings
+            setDataId(response.data.data.id);
           }
         }
       } catch (err) {
@@ -73,7 +80,7 @@ export default function Notifications() {
           },
         }
       );
-      
+      setInitialSettings(settings); // Update initial settings after successful save
     } catch (err) {
       setError("Failed to save preferences");
       console.error(err);
@@ -93,11 +100,12 @@ export default function Notifications() {
         }
       );
       if (response.data.success) {
-        setSettings({
+        const fetchedSettings = {
           interviewReminderEnabled: response.data.data.interviewReminderEnabled,
-          marketingNotificationsEnabled:
-            response.data.data.marketingNotificationsEnabled,
-        });
+          marketingNotificationsEnabled: response.data.data.marketingNotificationsEnabled,
+        };
+        setSettings(fetchedSettings);
+        setInitialSettings(fetchedSettings); // Reset initial settings
       }
     } catch (err) {
       setError("Failed to reset preferences");
@@ -123,6 +131,7 @@ export default function Notifications() {
   ];
 
   if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div>
@@ -148,7 +157,12 @@ export default function Notifications() {
       <div className="flex justify-start gap-4">
         <button
           onClick={handleSave}
-          className="px-4 py-2 bg-[#2a43d4] text-white rounded-md"
+          className={`px-4 py-2 rounded-md ${
+            hasChanges
+              ? "bg-[#2a43d4] text-white"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
+          disabled={!hasChanges}
         >
           Save Preferences
         </button>
