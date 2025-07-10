@@ -5,14 +5,8 @@ const BASE_URL = 'https://api.onemeet.app'
 class InterviewAPI {
 	getAuthHeaders() {
 		const accessToken = localStorage.getItem('accessToken')
-		const headers = {
-			'Content-Type': 'application/json',
-		}
-
-		if (accessToken) {
-			headers.Authorization = `Bearer ${accessToken}`
-		}
-
+		const headers = { 'Content-Type': 'application/json' }
+		if (accessToken) headers.Authorization = `Bearer ${accessToken}`
 		return headers
 	}
 
@@ -44,43 +38,17 @@ class InterviewAPI {
 			}
 			throw new Error(
 				error.response?.data?.message ||
-					error.response?.statusText ||
-					error.message
+				error.response?.statusText ||
+				error.message
 			)
 		}
 	}
 
-	// buildQueryParams(params) {
-
-	//   const searchParams = new URLSearchParams()
-
-	//   Object.entries(params).forEach(([key, value]) => {
-	//     if (value !== undefined && value !== null && value !== "") {
-	//       if (typeof value === "object") {
-	//         if (key === "pageable") {
-	//           Object.entries(value).forEach(([subKey, subValue]) => {
-	//             if (subValue !== undefined && subValue !== null) {
-	//               searchParams.append(subKey, String(subValue))
-	//             }
-	//           })
-	//         }
-	//       } else {
-	//         searchParams.append(key, String(value))
-	//       }
-	//     }
-	//   })
-
-	//   return searchParams.toString()
-	// }
-
-	// === Interview Management ===
 	buildQueryParams(params) {
 		const searchParams = new URLSearchParams()
-
 		Object.entries(params).forEach(([key, value]) => {
 			if (value !== undefined && value !== null && value !== '') {
 				if (typeof value === 'object' && !Array.isArray(value)) {
-					// Flatten pageable
 					Object.entries(value).forEach(([subKey, subValue]) => {
 						if (subValue !== undefined && subValue !== null) {
 							searchParams.append(subKey, String(subValue))
@@ -91,90 +59,77 @@ class InterviewAPI {
 				}
 			}
 		})
-
 		return searchParams.toString()
 	}
 
-	async createInterview(data) {
-		const accessToken = localStorage.getItem('accessToken')
-
-		return axios.post(
-			'https://api.onemeet.app/interview/business/create',
-			data,
-			{
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		)
+	// === Recruiter ===
+	async getRecruiterByUserProfileId(userProfileId) {
+		return this.request('GET', `/recruiter/get-by-user/${userProfileId}`)
 	}
 
+	async getRecruiterId() {
+	try {
+		const token = localStorage.getItem("accessToken")
+
+		const userRes = await fetch(`${BASE_URL}/user/me`, {
+			headers: { Authorization: `Bearer ${token}` }
+		})
+		const userJson = await userRes.json()
+
+		if (!userJson.success) throw new Error("User not found")
+		const userProfileId = userJson.data.id
+
+		const recruiterRes = await fetch(`${BASE_URL}/recruiter/get-by-user/${userProfileId}`, {
+			headers: { Authorization: `Bearer ${token}` }
+		})
+		const recruiterJson = await recruiterRes.json()
+
+		if (!recruiterJson.success) throw new Error("Recruiter not found")
+		return recruiterJson.data.id // ✅ recruiterId
+	} catch (err) {
+		console.error("❌ Failed to get recruiter ID:", err)
+		throw err
+	}
+}
+
+
+	// === Interview Creation ===
+	async createInterview(data) {
+		return axios.post(`${BASE_URL}/interview/business/create`, data, {
+			headers: this.getAuthHeaders(),
+		})
+	}
+
+	// === Candidates ===
 	async getAllCandidates() {
 		return this.request('GET', '/candidate/getAll')
 	}
 
+	// === Interview Read ===
 	async getInterview(id) {
 		return this.request('GET', `/interview/business/${id}`)
 	}
 
-	// async getInterviewsByRecruiter(recruiterId, filters = {}, pageable = { page: 0, size: 10 }) {
-	//   const queryParams = this.buildQueryParams({
-	//     status: filters.status,
-	//     sortBy: filters.sortBy || "createdAt",
-	//     direction: filters.direction || "desc",
-	//     pageable: {
-	//       page: pageable.page,
-	//       size: pageable.size,
-	//       sort: pageable.sort,
-	//     },
-	//   })
-
-	//   const url = `/interview/business/recruiter/${recruiterId}/paged${queryParams ? `?${queryParams}` : ""}`
-	//   return this.request("GET", url)
-	// }
-
-	async getInterviewsByRecruiter(
-		recruiterId,
-		filters = {},
-		pageable = { page: 0, size: 10 }
-	) {
+	async getInterviewsByRecruiter(recruiterId, filters = {}, pageable = { page: 0, size: 10 }) {
 		try {
-			// Query parametrlarini tuzish
 			const queryParams = new URLSearchParams()
-
-			// Pagination parametrlari
 			queryParams.append('page', pageable.page || 0)
 			queryParams.append('size', pageable.size || 10)
 
-			// Sort parametrini qo'shish
 			if (pageable.sort) {
 				queryParams.append('sort', pageable.sort)
 			} else if (filters.sortBy && filters.direction) {
-				queryParams.append(
-					'sort',
-					`${filters.sortBy},${filters.direction}`
-				)
+				queryParams.append('sort', `${filters.sortBy},${filters.direction}`)
 			} else {
-				// Default sort
 				queryParams.append('sort', 'createdAt,desc')
 			}
 
-			// Filter parametrlari - faqat status ni qo'shamiz va faqat "ALL" dan boshqa bo'lsa
 			if (filters.status && filters.status !== 'ALL') {
 				queryParams.append('status', filters.status)
 			}
 
-			// sortBy va direction parametrlarini yubormaslik!
-			// Chunki server buni yomon handle qiladi va 500 xato beradi
-
-			// URL tuzish
 			const url = `/interview/business/recruiter/${recruiterId}/paged?${queryParams.toString()}`
-
-			// Request yuborish
-			const response = await this.request('GET', url)
-
-			return response
+			return await this.request('GET', url)
 		} catch (error) {
 			console.error('getInterviewsByRecruiter xatosi:', {
 				recruiterId,
@@ -184,17 +139,94 @@ class InterviewAPI {
 				status: error.response?.status,
 				data: error.response?.data,
 			})
-
-			// Xatoni qayta tashlash
 			throw error
 		}
 	}
 
-	async getInterviewsByCompany(
-		companyId,
-		filters = {},
-		pageable = { page: 0, size: 10 }
-	) {
+	// ✅ TEST BLOCK WITH LOGS
+	async fetchRecruiterIdAndInterviews(setRecruiterId, setInterviews) {
+		try {
+			const token = localStorage.getItem("accessToken")
+			console.log("🔑 Token from localStorage:", token)
+
+			const userRes = await fetch(`${BASE_URL}/user/me`, {
+				headers: { Authorization: `Bearer ${token}` }
+			})
+			const userJson = await userRes.json()
+			console.log("👤 /user/me response:", userJson)
+
+			if (!userJson.success) throw new Error("User not found")
+			const userProfileId = userJson.data.id
+			console.log("✅ userProfileId:", userProfileId)
+
+			const recruiterRes = await fetch(`${BASE_URL}/recruiter/get-by-user/${userProfileId}`, {
+				headers: { Authorization: `Bearer ${token}` }
+			})
+			const recruiterJson = await recruiterRes.json()
+			console.log("👔 /recruiter/get-by-user response:", recruiterJson)
+
+			if (!recruiterJson.success) throw new Error("Recruiter not found")
+			const recruiterId = recruiterJson.data.id
+			console.log("✅ recruiterId:", recruiterId)
+			setRecruiterId(recruiterId)
+
+			const res = await fetch(
+				`${BASE_URL}/interview/business/recruiter/${recruiterId}/paged?status=&sortBy=createdAt&direction=desc&page=0&size=10`,
+				{ headers: { Authorization: `Bearer ${token}` } }
+			)
+			const json = await res.json()
+			console.log("📋 Interviews fetched:", json)
+
+			if (json.success) {
+				setInterviews(json.data.content)
+			}
+		} catch (err) {
+			console.error("❌ Error in fetchRecruiterIdAndInterviews:", err)
+		}
+	}
+
+	// async createInterviewWithFetchedRecruiter(recruiterId, formData, toast) {
+	// 	try {
+	// 		const token = localStorage.getItem("accessToken")
+	// 		console.log("📝 Creating interview with recruiterId:", recruiterId)
+	// 		console.log("📨 Payload:", formData)
+
+	// 		const body = {
+	// 			recruiterId,
+	// 			candidatesEmailList: formData.emailList,
+	// 			type: formData.type,
+	// 			profession: formData.profession,
+	// 			language: formData.language,
+	// 			durationMinutes: formData.duration,
+	// 			deadline: formData.deadline,
+	// 			contextPrompt: formData.contextPrompt || "",
+	// 		}
+
+	// 		const res = await fetch(`${BASE_URL}/interview/business/create`, {
+	// 			method: "POST",
+	// 			headers: {
+	// 				Authorization: `Bearer ${token}`,
+	// 				"Content-Type": "application/json"
+	// 			},
+	// 			body: JSON.stringify(body)
+	// 		})
+
+	// 		const json = await res.json()
+	// 		console.log("📤 Create interview response:", json)
+
+	// 		if (json.success) {
+	// 			toast.success("Interview(s) created")
+	// 		} else {
+	// 			toast.error("Failed to create interview")
+	// 		}
+	// 	} catch (err) {
+	// 		console.error("❌ Error creating interview:", err)
+	// 		toast.error("Server error")
+	// 	}
+	// }
+	// // ✅ END TEST BLOCK
+
+	async getInterviewsByCompany(companyId, filters = {}, pageable = { page: 0, size: 10 }) {
 		const queryParams = this.buildQueryParams({
 			recruiterName: filters.recruiterName,
 			status: filters.status,
@@ -207,18 +239,16 @@ class InterviewAPI {
 			},
 		})
 
-		const url = `/interview/business/company/${companyId}/paged${
-			queryParams ? `?${queryParams}` : ''
-		}`
+		const url = `/interview/business/company/${companyId}/paged${queryParams ? `?${queryParams}` : ''}`
 		return this.request('GET', url)
 	}
 
-	// === Interview Config ===
+	// === Meta Config ===
 	async getInterviewConfig() {
 		return this.request('GET', '/interview/meta/config')
 	}
 
-	// === Candidate Operations ===
+	// === Candidate Access ===
 	async startInterview(id) {
 		return this.request('POST', `/interview/candidate/start/${id}`)
 	}
@@ -227,10 +257,7 @@ class InterviewAPI {
 		return this.request('GET', `/interview/candidate/get/${id}`)
 	}
 
-	async getCandidateInterviews(
-		candidateId,
-		pageable = { page: 0, size: 10 }
-	) {
+	async getCandidateInterviews(candidateId, pageable = { page: 0, size: 10 }) {
 		const queryParams = this.buildQueryParams({
 			pageable: {
 				page: pageable.page,
@@ -239,9 +266,7 @@ class InterviewAPI {
 			},
 		})
 
-		const url = `/interview/candidate/get-all/${candidateId}/paged${
-			queryParams ? `?${queryParams}` : ''
-		}`
+		const url = `/interview/candidate/get-all/${candidateId}/paged${queryParams ? `?${queryParams}` : ''}`
 		return this.request('GET', url)
 	}
 
