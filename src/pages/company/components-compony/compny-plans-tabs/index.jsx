@@ -25,7 +25,7 @@ const CompanyPaymentsTabs = () => {
               : "text-gray-600 hover:text-blue-500"
           }`}
         >
-          List of plans & Create Payment
+          Top-Up Credits
         </button>
         <button
           onClick={() => setActiveTab("history")}

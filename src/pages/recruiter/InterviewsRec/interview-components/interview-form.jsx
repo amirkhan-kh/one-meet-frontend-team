@@ -33,7 +33,7 @@ export const InterviewForm = ({ onSuccess, onCancel }) => {
     type: '',
     profession: '',
     language: '',
-    durationMinutes: 45,
+    durationMinutes: 30,
     deadline: getCurrentDateTimeLocal(), // ✅ set default
     contextPrompt: '',
   })
@@ -69,14 +69,14 @@ export const InterviewForm = ({ onSuccess, onCancel }) => {
       setConfig({
         interviewTypes: configData.interviewTypes,
         supportedLanguages: configData.supportedLanguages,
-        durations: configData.durations || [15, 30, 45, 60],
+        durations: configData.durations || [5, 15, 30, 45, 60],
       })
 
       setFormData(prev => ({
         ...prev,
         type: configData.interviewTypes[0],
         language: configData.supportedLanguages[0],
-        durationMinutes: configData.durations?.[0] || 45,
+        durationMinutes: configData.durations?.[0] || 30,
       }))
     } catch (error) {
       toast.error('Interview konfiguratsiyani yuklab bo‘lmadi')

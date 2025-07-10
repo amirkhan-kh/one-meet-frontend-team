@@ -142,6 +142,7 @@ export default function RecruiterCompleteProfile() {
 					userProfileId: userProfile.id,
 					companyId: form.companyId,
 					position: form.position,
+					approvedByRecruiter: true,
 				},
 				{
 					headers: {
