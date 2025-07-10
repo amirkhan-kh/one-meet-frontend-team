@@ -9,7 +9,7 @@ export const navigationCompanyDashboard = [
     { navName: "Dashboard", pathName: "/company"},
     { navName: "Recruiters", pathName: "recruiters-compony"},
     { navName: "Usage", pathName: "usage"},
-    { navName: "Billing", pathName: "plans"},
+    { navName: "Finance", pathName: "finance"},
 ];
 export const navigationRecruiterDashboard = [
     { navName: "Dashboard", pathName: "/recruiter"},

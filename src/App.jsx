@@ -96,7 +96,7 @@ function App() {
 			{/* Company Dashboard */}
 			<Route path='/company' element={<CompanyDashboard />}>
 				<Route index element={<DashboardCompany />} />
-				<Route path='plans' element={<Plans />} />
+				<Route path='finance' element={<Plans />} />
 				<Route
 					path='recruiters-compony'
 					element={<RecruitersCompany />}
