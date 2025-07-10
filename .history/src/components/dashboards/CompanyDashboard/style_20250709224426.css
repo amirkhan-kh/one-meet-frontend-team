@@ -1,0 +1,58 @@
+.htmlmain,
+.bodymain {
+  height: 100%;
+}
+
+.bodymain {
+  background: radial-gradient(ellipse at center, #ffffff 0%, #fdfdfd 35%, #ffffff 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+.ocean {
+  height: 100%; /* to‘liq maydon */
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Wave SVG — #cee0ff rangda */
+.wave {
+  background: url("data:image/svg+xml;utf8,<svg viewBox='0 0 1440 320' xmlns='http://www.w3.org/2000/svg'><path fill='%23cee0ff' d='M0,160L80,144C160,128,320,96,480,96C640,96,800,128,960,149.3C1120,171,1280,181,1360,186.7L1440,192L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z'></path></svg>") repeat-x;
+  position: absolute;
+  top: -280px; /* yuqoriroq ko‘rinishi uchun */
+  width: 6400px;
+  height: 198px;
+  animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+  transform: translate3d(0, 0, 0);
+  opacity: 0.8;
+}
+
+.wave:nth-of-type(2) {
+  top: -260px;
+  animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite,
+             swell 7s ease -1.25s infinite;
+  opacity: 0.6;
+}
+
+/* Animation */
+@keyframes wave {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: -1600px;
+  }
+}
+
+@keyframes swell {
+  0%, 100% {
+    transform: translate3d(0, -25px, 0);
+  }
+  50% {
+    transform: translate3d(0, 5px, 0);
+  }
+}

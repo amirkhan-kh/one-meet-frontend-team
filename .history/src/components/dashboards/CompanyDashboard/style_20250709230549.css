@@ -1,0 +1,17 @@
+#login{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  
+}
+ #loginImg{
+    background-image: url("/public//media-img/wave2\ copy.png"), url("/public/media-img/wave1\ copy.png");
+    width: 100vw;
+    height: 100vh;
+    background-repeat: no-repeat, no-repeat;
+    background-size: 100% 100%, 100% 100%;
+    background-position: bottom left, bottom left;
+   }
