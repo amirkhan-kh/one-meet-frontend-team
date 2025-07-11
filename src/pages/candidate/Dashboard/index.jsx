@@ -25,25 +25,64 @@ export default function CandidateHome() {
             },
           }
         )
-        .then((res) => {
+        .then(async (res) => {
           if (res.data.success) {
             const allData = res.data.data.content;
 
-            const completed = allData.filter(
-              (item) =>
-                item.status === "STARTED" ||
-                item.status === "IN_PROGRESS" ||
-                item.status === "COMPLETED" ||
-                item.status === "UNCOMPLETED" ||
-                item.status === "EXPIRED"
+            const completed = allData.filter((item) =>
+              [
+                "STARTED",
+                "IN_PROGRESS",
+                "COMPLETED",
+                "UNCOMPLETED",
+                "EXPIRED",
+              ].includes(item.status)
             );
             const pending = allData.filter((item) => item.status === "PENDING");
 
-            setCompletedData(completed);
-            setPendingData(pending);
-
             setCompletedLength(completed.length);
             setPendingLength(pending.length);
+
+            // Unikal companyId larni yig'amiz
+            const companyIds = Array.from(
+              new Set(allData.map((item) => item.companyId))
+            );
+
+            // Har bir kompaniya uchun nomni olib kelamiz
+            const companyResponses = await Promise.all(
+              companyIds.map((id) =>
+                axios.get(`https://api.onemeet.app/company/get-by-id/${id}`, {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem(
+                      "accessToken"
+                    )}`,
+                  },
+                })
+              )
+            );
+
+            // id => name xarita (map) hosil qilamiz
+            const companyMap = {};
+            companyResponses.forEach((res) => {
+              if (res.data.success) {
+                const company = res.data.data;
+                companyMap[company.id] = company.name;
+              }
+            });
+
+            // completed va pending ma'lumotlarga companyName qo‘shamiz
+            const completedWithCompany = completed.map((item) => ({
+              ...item,
+              companyName: companyMap[item.companyId],
+            }));
+
+            const pendingWithCompany = pending.map((item) => ({
+              ...item,
+              companyName: companyMap[item.companyId],
+            }));
+
+            setCompletedData(completedWithCompany);
+            setPendingData(pendingWithCompany);
           }
         })
         .catch((err) => {

@@ -17,9 +17,7 @@ export default function Completed({ completedData }) {
               completedData.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-4 py-3 border-b">{item.profession}</td>
-                  <td className="px-4 py-3 border-b">
-                    {item.companyId}
-                  </td>
+                  <td className="px-4 py-3 border-b">{item.companyName}</td>
                   <td className="px-4 py-3 border-b">{item.status}</td>
                 </tr>
               ))
