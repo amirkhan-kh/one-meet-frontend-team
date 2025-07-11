@@ -25,7 +25,16 @@ export default function Pending({ pendingData }) {
               pendingData.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-4 py-3 border-b">{item.profession}</td>
-                  <td className="px-4 py-3 border-b">{item.companyName}</td>
+                  <td className="px-4 py-3 border-b flex items-center gap-2">
+                    {item.companyLogo && (
+                      <img
+                        src={item.companyLogo}
+                        alt="Company logo"
+                        className="w-10 h-8 rounded-full"
+                      />
+                    )}
+                    {item.companyName}
+                  </td>
                   <td className="px-4 py-3 border-b">
                     {item.durationMinutes} min
                   </td>
