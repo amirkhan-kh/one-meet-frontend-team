@@ -25,25 +25,120 @@ export default function CandidateHome() {
             },
           }
         )
-        .then((res) => {
+        .then(async (res) => {
           if (res.data.success) {
             const allData = res.data.data.content;
 
-            const completed = allData.filter(
-              (item) =>
-                item.status === "STARTED" ||
-                item.status === "IN_PROGRESS" ||
-                item.status === "COMPLETED" ||
-                item.status === "UNCOMPLETED" ||
-                item.status === "EXPIRED"
+            const completed = allData.filter((item) =>
+              [
+                "STARTED",
+                "IN_PROGRESS",
+                "COMPLETED",
+                "UNCOMPLETED",
+                "EXPIRED",
+              ].includes(item.status)
             );
             const pending = allData.filter((item) => item.status === "PENDING");
 
-            setCompletedData(completed);
-            setPendingData(pending);
-
             setCompletedLength(completed.length);
             setPendingLength(pending.length);
+
+            const companyIds = Array.from(
+              new Set(allData.map((item) => item.companyId))
+            );
+
+            const companyInfos = await Promise.all(
+              companyIds.map(async (companyId) => {
+                try {
+                  // 1. Kompaniya ma'lumotlari
+                  const companyRes = await axios.get(
+                    `https://api.onemeet.app/company/get-by-id/${companyId}`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                          "accessToken"
+                        )}`,
+                      },
+                    }
+                  );
+
+                  if (!companyRes.data.success) return null;
+
+                  const companyData = companyRes.data.data;
+                  const companyName = companyData.name;
+                  const ownerId = companyData.ownerUserId;
+
+                  // 2. Kompaniya egasining profili
+                  const ownerRes = await axios.get(
+                    `https://api.onemeet.app/user/get-by-id/${ownerId}`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                          "accessToken"
+                        )}`,
+                      },
+                    }
+                  );
+
+                  if (!ownerRes.data.success) return null;
+
+                  const profilePictureId = ownerRes.data.data?.profilePicture;
+
+                  let logoUrl = null;
+
+                  if (profilePictureId) {
+                    // 3. Rasmni blob formatda olish
+                    const imageRes = await axios.get(
+                      `https://api.onemeet.app/media/business/files/${profilePictureId}`,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${localStorage.getItem(
+                            "accessToken"
+                          )}`,
+                        },
+                        responseType: "blob",
+                      }
+                    );
+                    // 4. Blob URL yaratish
+                    logoUrl = URL.createObjectURL(imageRes.data);
+                  }
+
+                  return {
+                    companyId,
+                    name: companyName,
+                    logoUrl,
+                  };
+                } catch (err) {
+                  console.error("Error fetching company info:", err);
+                  return null;
+                }
+              })
+            );
+
+            const companyMap = {};
+            companyInfos.forEach((info) => {
+              if (info) {
+                companyMap[info.companyId] = {
+                  name: info.name,
+                  logoUrl: info.logoUrl,
+                };
+              }
+            });
+
+            const completedWithCompany = completed.map((item) => ({
+              ...item,
+              companyName: companyMap[item.companyId]?.name,
+              companyLogo: companyMap[item.companyId]?.logoUrl,
+            }));
+
+            const pendingWithCompany = pending.map((item) => ({
+              ...item,
+              companyName: companyMap[item.companyId]?.name,
+              companyLogo: companyMap[item.companyId]?.logoUrl,
+            }));
+
+            setCompletedData(completedWithCompany);
+            setPendingData(pendingWithCompany);
           }
         })
         .catch((err) => {
@@ -56,11 +151,8 @@ export default function CandidateHome() {
     <div className="">
       <div className="bg-gray-200">
         <div className="container">
-          <div>
-            <p className="font-bold text-2xl mb-8 mt-4">Interviews</p>
-          </div>
+          <p className="font-bold text-2xl mb-8 mt-4">Interviews</p>
 
-          {/* Tabs */}
           <div className="flex gap-6 mb-4 border-b">
             <button
               onClick={() => setActiveTab("pending")}
@@ -105,7 +197,6 @@ export default function CandidateHome() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="container">
         {activeTab === "pending" && <Pending pendingData={pendingData} />}
         {activeTab === "completed" && (

@@ -130,9 +130,6 @@ export default function Notifications() {
     },
   ];
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Notification Settings</h2>

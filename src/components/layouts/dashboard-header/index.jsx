@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   navigationAdminDashboard,
@@ -17,7 +17,10 @@ export const DashboardHeader = () => {
   const [hoveredItem, setHoveredItem] = useState(null);
 
   const location = useLocation();
+  const navigate = useNavigate();
   const path = location.pathname;
+
+  const token = localStorage.getItem("accessToken");
 
   let currentLinks;
   switch (true) {
@@ -47,12 +50,25 @@ export const DashboardHeader = () => {
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
+  const handleLogoClick = () => {
+    if (token) {
+      if (path.startsWith("/admin")) navigate("/admin-dashboard");
+      else if (path.startsWith("/company")) navigate("/company");
+      else if (path.startsWith("/recruiter")) navigate("/recruiter");
+      else if (path.startsWith("/candidate")) navigate("/candidate");
+      else navigate("/admin-dashboard"); // fallback
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
     <header className="ai-header">
       <div className="flex items-center justify-between px-6 py-3">
-        <a href="/" className="ai-logo">
+        {/* Logo */}
+        <button onClick={handleLogoClick} className="ai-logo text-left">
           OneMeet
-        </a>
+        </button>
 
         {/* Desktop nav */}
         <nav className="ai-nav hidden lg:block">
@@ -67,12 +83,20 @@ export const DashboardHeader = () => {
 
         {/* Medium screen nav */}
         <div className="hidden sm:block lg:hidden">
-          <nav className={`ai-nav ${menuOpen ? "show" : ""} translate-y-0 h-[205px]`}>
+          <nav
+            className={`ai-nav ${
+              menuOpen ? "show" : ""
+            } translate-y-0 h-[205px]`}
+          >
             <div className="flex gap-4 w-full pr-2">
               <div>
                 <ul className="text-left pl-[20px]">
                   {currentLinks.map((item, i) => (
-                    <NavLink key={i} to={item.pathName} className="underline-hover">
+                    <NavLink
+                      key={i}
+                      to={item.pathName}
+                      className="underline-hover"
+                    >
                       <li
                         className="underline-hover text-[14px] font-semibold"
                         onMouseEnter={() => setHoveredItem(item)}
@@ -87,7 +111,9 @@ export const DashboardHeader = () => {
               <div className="w-full">
                 {hoveredItem ? (
                   <div>
-                    <h4 className="font-light text-lg mb-2 ms-4">{hoveredItem.navName}</h4>
+                    <h4 className="font-light text-lg mb-2 ms-4">
+                      {hoveredItem.navName}
+                    </h4>
                     <HoveredInfo hoveredItem={hoveredItem} />
                   </div>
                 ) : (
