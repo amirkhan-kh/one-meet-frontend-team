@@ -40,7 +40,6 @@ import PreCheckPage from './pages/candidate/Dashboard/PreCheckPage'
 import InterviewWrapper from './pages/candidate/Dashboard/InterviewWrapper'
 import FinishPage from './pages/candidate/Dashboard/FinishPage'
 import ResetPassword from './components/auth/Login/ResetPassword'
-import NotFoundPage from './pages/error-page'
 
 function App() {
 	return (
@@ -53,8 +52,6 @@ function App() {
 			<Route path='/auth/verify' element={<Verify />} />
 			<Route path='/contact-support' element={<ContactSupport />} />
 			<Route path='/reset-password' element={<ResetPassword />} />
-			<Route path="*" element={<NotFoundPage />} />
-
 
 			{/* Complete profile routes */}
 			<Route
