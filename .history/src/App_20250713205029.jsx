@@ -40,7 +40,6 @@ import PreCheckPage from './pages/candidate/Dashboard/PreCheckPage'
 import InterviewWrapper from './pages/candidate/Dashboard/InterviewWrapper'
 import FinishPage from './pages/candidate/Dashboard/FinishPage'
 import ResetPassword from './components/auth/Login/ResetPassword'
-import NotFoundPage from './pages/error-page'
 
 function App() {
 	return (
