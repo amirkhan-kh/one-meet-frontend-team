@@ -95,11 +95,11 @@ function App() {
 
 			{/* Company Dashboard */}
 			<Route path='/company' element={<CompanyDashboard />}>
+				{/* <Route index element={<DashboardCompany />} /> */}
 				<Route index element={<RecruitersCompany />}/>
 				<Route path='finance' element={<Plans />} />
 				<Route path='usage' element={<UsageCompany />} />
 				<Route path='profile-company' element={<ProfileCompany />} />
-				{/* <Route index element={<DashboardCompany />} /> */}
 			</Route>
 
 			{/* Recruiter Dashboard */}
@@ -107,7 +107,8 @@ function App() {
 				<Route index element={<InterviewsRec />} />
 				<Route path='interviews-rec' element={<InterviewsRec />} />
 				<Route path='usage' element={<UsageRec />} />
-				<Route	path='profile-recruiter'	element={<ProfilerecruiterRec />}/>
+				<Route	path='profile-recruiter'	element={<ProfilerecruiterRec />}
+				/>
 			</Route>
 		</Routes>
 	)

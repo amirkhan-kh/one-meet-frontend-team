@@ -6,8 +6,8 @@ export const navigationAdminDashboard = [
     { navName: "Account Control", pathName: "account-control"},
 ];
 export const navigationCompanyDashboard = [
-    { navName: "Recruiters", pathName: "/company"},
-    { navName: "Usage", pathName: "usage"},
+    { navName: "Recruiters", pathName: "/recruiters-compony"},
+    { navName: "Usage", pathName: "/recruiters-compony/usage"},
     { navName: "Finance", pathName: "finance"},
 ];
 export const navigationRecruiterDashboard = [
