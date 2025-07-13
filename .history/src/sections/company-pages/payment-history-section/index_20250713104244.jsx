@@ -71,7 +71,7 @@ console.log(companyData);
           <TableBody>
               <TableRow >
                 <TableCell className="font-medium translate-x-2">
-                  {companyData.name}
+                  {companyData?.plan?.name}
                 </TableCell>
                 <TableCell>{companyData?.plan?.amount}</TableCell>
                 <TableCell>{companyData?.plan?.credits}</TableCell>

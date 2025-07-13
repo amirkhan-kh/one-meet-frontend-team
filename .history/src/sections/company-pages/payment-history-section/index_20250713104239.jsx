@@ -59,7 +59,7 @@ console.log(companyData);
       <div className="">
         <Table>
           <TableHeader className=" text-black hover:bg-transparent focus:ring-0 border-l-[4px] border-[#2b43d4] bg-[#f4f5fd]">
-            <TableRow className="bg-[#f4f5fd] hover:bg-[#f4f5fd] focus:ring-0 focus:outline-none border-none shadow-none p-4">
+            <TableRow className="bg hover:bg-[#f4f5fd] focus:ring-0 focus:outline-none border-none shadow-none p-4">
               <TableHead className="translate-x-2">Name</TableHead>
               <TableHead className="">Amount</TableHead>
               <TableHead className="">Credits</TableHead>
@@ -71,7 +71,7 @@ console.log(companyData);
           <TableBody>
               <TableRow >
                 <TableCell className="font-medium translate-x-2">
-                  {companyData.name}
+                  {companyData?.plan?.name}
                 </TableCell>
                 <TableCell>{companyData?.plan?.amount}</TableCell>
                 <TableCell>{companyData?.plan?.credits}</TableCell>

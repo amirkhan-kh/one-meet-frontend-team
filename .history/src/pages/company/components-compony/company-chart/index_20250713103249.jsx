@@ -99,7 +99,7 @@ export const ComponentChart = () => {
       )
       setRecruiters(recruiterData)
     } catch (err) {
-      console.error("Failed to load recruiters", err)
+      console.error("Failed to load recruiters")
     }
   }
 
@@ -114,7 +114,7 @@ export const ComponentChart = () => {
       const json = await res.json()
       setData(json.data || [])
     } catch (err) {
-      console.error("Failed to fetch usage data", err)
+      console.error("Failed to fetch usage data", )
     }
   }
 

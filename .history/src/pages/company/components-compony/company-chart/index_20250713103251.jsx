@@ -99,7 +99,7 @@ export const ComponentChart = () => {
       )
       setRecruiters(recruiterData)
     } catch (err) {
-      console.error("Failed to load recruiters", err)
+      console.error("Failed to load recruiters")
     }
   }
 

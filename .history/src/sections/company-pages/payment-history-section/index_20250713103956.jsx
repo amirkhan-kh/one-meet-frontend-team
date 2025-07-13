@@ -23,7 +23,6 @@ useEffect(() => {
     dispatch(fetchPaymentsByCompany(companyData.id));
   }
 }, [companyData, dispatch]);
-console.log(companyData);
 
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,19 +58,19 @@ console.log(companyData);
       <div className="">
         <Table>
           <TableHeader className=" text-black hover:bg-transparent focus:ring-0 border-l-[4px] border-[#2b43d4] bg-[#f4f5fd]">
-            <TableRow className="bg-[#f4f5fd] hover:bg-[#f4f5fd] focus:ring-0 focus:outline-none border-none shadow-none p-4">
-              <TableHead className="translate-x-2">Name</TableHead>
-              <TableHead className="">Amount</TableHead>
-              <TableHead className="">Credits</TableHead>
-              <TableHead className="">Currency</TableHead>
-              <TableHead className="ps-10.5 ">Created At</TableHead>
-              <TableHead className="">Payment Status</TableHead>
+            <TableRow className="hover:bg-transparent focus:ring-0 focus:outline-none border-none shadow-none p-4">
+              <TableHead className="text-white translate-x-2">Name</TableHead>
+              <TableHead className="text-white">Amount</TableHead>
+              <TableHead className="text-white">Credits</TableHead>
+              <TableHead className="text-white">Currency</TableHead>
+              <TableHead className="ps-10.5 text-white">Created At</TableHead>
+              <TableHead className="text-white">Payment Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
               <TableRow >
                 <TableCell className="font-medium translate-x-2">
-                  {companyData.name}
+                  {companyData?.plan?.name}
                 </TableCell>
                 <TableCell>{companyData?.plan?.amount}</TableCell>
                 <TableCell>{companyData?.plan?.credits}</TableCell>
