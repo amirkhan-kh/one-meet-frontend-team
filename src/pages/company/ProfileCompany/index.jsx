@@ -226,6 +226,30 @@ export const ProfileCompany = () => {
                 )}
               </label>
               <label className="font-semibold text-[14] flex flex-col gap-3">
+                Last Name
+                {loading || error ? (
+                  <Skeleton className="w-full h-10 rounded-md" />
+                ) : (
+                  <Input
+                    value={data?.lastName}
+                    // onChange={(e) => setWebsite(e.target.value)}
+                    className="bg-gray-100 border border-gray-200 text-gray-500"
+                  />
+                )}
+              </label>
+              <label className="font-semibold text-[14] flex flex-col gap-3">
+                First Name
+                {loading || error ? (
+                  <Skeleton className="w-full h-10 rounded-md" />
+                ) : (
+                  <Input
+                    value={data?.firstName}
+                    // onChange={(e) => setWebsite(e.target.value)}
+                    className="bg-gray-100 border border-gray-200 text-gray-500"
+                  />
+                )}
+              </label>
+              <label className="font-semibold text-[14] flex flex-col gap-3">
                 Website
                 {loading || error ? (
                   <Skeleton className="w-full h-10 rounded-md" />
