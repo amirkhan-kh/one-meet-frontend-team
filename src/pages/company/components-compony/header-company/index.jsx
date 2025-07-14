@@ -29,19 +29,16 @@ export const CompanyHeader = () => {
   const company = useSelector((state) => state.companyByOwner.data);
   const { data } = useSelector((state) => state.companyProfileGet);
 
-  // ⚠️ Fetch user profile
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
 
-  // ✅ Fetch company by user profile id (this was missing!)
   useEffect(() => {
     if (data?.id) {
       dispatch(fetchCompanyByOwnerId(data.id));
     }
   }, [data?.id, dispatch]);
 
-  // ☑️ Handle window resize for menu
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
@@ -56,7 +53,6 @@ export const CompanyHeader = () => {
     setMenuOpen((prev) => !prev);
   };
 
-  // 🖼️ Fetch logo image from backend
   useEffect(() => {
     const fetchLogo = async () => {
       if (data?.profilePicture) {
@@ -97,23 +93,19 @@ export const CompanyHeader = () => {
         <a href="/" className="ai-logo">
           OneMeet
         </a>
+        <nav className="ai-nav">
+          <ul className="flex items-center ">
+            {navigationCompanyDashboard.map((item, i) => (
+              <NavLink key={i} to={item.pathName} className="underline-hover">
+                <li className="underline-hover text-[14px] font-semibold">
+                  {item.navName}
+                </li>
+              </NavLink>
+            ))}
+          </ul>
+        </nav>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-4">
-            <nav className="ai-nav">
-              <ul className="flex items-center ">
-                {navigationCompanyDashboard.map((item, i) => (
-                  <NavLink
-                    key={i}
-                    to={item.pathName}
-                    className="underline-hover"
-                  >
-                    <li className="underline-hover text-[14px] font-semibold">
-                      {item.navName}
-                    </li>
-                  </NavLink>
-                ))}
-              </ul>
-            </nav>
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2">
                 <Avatar className="border border-blue-500">
@@ -121,7 +113,7 @@ export const CompanyHeader = () => {
                     <img
                       src={logo}
                       alt={data?.firstName}
-                      className="object-cover h-full rounded-md w-full"
+                      className="object-cover h-full w-full"
                     />
                   ) : (
                     <div className="text-center text-sm text-gray-400 pt-12">
