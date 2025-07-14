@@ -4,9 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 
 export default function NotificationsCompany() {
-  const { data, error } = useSelector((state) => state.companyProfileGet);
-  
-  const companyId = data.id;
+  const company = useSelector((state) => state.companyByOwner.data);
+  const comId = company?.id;
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     notifyMarketing: false,
@@ -16,11 +15,14 @@ export default function NotificationsCompany() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get(`https://api.onemeet.app/company/get-by-id/${companyId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      });
+      const res = await axios.get(
+        `https://api.onemeet.app/company/get-by-id/${comId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
       const data = res.data?.data;
       setForm({
         notifyMarketing: data.notifyMarketing,
@@ -29,7 +31,7 @@ export default function NotificationsCompany() {
       });
     };
     fetchData();
-  }, [companyId]);
+  }, [comId]);
 
   const handleChange = (e) => {
     const { name, checked } = e.target;
@@ -38,11 +40,15 @@ export default function NotificationsCompany() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    await axios.patch(`https://api.onemeet.app/company/upgrade/${companyId}`, form, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    } );
+    await axios.patch(
+      `https://api.onemeet.app/company/upgrade/${comId}`,
+      form,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
     setLoading(false);
   };
 
