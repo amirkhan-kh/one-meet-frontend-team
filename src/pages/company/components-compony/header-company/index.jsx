@@ -14,17 +14,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { fetchUserProfile } from "@/store/company-service/profile-get";
 import { useDispatch, useSelector } from "react-redux";
-import './header.css'
+import "./header.css";
+import { useUser } from "@/lib/hook/useUser";
 export const CompanyHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
   const dispatch = useDispatch();
   const [logo, setLogo] = useState(null);
 
-  const { data } = useSelector(
-    (state) => state.companyProfileGet
-  );
-  
+  const { data } = useSelector((state) => state.companyProfileGet);
+
+  const user = useUser();
+
+  const company = useSelector((state) => state.companyByOwner.data);
+
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth > 768) {
@@ -76,7 +79,6 @@ export const CompanyHeader = () => {
     fetchLogo();
   }, [data?.profilePicture]);
 
-
   return (
     <header className="ai-header-company relative z-50">
       <div className="flex items-center justify-between px-6 py-3">
@@ -101,20 +103,26 @@ export const CompanyHeader = () => {
               </ul>
             </nav>
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger className="flex items-center gap-2">
                 <Avatar className={`border border-blue-500`}>
                   {logo ? (
                     <img
                       src={logo}
                       alt={data?.firstName}
-                      className="object-contain h-full rounded-md w-full"
+                      className="object-cover h-full rounded-md w-full"
                     />
                   ) : (
                     <div className="text-center text-sm text-gray-400 pt-12">
-                     {data?.firstName?.slice(0, 2).toUpperCase()}
+                      {company?.name?.slice(0, 2).toUpperCase()}
                     </div>
                   )}
                 </Avatar>
+                <div className="md:block hidden text-start">
+                  <p className="text-sm font-semibold">
+                    {company ? `${company.name}` : "Loading..."}
+                  </p>
+                  <p className="text-xs">{user?.user?.email}</p>
+                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -131,7 +139,6 @@ export const CompanyHeader = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-        
 
           {/* sm dan lg gacha block navigation */}
           <div className="hidden sm:block lg:hidden">
@@ -182,7 +189,7 @@ export const CompanyHeader = () => {
           {/* sm gacha ko'rinuvchi sheet navbar */}
           <div className="flex items-center gap-4">
             <div className="block sm:hidden">
-                <SheetNavigation />
+              <SheetNavigation />
             </div>
 
             <div className="hidden sm:block">
