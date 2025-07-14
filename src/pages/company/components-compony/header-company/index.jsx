@@ -13,44 +13,50 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { fetchUserProfile } from "@/store/company-service/profile-get";
+import { fetchCompanyByOwnerId } from "@/store/company-service/get-profile-by-id";
 import { useDispatch, useSelector } from "react-redux";
 import "./header.css";
 import { useUser } from "@/lib/hook/useUser";
+
 export const CompanyHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
-  const dispatch = useDispatch();
   const [logo, setLogo] = useState(null);
-
-  const { data } = useSelector((state) => state.companyProfileGet);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const user = useUser();
-
   const company = useSelector((state) => state.companyByOwner.data);
+  const { data } = useSelector((state) => state.companyProfileGet);
 
+  // ⚠️ Fetch user profile
   useEffect(() => {
-    function handleResize() {
+    dispatch(fetchUserProfile());
+  }, [dispatch]);
+
+  // ✅ Fetch company by user profile id (this was missing!)
+  useEffect(() => {
+    if (data?.id) {
+      dispatch(fetchCompanyByOwnerId(data.id));
+    }
+  }, [data?.id, dispatch]);
+
+  // ☑️ Handle window resize for menu
+  useEffect(() => {
+    const handleResize = () => {
       if (window.innerWidth > 768) {
         setMenuOpen(false);
       }
-    }
+    };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
 
-  useEffect(() => {
-    dispatch(fetchUserProfile());
-  }, [dispatch]);
-  const navigate = useNavigate();
-
-  const deleteToken = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("accessToken");
-    navigate("/");
-  };
+  // 🖼️ Fetch logo image from backend
   useEffect(() => {
     const fetchLogo = async () => {
       if (data?.profilePicture) {
@@ -79,6 +85,12 @@ export const CompanyHeader = () => {
     fetchLogo();
   }, [data?.profilePicture]);
 
+  const deleteToken = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("accessToken");
+    navigate("/");
+  };
+
   return (
     <header className="ai-header-company relative z-50">
       <div className="flex items-center justify-between px-6 py-3">
@@ -95,7 +107,7 @@ export const CompanyHeader = () => {
                     to={item.pathName}
                     className="underline-hover"
                   >
-                    <li className=" underline-hover text-[14px] font-semibold">
+                    <li className="underline-hover text-[14px] font-semibold">
                       {item.navName}
                     </li>
                   </NavLink>
@@ -104,7 +116,7 @@ export const CompanyHeader = () => {
             </nav>
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2">
-                <Avatar className={`border border-blue-500`}>
+                <Avatar className="border border-blue-500">
                   {logo ? (
                     <img
                       src={logo}
@@ -113,15 +125,15 @@ export const CompanyHeader = () => {
                     />
                   ) : (
                     <div className="text-center text-sm text-gray-400 pt-12">
-                      {company?.name?.slice(0, 2).toUpperCase()}
+                      {company?.name?.slice(0, 2).toUpperCase() || "NA"}
                     </div>
                   )}
                 </Avatar>
                 <div className="md:block hidden text-start">
                   <p className="text-sm font-semibold">
-                    {company ? `${company.name}` : "Loading..."}
+                    {company?.name || "..."}
                   </p>
-                  <p className="text-xs">{user?.user?.email}</p>
+                  <p className="text-xs">{user?.user?.email || ""}</p>
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -147,14 +159,14 @@ export const CompanyHeader = () => {
                 menuOpen ? "show" : ""
               } translate-y-0 h-[230px]`}
             >
-              <div className="flex gap-4 w-full pr-2 ">
-                <div className="">
+              <div className="flex gap-4 w-full pr-2">
+                <div>
                   <ul className="text-left pl-[20px] w-[170px]">
                     {navigationCompanyDashboard.map((item, i) => (
                       <NavLink
                         key={i}
                         to={item.pathName}
-                        className="underline-hover "
+                        className="underline-hover"
                         onClick={() => setMenuOpen(false)}
                       >
                         <li
@@ -168,7 +180,7 @@ export const CompanyHeader = () => {
                     ))}
                   </ul>
                 </div>
-                <div className=" w-full">
+                <div className="w-full">
                   {hoveredItem ? (
                     <div>
                       <h4 className="font-light text-lg mb-2 ms-4">
@@ -191,10 +203,9 @@ export const CompanyHeader = () => {
             <div className="block sm:hidden">
               <SheetNavigation />
             </div>
-
             <div className="hidden sm:block">
               <button
-                className="hidden sm:block lg:hidden  menu-toggle"
+                className="hidden sm:block lg:hidden menu-toggle"
                 onClick={toggleMenu}
                 aria-label="Toggle navigation menu"
                 aria-expanded={menuOpen}
