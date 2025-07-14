@@ -178,9 +178,7 @@ export const CompanyHeader = () => {
                       <h4 className="font-light text-lg mb-2 ms-4">
                         {hoveredItem.navName}
                       </h4>
-                      <p>
                         <HoveredInfo hoveredItem={hoveredItem} />
-                      </p>
                     </div>
                   ) : (
                     <HoveredInfo hoveredItem={hoveredItem} />
