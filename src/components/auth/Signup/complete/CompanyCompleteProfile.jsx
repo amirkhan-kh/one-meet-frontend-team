@@ -20,6 +20,10 @@ export default function CompanyCompleteProfile() {
 	const [error, setError] = useState('')
 	const [loading, setLoading] = useState(false)
 	const navigate = useNavigate()
+const [createdUserProfileId, setCreatedUserProfileId] = useState(null);
+const [uploadedMediaId, setUploadedMediaId] = useState(null); // 👈 new
+
+
 
 	useEffect(() => {
 		const token = localStorage.getItem('accessToken')
@@ -54,30 +58,30 @@ export default function CompanyCompleteProfile() {
 			setForm({ ...form, [name]: value })
 		}
 	}
+	
+const handleSubmit = async (e) => {
+	e.preventDefault();
+	const token = localStorage.getItem('accessToken');
+	setLoading(true);
+	setError('');
+	setMessage('');
 
-	const handleSubmit = async e => {
-		e.preventDefault()
-		const token = localStorage.getItem('accessToken')
+	try {
+		let mediaId = uploadedMediaId;
 
-		try {
-			setLoading(true)
-			setError('')
-			setMessage('')
-
+		if (!mediaId) {
+			// ✅ Step 1: Validate and upload logo (only once)
 			if (
 				!form.logoFile ||
-				!['image/jpeg', 'image/jpg', 'image/png'].includes(
-					form.logoFile.type
-				)
+				!['image/jpeg', 'image/jpg', 'image/png'].includes(form.logoFile.type)
 			) {
-				setError('Only JPEG and PNG images are allowed.')
-				setLoading(false)
-				return
+				setError('Only JPEG and PNG images are allowed.');
+				setLoading(false);
+				return;
 			}
 
-			// Step 1: Upload logo to media service
-			const formData = new FormData()
-			formData.append('file', form.logoFile)
+			const formData = new FormData();
+			formData.append('file', form.logoFile);
 
 			const mediaUpload = await axios.post(
 				'https://api.onemeet.app/media/business/upload-avatar',
@@ -88,12 +92,16 @@ export default function CompanyCompleteProfile() {
 						'Content-Type': 'multipart/form-data',
 					},
 				}
-			)
+			);
+			mediaId = mediaUpload.data?.data?.id;
+			if (!mediaId) throw new Error('Logo upload failed');
+			setUploadedMediaId(mediaId); // 💾 cache for retry
+		}
 
-			const mediaId = mediaUpload.data?.data?.id
-			if (!mediaId) throw new Error('Logo upload failed')
+		let userProfileId = createdUserProfileId;
 
-			// Step 2: Create user profile
+		if (!userProfileId) {
+			// ✅ Step 2: Create user profile
 			const userRes = await axios.post(
 				'https://api.onemeet.app/user/create',
 				{
@@ -108,48 +116,44 @@ export default function CompanyCompleteProfile() {
 						Authorization: `Bearer ${token}`,
 					},
 				}
-			)
-
-			const userProfileId = userRes.data.data.id
-
-			// Step 3: Create company
-			await axios.post(
-				'https://api.onemeet.app/company/create',
-				{
-					ownerUserId: userProfileId,
-					name: form.name,
-					website: form.website,
-					linkedin: form.linkedin,
-					logoUrl: mediaId,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			)
-
-			setMessage('Company profile completed.')
-			const accessToken = localStorage.getItem('accessToken')
-
-			const userResponse = await axios.get(
-				'https://api.onemeet.app/auth/me',
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				}
-			)
-
-			const userData = userResponse.data.data
-			localStorage.setItem('userData', JSON.stringify(userData))
-			navigate('/company')
-		} catch (err) {
-			setError(err.response?.data?.message || 'Submission failed')
-		} finally {
-			setLoading(false)
+			);
+			userProfileId = userRes.data.data.id;
+			setCreatedUserProfileId(userProfileId);
 		}
+
+		// ✅ Step 3: Create company
+		await axios.post(
+			'https://api.onemeet.app/company/create',
+			{
+				ownerUserId: userProfileId,
+				name: form.name,
+				website: form.website,
+				linkedin: form.linkedin,
+				logoUrl: mediaId,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+
+		setMessage('Company profile completed.');
+		const userResponse = await axios.get('https://api.onemeet.app/auth/me', {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		localStorage.setItem('userData', JSON.stringify(userResponse.data.data));
+		navigate('/company');
+	} catch (err) {
+		setError(err.response?.data?.message || 'Submission failed');
+	} finally {
+		setLoading(false);
 	}
+};
+
+
 
 	return (
 		<div className='page-background overflow'>
