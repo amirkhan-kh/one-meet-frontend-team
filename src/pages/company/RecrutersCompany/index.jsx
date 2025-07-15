@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   MdCheckCircleOutline,
   MdAccessTime,
@@ -8,16 +8,19 @@ import "./RecruiterTable.css";
 import { Skeleton } from "@/components/ui/skeleton";
 import CompanyCreateRecruiterModal from "./ui-components-company/modal-recruiter-post";
 import Lottie from "lottie-react";
-import animationData from '../../../../public/animation/errorData.json'
+import animationData from "../../../../public/animation/errorData.json";
+import defaultAvatar from "../../../../public/default-avatar.avif";
+
 export const RecruitersCompany = () => {
   const token = localStorage.getItem("accessToken");
   const [companyId, setCompanyId] = useState(null);
+  const [companyName, setCompanyName] = useState("");
   const [recruiters, setRecruiters] = useState([]);
   const [selectedRecruiterId, setSelectedRecruiterId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCompanyId = async () => {
+    const fetchCompanyInfo = async () => {
       try {
         const userRes = await fetch("https://api.onemeet.app/user/me", {
           headers: { Authorization: `Bearer ${token}` },
@@ -33,27 +36,26 @@ export const RecruitersCompany = () => {
           }
         );
         const companyJson = await companyRes.json();
-        const companyId = companyJson?.data?.id;
-        if (!companyId) throw new Error("Company ID not found");
+        const company = companyJson?.data;
+        if (!company?.id || !company?.name) throw new Error("Company data incomplete");
 
-        setCompanyId(companyId);
+        setCompanyId(company.id);
+        setCompanyName(company.name);
       } catch (err) {
-        console.error("❌ Failed to fetch companyId:", err);
+        console.error("\u274C Failed to fetch company info:", err);
       } finally {
         setIsLoading(false);
       }
     };
 
-    if (token) fetchCompanyId();
+    if (token) fetchCompanyInfo();
     else setIsLoading(false);
   }, [token]);
 
-  useEffect(() => {
-    if (companyId) fetchRecruiters();
-  }, [companyId]);
-
-  const fetchRecruiters = async () => {
+  const fetchRecruiters = useCallback(async () => {
+    if (!companyId) return;
     try {
+      console.log("\ud83d\udcc5 Fetching recruiters for companyId:", companyId);
       const res = await fetch(
         `https://api.onemeet.app/recruiter/get-by-company?companyId=${companyId}`,
         {
@@ -67,6 +69,7 @@ export const RecruitersCompany = () => {
         rawRecruiters.map(async (recruiter) => {
           let profileData = {};
           let authData = {};
+          let profilePictureUrl = null;
 
           try {
             const userRes = await fetch(
@@ -77,8 +80,21 @@ export const RecruitersCompany = () => {
             );
             const userJson = await userRes.json();
             profileData = userJson.data;
+
+            if (profileData.profilePicture) {
+              const avatarRes = await fetch(
+                `https://api.onemeet.app/media/business/files/${profileData.profilePicture}`,
+                {
+                  headers: { Authorization: `Bearer ${token}` },
+                }
+              );
+              if (avatarRes.ok) {
+                const blob = await avatarRes.blob();
+                profilePictureUrl = URL.createObjectURL(blob);
+              }
+            }
           } catch (_) {
-            console.log(_);
+            console.warn("\ud83e\udde8 User or avatar fetch error:", _);
           }
 
           try {
@@ -91,7 +107,7 @@ export const RecruitersCompany = () => {
             const authJson = await authRes.json();
             authData = authJson.data;
           } catch (_) {
-            console.log(_);
+            console.warn("\ud83e\udde8 Auth fetch error:", _);
           }
 
           return {
@@ -99,7 +115,7 @@ export const RecruitersCompany = () => {
             firstName: profileData.firstName,
             lastName: profileData.lastName,
             timezone: profileData.timezone,
-            profilePicture: profileData.profilePicture,
+            profilePicture: profilePictureUrl,
             authUserId: profileData.authUserId,
             email: authData.email,
           };
@@ -107,10 +123,15 @@ export const RecruitersCompany = () => {
       );
 
       setRecruiters(enriched);
+      console.log("\u2705 Recruiters refreshed:", enriched.length);
     } catch (err) {
-      console.error("❌ Failed to fetch recruiters:", err);
+      console.error("\u274C Failed to fetch recruiters:", err);
     }
-  };
+  }, [companyId, token]);
+
+  useEffect(() => {
+    if (companyId) fetchRecruiters();
+  }, [companyId, fetchRecruiters]);
 
   const handleAccept = async (recruiterId) => {
     try {
@@ -127,23 +148,23 @@ export const RecruitersCompany = () => {
       });
       fetchRecruiters();
     } catch (err) {
-      console.error("❌ Failed to accept recruiter:", err);
+      console.error("\u274C Failed to accept recruiter:", err);
     }
   };
 
   const approved = recruiters.filter(
-    (r) => r.approvedByCompany === true && r.approvedByRecruiter === true
+    (r) => r.approvedByCompany && r.approvedByRecruiter
   );
   const pendingByCompany = recruiters.filter(
-    (r) => r.approvedByRecruiter === true && r.approvedByCompany !== true
+    (r) => r.approvedByRecruiter && !r.approvedByCompany
   );
   const pendingByRecruiter = recruiters.filter(
-    (r) => r.approvedByCompany === true && r.approvedByRecruiter !== true
+    (r) => !r.approvedByCompany && !r.approvedByRecruiter
   );
 
   const renderTable = (title, data, showAccept) => (
     <div className="recruiter-section border-l-[4px] border-[#2b43d4]">
-      <div className="flex items-center justify-between ">
+      <div className="flex items-center justify-between">
         <h2>{title}</h2>
       </div>
       {data.length === 0 ? (
@@ -171,9 +192,7 @@ export const RecruitersCompany = () => {
                     )
                   }
                 >
-                  <td>
-                    {r.firstName} {r.lastName}
-                  </td>
+                  <td>{r.firstName} {r.lastName}</td>
                   <td>{r.position}</td>
                   <td>{new Date(r.joinedAt).toLocaleDateString()}</td>
                   {showAccept && (
@@ -190,38 +209,22 @@ export const RecruitersCompany = () => {
                     </td>
                   )}
                 </tr>
-
                 {selectedRecruiterId === r.id && (
                   <tr className="recruiter-details-row">
                     <td colSpan={showAccept ? 4 : 3}>
                       <div className="recruiter-details">
                         <img
-                          src={r.profilePicture}
+                          src={r.profilePicture || defaultAvatar}
                           alt="Profile"
                           className="recruiter-avatar"
-                          onError={(e) =>
-                            (e.target.src = "/default-avatar.jpg")
-                          }
+                          onError={(e) => (e.target.src = defaultAvatar)}
                         />
                         <div>
-                          <p>
-                            <strong>Full Name:</strong> {r.firstName}{" "}
-                            {r.lastName}
-                          </p>
-                          <p>
-                            <strong>Email:</strong> {r.email || "Unknown"}
-                          </p>
-                          <p>
-                            <strong>Time Zone:</strong>{" "}
-                            {r.timezone || "Unknown"}
-                          </p>
-                          <p>
-                            <strong>Position:</strong> {r.position}
-                          </p>
-                          <p>
-                            <strong>Joined At:</strong>{" "}
-                            {new Date(r.joinedAt).toLocaleString()}
-                          </p>
+                          <p><strong>Full Name:</strong> {r.firstName} {r.lastName}</p>
+                          <p><strong>Email:</strong> {r.email || "Unknown"}</p>
+                          <p><strong>Time Zone:</strong> {r.timezone || "Unknown"}</p>
+                          <p><strong>Position:</strong> {r.position}</p>
+                          <p><strong>Joined At:</strong> {new Date(r.joinedAt).toLocaleString()}</p>
                         </div>
                       </div>
                     </td>
@@ -237,73 +240,70 @@ export const RecruitersCompany = () => {
 
   if (isLoading)
     return (
-      <div className="p-3  rounded-md ">
-        <div className="shadow-md rounded-md px-3 sm:px-6 py-4 sm:p-6 mb-10 bg-white mx-auto  border-l-[4px] border-[#2b43d4]">
-          <Skeleton className="w-full rounded-xl" />
-          <div className="space-y-2">
-            <Skeleton className=" h-10 w-full" />
+      <div className="p-3">
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            className="shadow-md rounded-md px-3 sm:px-6 py-4 sm:p-6 mb-10 bg-white mx-auto border-l-[4px] border-[#2b43d4]"
+          >
+            <Skeleton className="w-full rounded-xl" />
+            <div className="space-y-2">
+              <Skeleton className="h-10 w-full" />
+            </div>
           </div>
-        </div>
-        <div className="shadow-md rounded-md px-3 sm:px-6 py-4 sm:p-6 mb-10 bg-white mx-auto  border-l-[4px] border-[#2b43d4]">
-          <Skeleton className="w-full rounded-xl" />
-          <div className="space-y-2">
-            <Skeleton className=" h-10 w-full" />
-          </div>
-        </div>
-        <div className="shadow-md rounded-md px-3 sm:px-6 py-4 sm:p-6 mb-10 bg-white mx-auto  border-l-[4px] border-[#2b43d4]">
-          <Skeleton className="w-full rounded-xl" />
-          <div className="space-y-2">
-            <Skeleton className=" h-10 w-full" />
-          </div>
-        </div>
+        ))}
       </div>
     );
-  if (!companyId) return <div className="grid place-content-center">
-     <Lottie
+
+  if (!companyId)
+    return (
+      <div className="grid place-content-center">
+        <Lottie
           animationData={animationData}
           loop
           autoplay
           style={{ height: "400px", width: "380px" }}
         />
-  </div>;
+      </div>
+    );
 
   return (
-    <div className=" p-3 ">
+    <div className="p-3">
       {renderTable(
-        <>
-          <div className="flex justify-between items-center w-full">
-            <div className="flex items-center gap-1">
-              <MdCheckCircleOutline size={24} className=" text-green-400"/>
-              <h3 className="">Active Recruiters</h3>
-            </div>
-            <div className="flex">
-              <span></span>
-              <CompanyCreateRecruiterModal />
-            </div>
+        <div className="flex justify-between items-center w-full">
+          <div className="flex items-center gap-1">
+            <MdCheckCircleOutline size={24} className="text-green-400" />
+            <h3 className="">Active Recruiters</h3>
           </div>
-        </>,
+          <CompanyCreateRecruiterModal
+            companyId={companyId}
+            companyName={companyName}
+            onSuccess={async () => {
+              toast.loading("Refreshing recruiter list...");
+              await fetchRecruiters();
+              toast.dismiss();
+              toast.success("Recruiters updated");
+            }}
+          />
+        </div>,
         approved,
         false
       )}
       {renderTable(
         <>
-          <MdOpenInBrowser size={24} className="inline mr-[2px] text-sky-800" />{" "}
-          Join Requests from Recruiters{" "}
+          <MdOpenInBrowser size={24} className="inline mr-[2px] text-sky-800" />
+          Join Requests from Recruiters
         </>,
         pendingByCompany,
         true
       )}
       {renderTable(
-       
-         <>
-          <MdAccessTime
-            size={24}
-            className="inline mr-[2px] text-blue-400"
-          />
+        <>
+          <MdAccessTime size={24} className="inline mr-[2px] text-blue-400" />
           Pending Approval by Company
         </>,
         pendingByRecruiter,
-        true
+        false
       )}
     </div>
   );
