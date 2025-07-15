@@ -129,7 +129,6 @@ export const CompanyHeader = () => {
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <NavLink to="profile-company">Profile</NavLink>
