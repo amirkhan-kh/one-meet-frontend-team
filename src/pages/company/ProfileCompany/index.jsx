@@ -184,7 +184,7 @@ export const ProfileCompany = () => {
                   : "hover:bg-gray-100"
               }`}
             >
-              Company Information
+              Account Information
             </button>
             <button
               onClick={() => setActiveTab("account")}
@@ -212,7 +212,7 @@ export const ProfileCompany = () => {
         {activeTab === "information" && (
           <div className="shadow p-4 bg-white rounded-md w-full md:w-[70%]">
             <div className="flex flex-col justify-between gap-10">
-              <h3 className="font-semibold text-[20px]">Company Information</h3>
+              <h3 className="font-semibold text-[20px]">Account Information</h3>
               <label className="font-semibold text-[14] flex flex-col gap-3">
                 Company Name
                 {loading || error ? (
@@ -221,6 +221,18 @@ export const ProfileCompany = () => {
                   <Input
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
+                    className="bg-gray-100 border border-gray-200 text-gray-500"
+                  />
+                )}
+              </label>
+              <label className="font-semibold text-[14] flex flex-col gap-3">
+                Website
+                {loading || error ? (
+                  <Skeleton className="w-full h-10 rounded-md" />
+                ) : (
+                  <Input
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
                     className="bg-gray-100 border border-gray-200 text-gray-500"
                   />
                 )}
@@ -245,18 +257,6 @@ export const ProfileCompany = () => {
                   <Input
                     value={data?.firstName}
                     // onChange={(e) => setWebsite(e.target.value)}
-                    className="bg-gray-100 border border-gray-200 text-gray-500"
-                  />
-                )}
-              </label>
-              <label className="font-semibold text-[14] flex flex-col gap-3">
-                Website
-                {loading || error ? (
-                  <Skeleton className="w-full h-10 rounded-md" />
-                ) : (
-                  <Input
-                    value={website}
-                    onChange={(e) => setWebsite(e.target.value)}
                     className="bg-gray-100 border border-gray-200 text-gray-500"
                   />
                 )}
