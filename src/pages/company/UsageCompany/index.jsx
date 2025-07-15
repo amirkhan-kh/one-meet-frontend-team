@@ -1,108 +1,219 @@
-import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { useEffect, useState } from "react";
 import InterviewUsageChart from "../components-compony/company-chart";
+import "./style.css";
+import { useSelector } from "react-redux";
+
+const statuses = ["PENDING", "IN_PROGRESS", "COMPLETED", "EXPIRED"];
 
 export const UsageCompany = () => {
-  const originalInvoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-  ];
+  const token = localStorage.getItem("accessToken");
 
-  // Ma'lumotlarni 4x ko'paytirish
-  const invoicesAll = [...Array(4)].flatMap(() => originalInvoices);
+  const [recruiterName, setRecruiterName] = useState("");
+  const [recruiters, setRecruiters] = useState([]);
 
-  const itemsPerPage = 4;
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(invoicesAll.length / itemsPerPage);
+  const [status, setStatus] = useState("");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [direction, setDirection] = useState("desc");
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(5);
+  const [data, setData] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const startIdx = (currentPage - 1) * itemsPerPage;
-  const paginatedInvoices = invoicesAll.slice(startIdx, startIdx + itemsPerPage);
+  const companyId = useSelector((state) => state.companyByOwner?.data?.id);
 
+  useEffect(() => {
+    if (companyId) {
+      fetchRecruiters();
+    }
+  }, [companyId]);
+
+  useEffect(() => {
+    if (companyId) {
+      fetchData();
+    }
+  }, [companyId, recruiterName, status, sortBy, direction, page, size]);
+
+  const fetchRecruiters = async () => {
+    try {
+      const res = await fetch(
+        `https://api.onemeet.app/recruiter/get-by-company?companyId=${companyId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const json = await res.json();
+      const recruiterData = await Promise.all(
+        (json.data || []).map(async (recruiter) => {
+          try {
+            const userRes = await fetch(
+              `https://api.onemeet.app/user/get-by-id/${recruiter.userProfileId}`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+            const user = await userRes.json();
+            return {
+              id: recruiter.id,
+              name: `${user.data.firstName} ${user.data.lastName}`,
+            };
+          } catch {
+            return { id: recruiter.id, name: "Unknown" };
+          }
+        })
+      );
+      setRecruiters(recruiterData);
+    } catch (err) {
+      console.error("❌ Failed to fetch recruiters:", err);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const params = new URLSearchParams({
+        recruiterName,
+        status,
+        page,
+        size,
+      });
+      params.append("sort", `${sortBy},${direction}`);
+
+      const res = await fetch(
+        `https://api.onemeet.app/interview/business/company/${companyId}/paged?${params.toString()}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const json = await res.json();
+      setData(json.data?.content || []);
+      setTotalPages(json.data?.totalPages || 0);
+    } catch (err) {
+      console.error("❌ Failed to fetch interviews:", err);
+    }
+  };
 
   return (
     <div className="px-3 py-5 sm:p-6">
       <div className="flex flex-col gap-10">
-        <div className="w-[70%]">
-          <h3 className="text-[18px] sm:text-4xl font-bold mb-10">Interview Usage Analytics</h3>
-          <p className="text-[18px] mb-8">Monitor and analyze the overall interview activities conducted by your team. This summary provides valuable insights into recruitment performance and trends over time.</p>
-        </div>
-        <div>
-          <h3 className="text-[18px] sm:text-2xl font-semibold mb-8">
-            Recent Activity
-          </h3>
-          <div className="shadow-md px-3 py-4 bg-white rounded-md">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>№</TableHead>
-                  <TableHead>Recruiter</TableHead>
-                  <TableHead>Interviews Conducted</TableHead>
-                  <TableHead className="text-right">Paid</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedInvoices.map((invoice, idx) => (
-                  <TableRow key={`${invoice.invoice}-${idx}`}>
-                    <TableCell>{(startIdx + idx + 1).toString().padStart(2, "0")}</TableCell>
-                    <TableCell>{invoice.paymentStatus}</TableCell>
-                    <TableCell>{invoice.paymentMethod}</TableCell>
-                    <TableCell className="text-right">
-                      {invoice.totalAmount}
-                    </TableCell>
-                  </TableRow>
+        <div className="chart-container">
+          <h2 className="chart-title">🧾 Interview Records</h2>
+          <div className="chart-filters">
+            <div className="filter-group">
+              <label className="filter-label">Recruiter Name</label>
+              <select
+                className="filter-select"
+                value={recruiterName}
+                onChange={(e) => setRecruiterName(e.target.value)}
+              >
+                <option value="">All Recruiters</option>
+                {recruiters.map((r) => (
+                  <option key={r.id} value={r.name}>
+                    {r.name}
+                  </option>
                 ))}
-              </TableBody>
-            </Table>
+              </select>
+            </div>
 
-            {/* Pagination */}
-            <div className="flex justify-end gap-2 py-4 pr-4">
-              {Array.from({ length: totalPages }, (_, i) => {
-                const page = i + 1;
-                const isActive = page === currentPage;
-                return (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`w-9 h-9 flex items-center justify-center rounded-md text-sm ${
-                      isActive
-                        ? "border border-gray-300 font-semibold"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                );
-              })}
+            <div className="filter-group">
+              <label className="filter-label">Status</label>
+              <select
+                className="filter-select"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value="">All</option>
+                {statuses.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label className="filter-label">Sort By</label>
+              <select
+                className="filter-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="createdAt">Created At</option>
+                <option value="score">Score</option>
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label className="filter-label">Direction</label>
+              <select
+                className="filter-select"
+                value={direction}
+                onChange={(e) => setDirection(e.target.value)}
+              >
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
+              </select>
             </div>
           </div>
+
+          <div className="chart-box">
+            {data.length === 0 ? (
+              <div className="no-data">
+                <img
+                  src="/no-data.jpg"
+                  alt="No data"
+                  className="no-data-image"
+                />
+                <p className="no-data-text">
+                  No interviews found with these filters.
+                </p>
+              </div>
+            ) : (
+              <table className="interview-table">
+                <thead>
+                  <tr>
+                    <th>Profession</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Score</th>
+                    <th>Deadline</th>
+                    <th>Created</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((i) => (
+                    <tr key={i.id}>
+                      <td>{i.profession}</td>
+                      <td>{i.type}</td>
+                      <td>{i.status}</td>
+                      <td>{i.score}</td>
+                      <td>{new Date(i.deadline).toLocaleDateString()}</td>
+                      <td>{new Date(i.createdAt).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                disabled={page === 0}
+                onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+              >
+                ⬅ Prev
+              </button>
+              <span>
+                Page {page + 1} of {totalPages}
+              </span>
+              <button
+                disabled={page + 1 >= totalPages}
+                onClick={() => setPage((prev) => prev + 1)}
+              >
+                Next ➡
+              </button>
+            </div>
+          )}
         </div>
-
-       
-
-          <InterviewUsageChart/>
+        <InterviewUsageChart />
       </div>
     </div>
   );
