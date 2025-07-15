@@ -2,15 +2,13 @@ import { useEffect, useState } from "react";
 import InterviewUsageChart from "../components-compony/company-chart";
 import "./style.css";
 import { useSelector } from "react-redux";
-import { FaTableList } from "react-icons/fa6";
 
 const statuses = ["PENDING", "IN_PROGRESS", "COMPLETED", "EXPIRED"];
 
 export const UsageCompany = () => {
   const token = localStorage.getItem("accessToken");
-  const companyId = useSelector((state) => state.companyByOwner?.data?.id);
 
-  const [recruiterId, setRecruiterId] = useState("");
+  const [recruiterName, setRecruiterName] = useState("");
   const [recruiters, setRecruiters] = useState([]);
 
   const [status, setStatus] = useState("");
@@ -22,6 +20,8 @@ export const UsageCompany = () => {
   const [totalPages, setTotalPages] = useState(0);
 console.log(setSize);
 
+  const companyId = useSelector((state) => state.companyByOwner?.data?.id);
+
   useEffect(() => {
     if (companyId) {
       fetchRecruiters();
@@ -32,7 +32,7 @@ console.log(setSize);
     if (companyId) {
       fetchData();
     }
-  }, [companyId, recruiterId, status, sortBy, direction, page, size]);
+  }, [companyId, recruiterName, status, sortBy, direction, page, size]);
 
   const fetchRecruiters = async () => {
     try {
@@ -69,12 +69,12 @@ console.log(setSize);
   const fetchData = async () => {
     try {
       const params = new URLSearchParams({
+        recruiterName,
         status,
         page,
         size,
-        sort: `${sortBy},${direction}`,
       });
-      if (recruiterId) params.append("recruiterId", recruiterId);
+      params.append("sort", `${sortBy},${direction}`);
 
       const res = await fetch(
         `https://api.onemeet.app/interview/business/company/${companyId}/paged?${params.toString()}`,
@@ -82,6 +82,7 @@ console.log(setSize);
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       const json = await res.json();
       setData(json.data?.content || []);
       setTotalPages(json.data?.totalPages || 0);
@@ -94,21 +95,18 @@ console.log(setSize);
     <div className="px-3 py-5 sm:p-6">
       <div className="flex flex-col gap-10">
         <div className="chart-cont">
-          <h2 className="chart-title flex items-center gap-2.5">
-            <FaTableList className="text-blue-700" /> Interview Records
-          </h2>
-
+          <h2 className="chart-title">🧾 Interview Records</h2>
           <div className="chart-filters">
             <div className="filter-group">
-              <label className="filter-label">Recruiter</label>
+              <label className="filter-label">Recruiter Name</label>
               <select
                 className="filter-select"
-                value={recruiterId}
-                onChange={(e) => setRecruiterId(e.target.value)}
+                value={recruiterName}
+                onChange={(e) => setRecruiterName(e.target.value)}
               >
                 <option value="">All Recruiters</option>
                 {recruiters.map((r) => (
-                  <option key={r.id} value={r.id}>
+                  <option key={r.id} value={r.name}>
                     {r.name}
                   </option>
                 ))}
@@ -216,7 +214,6 @@ console.log(setSize);
             </div>
           )}
         </div>
-
         <InterviewUsageChart />
       </div>
     </div>

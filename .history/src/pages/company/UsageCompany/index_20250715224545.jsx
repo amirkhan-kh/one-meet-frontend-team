@@ -20,8 +20,7 @@ export const UsageCompany = () => {
   const [size, setSize] = useState(5);
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
-console.log(setSize);
-
+log
   useEffect(() => {
     if (companyId) {
       fetchRecruiters();

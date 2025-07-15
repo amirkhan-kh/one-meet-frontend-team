@@ -48,7 +48,7 @@ const InterviewUsageChart = () => {
     if (companyId && year && month) {
       fetchUsageChart();
     }
-  }, [year, month, selectedRecruiter, companyId]);
+  }, [year, month, selectedRecruiter]);
 
   const fetchRecruiters = async () => {
     try {

@@ -20,7 +20,7 @@ const pageInfo = {
   // Company Dashboard
   "/company": { title: "Company Panel", description: "Dashboard for companies." },
   "usage": { title: "Plans", description: "View available subscription plans." },
-  "finance": {title: "Finance", description: "Manage and track all your company's payments, plans, and financial activity in one place. "},
+  "finance": {}
   "profile-company": { title: "Profile", description: "Update company profile information." },
 
   // Recruiter Dashboard

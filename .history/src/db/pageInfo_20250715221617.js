@@ -18,9 +18,8 @@ const pageInfo = {
   "account-control": { title: "Account Control", description: "Manage user accounts and access." },
 
   // Company Dashboard
-  "/company": { title: "Company Panel", description: "Dashboard for companies." },
-  "usage": { title: "Plans", description: "View available subscription plans." },
-  "finance": {title: "Finance", description: "Manage and track all your company's payments, plans, and financial activity in one place. "},
+  "/recruiters": { title: "Company Panel", description: "Dashboard for companies." },
+  "plans": { title: "Plans", description: "View available subscription plans." },
   "profile-company": { title: "Profile", description: "Update company profile information." },
 
   // Recruiter Dashboard

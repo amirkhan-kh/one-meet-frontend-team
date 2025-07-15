@@ -48,7 +48,7 @@ const InterviewUsageChart = () => {
     if (companyId && year && month) {
       fetchUsageChart();
     }
-  }, [year, month, selectedRecruiter, companyId]);
+  }, [year, month, selectedRecruiter]);
 
   const fetchRecruiters = async () => {
     try {
@@ -97,7 +97,7 @@ const InterviewUsageChart = () => {
 
   return (
     <div className="chart-contai">
-      <h2 className="chart-title flex items-center gap-2.5"><FaChartBar className="text-blue-700"/> Interview Usage Overview</h2>
+      <h2 className="chart-title"><FaChartBar className="text-"/> Interview Usage Overview</h2>
 
       <div className="chart-filters">
         <div className="filter-group">

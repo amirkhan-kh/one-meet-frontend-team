@@ -221,7 +221,7 @@ export const RecruitersCompany = () => {
                       {showAccept && (
                         <TableCell>
                           <button
-                            className="bg-blue-700 text-white px-2 py-0.5 rounded-sm"
+                            className="bg-blue-700 text-white px-2 py-0.5 rounded"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleAccept(r.id);

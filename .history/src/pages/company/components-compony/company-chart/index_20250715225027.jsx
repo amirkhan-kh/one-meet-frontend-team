@@ -94,6 +94,7 @@ const InterviewUsageChart = () => {
       console.error("Failed to fetch usage data", err);
     }
   };
+console.log(data);
 
   return (
     <div className="chart-contai">
