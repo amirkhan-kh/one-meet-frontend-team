@@ -56,7 +56,7 @@ export const DashboardHeader = () => {
       else if (path.startsWith("/company")) navigate("/company");
       else if (path.startsWith("/recruiter")) navigate("/recruiter");
       else if (path.startsWith("/candidate")) navigate("/candidate");
-      else navigate("/admin-dashboard"); // fallback
+      else navigate("/admin-dashboard"); 
     } else {
       navigate("/");
     }

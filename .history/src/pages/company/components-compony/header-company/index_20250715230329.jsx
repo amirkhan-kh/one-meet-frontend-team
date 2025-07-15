@@ -90,7 +90,7 @@ export const CompanyHeader = () => {
   return (
     <header className="ai-header-company relative z-50">
       <div className="flex items-center justify-between px-6 py-3">
-        <a href="#" className="ai-logo">
+        <a href="" className="ai-logo">
           OneMeet
         </a>
         <nav className="ai-nav">
