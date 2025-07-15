@@ -1,0 +1,319 @@
+import React, { useEffect, useState } from "react";
+import {
+  MdCheckCircleOutline,
+  MdAccessTime,
+  MdOpenInBrowser,
+} from "react-icons/md";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import "./RecruiterTable.css";
+import { Skeleton } from "@/components/ui/skeleton";
+import CompanyCreateRecruiterModal from "./ui-components-company/modal-recruiter-post";
+import Lottie from "lottie-react";
+import animationData from '../../../../public/animation/errorData.json'
+export const RecruitersCompany = () => {
+  const token = localStorage.getItem("accessToken");
+  const [companyId, setCompanyId] = useState(null);
+  const [recruiters, setRecruiters] = useState([]);
+  const [selectedRecruiterId, setSelectedRecruiterId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCompanyId = async () => {
+      try {
+        const userRes = await fetch("https://api.onemeet.app/user/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const userJson = await userRes.json();
+        const userId = userJson?.data?.id;
+        if (!userId) throw new Error("User ID not found");
+
+        const companyRes = await fetch(
+          `https://api.onemeet.app/company/get-by-ownerUserId/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const companyJson = await companyRes.json();
+        const companyId = companyJson?.data?.id;
+        if (!companyId) throw new Error("Company ID not found");
+
+        setCompanyId(companyId);
+      } catch (err) {
+        console.error("❌ Failed to fetch companyId:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (token) fetchCompanyId();
+    else setIsLoading(false);
+  }, [token]);
+
+  useEffect(() => {
+    if (companyId) fetchRecruiters();
+  }, [companyId]);
+
+  const fetchRecruiters = async () => {
+    try {
+      const res = await fetch(
+        `https://api.onemeet.app/recruiter/get-by-company?companyId=${companyId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const json = await res.json();
+      const rawRecruiters = json.data || [];
+
+      const enriched = await Promise.all(
+        rawRecruiters.map(async (recruiter) => {
+          let profileData = {};
+          let authData = {};
+
+          try {
+            const userRes = await fetch(
+              `https://api.onemeet.app/user/get-by-id/${recruiter.userProfileId}`,
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+            const userJson = await userRes.json();
+            profileData = userJson.data;
+          } catch (_) {
+            console.log(_);
+          }
+
+          try {
+            const authRes = await fetch(
+              `https://api.onemeet.app/auth/get?id=${profileData.authUserId}`,
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+            const authJson = await authRes.json();
+            authData = authJson.data;
+          } catch (_) {
+            console.log(_);
+          }
+
+          return {
+            ...recruiter,
+            firstName: profileData.firstName,
+            lastName: profileData.lastName,
+            timezone: profileData.timezone,
+            profilePicture: profileData.profilePicture,
+            authUserId: profileData.authUserId,
+            email: authData.email,
+          };
+        })
+      );
+
+      setRecruiters(enriched);
+    } catch (err) {
+      console.error("❌ Failed to fetch recruiters:", err);
+    }
+  };
+
+  const handleAccept = async (recruiterId) => {
+    try {
+      await fetch(`https://api.onemeet.app/recruiter/update/${recruiterId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          approvedByCompany: true,
+          approvedByRecruiter: true,
+        }),
+      });
+      fetchRecruiters();
+    } catch (err) {
+      console.error("❌ Failed to accept recruiter:", err);
+    }
+  };
+
+  const approved = recruiters.filter(
+    (r) => r.approvedByCompany === true && r.approvedByRecruiter === true
+  );
+  const pendingByCompany = recruiters.filter(
+    (r) => r.approvedByRecruiter === true && r.approvedByCompany !== true
+  );
+  const pendingByRecruiter = recruiters.filter(
+    (r) => r.approvedByCompany === true && r.approvedByRecruiter !== true
+  );
+
+  const renderTable = (title, data, showAccept) => (
+    <div className="recruiter-section border-l-[4px] border-[#2b43d4]">
+      <div className="flex items-center justify-between ">
+        <h2>{title}</h2>
+      </div>
+      {data.length === 0 ? (
+        <p className="empty-row">No recruiters found</p>
+      ) : (
+        <Table className="recruiter-table">
+          <TableHeader className={` text-black hover:bg-transparent focus:ring-0 bg-[#f4f5fd]`}>
+            <TableRow>
+               <TableHead>Name</TableHead>
+               <TableHead>Position</TableHead>
+               <TableHead>Joined At</TableHead>
+              {showAccept && 
+              <TableHead>Action</TableHead>}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((r) => (
+              <React.Fragment key={r.id}>
+                <TableRow
+                  className={`recruiter-row ${
+                    selectedRecruiterId === r.id ? "active" : ""
+                  }`}
+                  onClick={() =>
+                    setSelectedRecruiterId((prev) =>
+                      prev === r.id ? null : r.id
+                    )
+                  }
+                >
+                  <TableCell>
+                    {r.firstName} {r.lastName}
+                  </TableCell >
+                  <TableCell >{r.position}</TableCell >
+                  <TableCell >{new Date(r.joinedAt).toLocaleDateString()}</TableCell >
+                  {showAccept && (
+                    <TableCell >
+                      <button
+                        className="accept-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAccept(r.id);
+                        }}
+                      >
+                        Accept
+                      </button>
+                    </TableCell >
+                  )}
+                </TableRow>
+
+                {selectedRecruiterId === r.id && (
+                  <TableRow className="recruiter-details-row">
+                    <TableCell  colSpan={showAccept ? 4 : 3}>
+                      <div className="recruiter-details">
+                        <img
+                          src={r.profilePicture}
+                          alt="Profile"
+                          className="recruiter-avatar"
+                          onError={(e) =>
+                            (e.target.src = "/default-avatar.jpg")
+                          }
+                        />
+                        <div>
+                          <p>
+                            <strong>Full Name:</strong> {r.firstName}{" "}
+                            {r.lastName}
+                          </p>
+                          <p>
+                            <strong>Email:</strong> {r.email || "Unknown"}
+                          </p>
+                          <p>
+                            <strong>Time Zone:</strong>{" "}
+                            {r.timezone || "Unknown"}
+                          </p>
+                          <p>
+                            <strong>Position:</strong> {r.position}
+                          </p>
+                          <p>
+                            <strong>Joined At:</strong>{" "}
+                            {new Date(r.joinedAt).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    </TableCell >
+                  </TableRow>
+                )}
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+    </div>
+  );
+
+  if (isLoading)
+    return (
+      <div className="p-3  rounded-md ">
+        <div className="shadow-md rounded-md px-3 sm:px-6 py-4 sm:p-6 mb-10 bg-white mx-auto  border-l-[4px] border-[#2b43d4]">
+          <Skeleton className="w-full rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className=" h-10 w-full" />
+          </div>
+        </div>
+        <div className="shadow-md rounded-md px-3 sm:px-6 py-4 sm:p-6 mb-10 bg-white mx-auto  border-l-[4px] border-[#2b43d4]">
+          <Skeleton className="w-full rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className=" h-10 w-full" />
+          </div>
+        </div>
+        <div className="shadow-md rounded-md px-3 sm:px-6 py-4 sm:p-6 mb-10 bg-white mx-auto  border-l-[4px] border-[#2b43d4]">
+          <Skeleton className="w-full rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className=" h-10 w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  if (!companyId) return <div className="grid place-content-center">
+     <Lottie
+          animationData={animationData}
+          loop
+          autoplay
+          style={{ height: "400px", width: "380px" }}
+        />
+  </div>;
+
+  return (
+    <div className=" p-3 ">
+      {renderTable(
+        <div className="bg-amber-500 w-full block">
+          <div className="flex justify-between items-center w-full">
+            <div className="flex items-center gap-1">
+              <MdCheckCircleOutline size={24} className=" text-green-400"/>
+              <h3 className="">Active Recruiters</h3>
+            </div>
+            <div className="flex">
+              <span></span>
+              <CompanyCreateRecruiterModal />
+            </div>
+          </div>
+        </div>,
+        approved,
+        false
+      )}
+      {renderTable(
+        <>
+          <MdOpenInBrowser size={24} className="inline mr-[2px] text-sky-800" />{" "}
+          Join Requests from Recruiters{" "}
+        </>,
+        pendingByCompany,
+        true
+      )}
+      {renderTable(
+       
+         <>
+          <MdAccessTime
+            size={24}
+            className="inline mr-[2px] text-blue-400"
+          />
+          Pending Approval by Company
+        </>,
+        pendingByRecruiter,
+        true
+      )}
+    </div>
+  );
+};
