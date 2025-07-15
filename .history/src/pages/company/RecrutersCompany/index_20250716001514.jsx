@@ -189,7 +189,7 @@ export const RecruitersCompany = () => {
           </div>
         ) : (
           <>
-            <Table className={`min-w-[700px]`}>
+            <Table className={``}>
               <TableHeader>
                 <TableRow className="text-black bg-[#f4f5fd] hover:bg-[#f4f5fd] ">
                   <TableHead className={`translate-x-3`}>Name</TableHead>

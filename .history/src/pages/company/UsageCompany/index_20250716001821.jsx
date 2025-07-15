@@ -3,13 +3,6 @@ import InterviewUsageChart from "../components-compony/company-chart";
 import "./style.css";
 import { useSelector } from "react-redux";
 import { FaTableList } from "react-icons/fa6";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 const statuses = ["PENDING", "IN_PROGRESS", "COMPLETED", "EXPIRED"];
 
@@ -17,30 +10,37 @@ export const UsageCompany = () => {
   const token = localStorage.getItem("accessToken");
   const companyId = useSelector((state) => state.companyByOwner?.data?.id);
 
-  const [recruiterId, setRecruiterId] = useState("all");
+  const [recruiterId, setRecruiterId] = useState("");
   const [recruiters, setRecruiters] = useState([]);
 
-  const [status, setStatus] = useState("all");
+  const [status, setStatus] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [direction, setDirection] = useState("desc");
   const [page, setPage] = useState(0);
-  const [size] = useState(5);
+  const [size, setSize] = useState(5);
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
+console.log(setSize);
 
   useEffect(() => {
-    if (companyId) fetchRecruiters();
+    if (companyId) {
+      fetchRecruiters();
+    }
   }, [companyId]);
 
   useEffect(() => {
-    if (companyId) fetchData();
-  }, [companyId, recruiterId, status, sortBy, direction, page]);
+    if (companyId) {
+      fetchData();
+    }
+  }, [companyId, recruiterId, status, sortBy, direction, page, size]);
 
   const fetchRecruiters = async () => {
     try {
       const res = await fetch(
         `https://api.onemeet.app/recruiter/get-by-company?companyId=${companyId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       const json = await res.json();
       const recruiterData = await Promise.all(
@@ -69,17 +69,18 @@ export const UsageCompany = () => {
   const fetchData = async () => {
     try {
       const params = new URLSearchParams({
+        status,
         page,
         size,
         sort: `${sortBy},${direction}`,
       });
-
-      if (status !== "all") params.append("status", status);
-      if (recruiterId !== "all") params.append("recruiterId", recruiterId);
+      if (recruiterId) params.append("recruiterId", recruiterId);
 
       const res = await fetch(
         `https://api.onemeet.app/interview/business/company/${companyId}/paged?${params.toString()}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       const json = await res.json();
       setData(json.data?.content || []);
@@ -98,82 +99,77 @@ export const UsageCompany = () => {
           </h2>
 
           <div className="chart-filters">
-            {/* Recruiter Filter */}
             <div className="filter-group">
               <label className="filter-label">Recruiter</label>
-              <Select value={recruiterId} onValueChange={setRecruiterId}>
-                <SelectTrigger className="filter-select">
-                  <SelectValue placeholder="Select recruiter" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Recruiters</SelectItem>
-                  {recruiters.map((r) => (
-                    <SelectItem key={r.id} value={r.id}>
-                      {r.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+              <Select
+                className="filter-select"
+                value={recruiterId}
+                onChange={(e) => setRecruiterId(e.target.value)}
+              >
+                <option value="">All Recruiters</option>
+                {recruiters.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name}
+                  </option>
+                ))}
               </Select>
             </div>
 
-            {/* Status Filter */}
             <div className="filter-group">
               <label className="filter-label">Status</label>
-              <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className="filter-select">
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  {statuses.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Select
+                className="filter-select"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value="">All</option>
+                {statuses.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            {/* Sort By */}
             <div className="filter-group">
               <label className="filter-label">Sort By</label>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="filter-select">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="createdAt">Created At</SelectItem>
-                  <SelectItem value="score">Score</SelectItem>
-                </SelectContent>
-              </Select>
+              <select
+                className="filter-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="createdAt">Created At</option>
+                <option value="score">Score</option>
+              </select>
             </div>
 
-            {/* Direction */}
             <div className="filter-group">
               <label className="filter-label">Direction</label>
-              <Select value={direction} onValueChange={setDirection}>
-                <SelectTrigger className="filter-select">
-                  <SelectValue placeholder="Order" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="desc">Descending</SelectItem>
-                  <SelectItem value="asc">Ascending</SelectItem>
-                </SelectContent>
-              </Select>
+              <select
+                className="filter-select"
+                value={direction}
+                onChange={(e) => setDirection(e.target.value)}
+              >
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
+              </select>
             </div>
           </div>
 
-          {/* Table */}
-          <div className="chart-box overflow-x-auto">
+          <div className="chart-box">
             {data.length === 0 ? (
               <div className="no-data">
-                <img src="/no-data.jpg" alt="No data" className="no-data-image" />
+                <img
+                  src="/no-data.jpg"
+                  alt="No data"
+                  className="no-data-image"
+                />
                 <p className="no-data-text">
                   No interviews found with these filters.
                 </p>
               </div>
             ) : (
-              <table className="interview-table min-w-full">
+              <table className="interview-table">
                 <thead>
                   <tr>
                     <th>Profession</th>
@@ -200,9 +196,8 @@ export const UsageCompany = () => {
             )}
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
-            <div className="pagination mt-4">
+            <div className="pagination">
               <button
                 disabled={page === 0}
                 onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
@@ -222,7 +217,6 @@ export const UsageCompany = () => {
           )}
         </div>
 
-        {/* Chart */}
         <InterviewUsageChart />
       </div>
     </div>

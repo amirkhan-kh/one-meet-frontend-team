@@ -17,10 +17,10 @@ export const UsageCompany = () => {
   const token = localStorage.getItem("accessToken");
   const companyId = useSelector((state) => state.companyByOwner?.data?.id);
 
-  const [recruiterId, setRecruiterId] = useState("all");
+  const [recruiterId, setRecruiterId] = useState("");
   const [recruiters, setRecruiters] = useState([]);
 
-  const [status, setStatus] = useState("all");
+  const [status, setStatus] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [direction, setDirection] = useState("desc");
   const [page, setPage] = useState(0);
@@ -69,13 +69,12 @@ export const UsageCompany = () => {
   const fetchData = async () => {
     try {
       const params = new URLSearchParams({
+        status,
         page,
         size,
         sort: `${sortBy},${direction}`,
       });
-
-      if (status !== "all") params.append("status", status);
-      if (recruiterId !== "all") params.append("recruiterId", recruiterId);
+      if (recruiterId) params.append("recruiterId", recruiterId);
 
       const res = await fetch(
         `https://api.onemeet.app/interview/business/company/${companyId}/paged?${params.toString()}`,
@@ -98,15 +97,15 @@ export const UsageCompany = () => {
           </h2>
 
           <div className="chart-filters">
-            {/* Recruiter Filter */}
+            {/* Recruiter Select */}
             <div className="filter-group">
               <label className="filter-label">Recruiter</label>
               <Select value={recruiterId} onValueChange={setRecruiterId}>
                 <SelectTrigger className="filter-select">
-                  <SelectValue placeholder="Select recruiter" />
+                  <SelectValue placeholder="All Recruiters" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Recruiters</SelectItem>
+                  <SelectItem value="">All Recruiters</SelectItem>
                   {recruiters.map((r) => (
                     <SelectItem key={r.id} value={r.id}>
                       {r.name}
@@ -116,15 +115,15 @@ export const UsageCompany = () => {
               </Select>
             </div>
 
-            {/* Status Filter */}
+            {/* Status Select */}
             <div className="filter-group">
               <label className="filter-label">Status</label>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="filter-select">
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="">All</SelectItem>
                   {statuses.map((s) => (
                     <SelectItem key={s} value={s}>
                       {s}
@@ -134,12 +133,12 @@ export const UsageCompany = () => {
               </Select>
             </div>
 
-            {/* Sort By */}
+            {/* Sort By Select */}
             <div className="filter-group">
               <label className="filter-label">Sort By</label>
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="filter-select">
-                  <SelectValue placeholder="Sort by" />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="createdAt">Created At</SelectItem>
@@ -148,12 +147,12 @@ export const UsageCompany = () => {
               </Select>
             </div>
 
-            {/* Direction */}
+            {/* Direction Select */}
             <div className="filter-group">
               <label className="filter-label">Direction</label>
               <Select value={direction} onValueChange={setDirection}>
                 <SelectTrigger className="filter-select">
-                  <SelectValue placeholder="Order" />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="desc">Descending</SelectItem>
