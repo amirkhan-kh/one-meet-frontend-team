@@ -14,7 +14,7 @@ export default function Footer() {
 
         {/* Center: Navigation Links */}
         <div className="footer-center">
-          <a href="/contact">Contact Us</a>
+          <a href="/contact-support">Contact Us</a>
           <a href="#guide">Guide</a>
           <a href="#pricing">Pricing</a>
         </div>
