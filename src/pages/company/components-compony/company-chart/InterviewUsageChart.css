@@ -1,11 +1,11 @@
 .chart-container {
-  padding: 0;
+  padding: 2rem;
 }
 
 .chart-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1f2937;
+  color: #1f2937; /* Tailwind slate-800 */
   margin-bottom: 1.5rem;
 }
 
@@ -24,7 +24,7 @@
 .filter-label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #4b5563;
+  color: #4b5563; /* Tailwind gray-600 */
   margin-bottom: 0.25rem;
 }
 
@@ -40,14 +40,17 @@
   background-color: white;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
   min-height: 300px;
 }
 
+/* No Data State */
 .no-data {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 2rem;
   text-align: center;
   min-height: 300px;
 }

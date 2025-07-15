@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -7,8 +7,9 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
-} from "recharts"
-import "./InterviewUsageChart.css"
+} from "recharts";
+import "./InterviewUsageChart.css";
+import { useSelector } from "react-redux";
 
 const months = [
   { label: "January", value: 1 },
@@ -23,28 +24,30 @@ const months = [
   { label: "October", value: 10 },
   { label: "November", value: 11 },
   { label: "December", value: 12 },
-]
+];
 
-const InterviewUsageChart = ({ companyId }) => {
-  const [year, setYear] = useState(new Date().getFullYear())
-  const [month, setMonth] = useState(new Date().getMonth() + 1)
-  const [recruiters, setRecruiters] = useState([])
-  const [selectedRecruiter, setSelectedRecruiter] = useState("")
-  const [data, setData] = useState([])
+const InterviewUsageChart = () => {
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [recruiters, setRecruiters] = useState([]);
+  const [selectedRecruiter, setSelectedRecruiter] = useState("");
+  const [data, setData] = useState([]);
 
-  const token = localStorage.getItem("accessToken")
+  const token = localStorage.getItem("accessToken");
+
+  const companyId = useSelector((state) => state.companyByOwner?.data?.id);
 
   useEffect(() => {
     if (companyId) {
-      fetchRecruiters()
+      fetchRecruiters();
     }
-  }, [companyId])
+  }, [companyId]);
 
   useEffect(() => {
     if (companyId && year && month) {
-      fetchUsageChart()
+      fetchUsageChart();
     }
-  }, [year, month, selectedRecruiter])
+  }, [year, month, selectedRecruiter]);
 
   const fetchRecruiters = async () => {
     try {
@@ -53,40 +56,43 @@ const InterviewUsageChart = ({ companyId }) => {
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-      )
-      const json = await res.json()
+      );
+      const json = await res.json();
       const recruiterData = await Promise.all(
         json.data.map(async (recruiter) => {
-          const userRes = await fetch(`https://api.onemeet.app/user/get-by-id/${recruiter.userProfileId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          })
-          const user = await userRes.json()
+          const userRes = await fetch(
+            `https://api.onemeet.app/user/get-by-id/${recruiter.userProfileId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          const user = await userRes.json();
           return {
             id: recruiter.id,
             name: `${user.data.firstName} ${user.data.lastName}`,
-          }
+          };
         })
-      )
-      setRecruiters(recruiterData)
+      );
+      setRecruiters(recruiterData);
     } catch (err) {
-      console.error("Failed to load recruiters", err)
+      console.error("Failed to load recruiters", err);
     }
-  }
+  };
 
   const fetchUsageChart = async () => {
     try {
-      let url = `https://api.onemeet.app/interview/business/company/${companyId}/usage-chart?year=${year}&month=${month}`
-      if (selectedRecruiter) url += `&recruiterId=${selectedRecruiter}`
+      let url = `https://api.onemeet.app/interview/business/company/${companyId}/usage-chart?year=${year}&month=${month}`;
+      if (selectedRecruiter) url += `&recruiterId=${selectedRecruiter}`;
 
       const res = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
-      })
-      const json = await res.json()
-      setData(json.data || [])
+      });
+      const json = await res.json();
+      setData(json.data || []);
     } catch (err) {
-      console.error("Failed to fetch usage data", err)
+      console.error("Failed to fetch usage data", err);
     }
-  }
+  };
 
   return (
     <div className="chart-container">
@@ -101,7 +107,9 @@ const InterviewUsageChart = ({ companyId }) => {
             onChange={(e) => setYear(Number(e.target.value))}
           >
             {[2025, 2026, 2027].map((y) => (
-              <option key={y} value={y}>{y}</option>
+              <option key={y} value={y}>
+                {y}
+              </option>
             ))}
           </select>
         </div>
@@ -114,7 +122,9 @@ const InterviewUsageChart = ({ companyId }) => {
             onChange={(e) => setMonth(Number(e.target.value))}
           >
             {months.map((m) => (
-              <option key={m.value} value={m.value}>{m.label}</option>
+              <option key={m.value} value={m.value}>
+                {m.label}
+              </option>
             ))}
           </select>
         </div>
@@ -128,7 +138,9 @@ const InterviewUsageChart = ({ companyId }) => {
           >
             <option value="">All Recruiters</option>
             {recruiters.map((r) => (
-              <option key={r.id} value={r.id}>{r.name}</option>
+              <option key={r.id} value={r.id}>
+                {r.name}
+              </option>
             ))}
           </select>
         </div>
@@ -137,12 +149,10 @@ const InterviewUsageChart = ({ companyId }) => {
       <div className="chart-box">
         {data.length === 0 ? (
           <div className="no-data">
-            <img
-              src="/no-data.jpg"
-              alt="No data"
-              className="no-data-image"
-            />
-            <p className="no-data-text">No interviews recorded for this selection.</p>
+            <img src="/no-data.jpg" alt="No data" className="no-data-image" />
+            <p className="no-data-text">
+              No interviews recorded for this selection.
+            </p>
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={300}>
@@ -157,7 +167,7 @@ const InterviewUsageChart = ({ companyId }) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default InterviewUsageChart
+export default InterviewUsageChart;
