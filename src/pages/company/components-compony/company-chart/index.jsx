@@ -91,7 +91,19 @@ const InterviewUsageChart = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
-      setData(json.data || []);
+      const rawData = json.data || [];
+
+      const daysInMonth = new Date(Number(year), Number(month), 0).getDate();
+      const filledData = Array.from({ length: daysInMonth }, (_, i) => {
+        const day = `${i + 1}`;
+        const entry = rawData.find((d) => `${d.day}` === day);
+        return {
+          day,
+          count: entry ? entry.count : 0,
+        };
+      });
+
+      setData(filledData);
     } catch (err) {
       console.error("Failed to fetch usage data", err);
     }
@@ -104,7 +116,6 @@ const InterviewUsageChart = () => {
       </h2>
 
       <div className="chart-filters">
-        {/* Year */}
         <div className="filter-group">
           <label className="filter-label">Year</label>
           <Select value={year} onValueChange={setYear}>
@@ -121,7 +132,6 @@ const InterviewUsageChart = () => {
           </Select>
         </div>
 
-        {/* Month */}
         <div className="filter-group">
           <label className="filter-label">Month</label>
           <Select value={month} onValueChange={setMonth}>
@@ -138,7 +148,6 @@ const InterviewUsageChart = () => {
           </Select>
         </div>
 
-        {/* Recruiter */}
         <div className="filter-group">
           <label className="filter-label">Recruiter</label>
           <Select value={selectedRecruiter} onValueChange={setSelectedRecruiter}>
