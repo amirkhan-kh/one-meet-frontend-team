@@ -9,6 +9,8 @@ import LandingPage from './pages/LandingPage'
 import CandidateCompleteProfile from './components/auth/Signup/complete/CandidateCompleteProfile'
 import CompanyCompleteProfile from './components/auth/Signup/complete/CompanyCompleteProfile'
 import RecruiterCompleteProfile from './components/auth/Signup/complete/RecruiterCompleteProfile'
+import RecruiterUpdateProfile from './components/auth/Signup/update/RecruiterUpdateProfile'
+import CandidateUpdateProfile from './components/auth/Signup/update/CandidateUpdateProfile'
 
 import {  ProfileCandidate } from './pages/candidate'
 import { Plans } from './pages/company/Plans'
@@ -68,6 +70,14 @@ function App() {
 			<Route
 				path='/complete-profile/company'
 				element={<CompanyCompleteProfile />}
+			/>
+			<Route
+				path='/update-profile/recruiter'
+				element={<RecruiterUpdateProfile />}
+			/>
+			<Route
+				path='/update-profile/candidate'
+				element={<CandidateUpdateProfile />}
 			/>
 
 			{/* Candidate Dashboard */}
