@@ -249,7 +249,7 @@ export default function RecruiterCompleteProfile() {
             type='text'
             id='companySearch'
             name='companySearch'
-            className='input-field slim-input'
+            className='input-field'
             placeholder='Type company name...'
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}

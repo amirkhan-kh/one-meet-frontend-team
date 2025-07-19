@@ -146,7 +146,7 @@ export const ProfileCompany = () => {
                     rel="noopener noreferrer"
                     className="text-blue-600 underline text-[10px] sm:text-[12px] "
                   >
-                    {company.linkedin}
+                    https://linkedin/{company?.name}.com
                   </a>
                 ) : (
                   "Not provided"
