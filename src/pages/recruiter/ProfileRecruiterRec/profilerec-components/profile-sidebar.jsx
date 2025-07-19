@@ -56,13 +56,13 @@ export const ProfileSidebar = ({ activeTab, setActiveTab }) => {
       <Card className="p-6 bg-white border border-gray-200">
         <div className="flex flex-col">
           <div className="relative inline-block mb-4">
-            <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto">
+            <div className="rounded-sm h-24 bg-gray-200 overflow-hidden  flex items-center justify-center mx-auto">
              
               {logo ? (
                 <img
                   src={logo}
                   alt={data?.firstName}
-                  className="object-contain h-full rounded-md w-full"
+                  className="object-contain h-full rounded-md w-full "
                 />
               ) : (
                 <div className="text-center text-sm text-gray-400 pt-12">
